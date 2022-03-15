@@ -2,46 +2,48 @@
 @using MyMDb.Shared
 @inject HttpClient Http
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>Movies</PageTitle>
 
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-@if (forecasts == null)
+<MudText Typo="Typo.h3" GutterBottom="true">Movies</MudText>
+<MudText Class="mb-8">This component demonstrates fetching data from the server.</MudText>
+@if (movies == null)
 {
-    <p><em>Loading...</em></p>
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <MudTable Items="movies" Hover="true" SortLabel="Sort By" Elevation="0">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.Title)">Title</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.IMDbRating)">IMDb Rating</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.Runtimemins)">Runtime</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.Year)">Year</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.Directors)">Director(s)</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.ReleaseDate)">Release Date</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Title">@context.Title</MudTd>
+            <MudTd DataLabel="IMDb Rating">@context.IMDbRating</MudTd>
+            <MudTd DataLabel="Runtime">@context.Runtimemins</MudTd>
+            <MudTd DataLabel="Year">@context.Year</MudTd>
+            <MudTd DataLabel="Director(s)">@context.Directors</MudTd>
+            <MudTd DataLabel="Release Date">@context.ReleaseDate</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{10, 20, 50, 100}" />
+        </PagerContent>
+    </MudTable>
 }
 
 @code {
-    private List<Movie>? Movies;
+    private Movie[] movies;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<Movie[]>("api/movie");
+        var result = await Http.GetFromJsonAsync<Movie[]>("api/movie");
+        if (result != null)
+        {
+            movies = result;
+        }
     }
 }
