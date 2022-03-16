@@ -1,4 +1,5 @@
 ﻿@page "/counter"
+@inject HttpClient Http
 
 <PageTitle>Counter</PageTitle>
 
@@ -14,4 +15,24 @@
     {
         currentCount++;
     }
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    var movies = await Http.GetFromJsonAsync<Movie[]>("api/movie");
+    //    var people = await Http.GetFromJsonAsync<Person[]>("api/person");
+
+    //    if (movies != null && people != null)
+    //    {
+    //        foreach (Movie m in movies)
+    //        {
+    //            foreach (Person p in people)
+    //            {
+    //                if (m.Cast.Contains(p.FullName) || m.Directors.Contains(p.FullName))
+    //                {
+    //                    Console.WriteLine($"({m.Id}, {p.Id}),");
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 }

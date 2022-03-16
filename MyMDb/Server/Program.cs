@@ -1,7 +1,9 @@
 global using MyMDb.Shared;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using MyMDb.Server.Data;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 var connectionString = builder.Configuration.GetConnectionString("MyMDbDbContext");
 builder.Services.AddDbContext<MyMDbDbContext>(options => options.UseSqlServer(connectionString));
+
+//This setting causes circular references to be null instead, as soon as they are detected
+builder.Services.AddControllers().AddJsonOptions(options => 
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 var app = builder.Build();
 

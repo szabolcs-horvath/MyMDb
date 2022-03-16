@@ -1,0 +1,41 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MyMDb.Server.Data;
+
+namespace MyMDb.Server.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PersonController : ControllerBase
+    {
+        private readonly MyMDbDbContext _context;
+
+        public PersonController(MyMDbDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Person>>> GetPersons()
+        {
+            //Notice, when requesting all movies through the REST API, it doesnt Include() the Movies
+            //through the Person.Movie navigation property, to avoid circular references, and have a cleaner resulting JSON string
+            return await _context.Person.ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Person>> GetPerson(int id)
+        {
+            //Circular references will appear as null in the JSON string (see IgnoreCycles in MyMDb.Server.Program.cs)
+            var result = await _context.Person.Include(p => p.Movie).Where(p => p.Id == id).FirstAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+    }
+}

@@ -8,6 +8,7 @@ namespace MyMDb.Server.Data
             : base(options) { }
 
         public DbSet<Movie> Movie { get; set; }
+        public DbSet<Person> Person { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -18,6 +19,14 @@ namespace MyMDb.Server.Data
 
             var connectionString = configuration.GetConnectionString("MyMDbDbContext");
             optionsBuilder.UseSqlServer(connectionString);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Movie>()
+                .HasMany(m => m.Person)
+                .WithMany(p => p.Movie)
+                .UsingEntity(j => j.ToTable("MoviePersonJoiningTable"));
         }
     }
 }

@@ -20,6 +20,9 @@ namespace MyMDb.Shared
         public string Genres { get; set; } = string.Empty;
         public string ReleaseDate { get; set; } = string.Empty;
         public string Directors { get; set; } = string.Empty;
+        public string Cast { get; set; } = string.Empty;
+
+        public ICollection<Person> Person { get; set; } = new List<Person>();
 
         public override string ToString()
         {
