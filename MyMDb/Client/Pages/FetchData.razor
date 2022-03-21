@@ -1,5 +1,6 @@
 ﻿@page "/fetchdata"
 @using MyMDb.Shared
+@using System
 @inject HttpClient Http
 
 <PageTitle>Movies</PageTitle>
@@ -12,7 +13,20 @@
 }
 else
 {
-    <MudTable Items="movies" Hover="true" SortLabel="Sort By" Elevation="0">
+    <MudTable Items="movies" Height="400px" Hover="true" SortLabel="Sort By" FixedHeader=true Virtualize="true" Filter="new Func<Movie, bool>(FilterCheck)">
+        <ColGroup>
+            <col />
+            <col style="width: 12%" />
+            <col style="width: 10%" />
+            <col style="width: 10%" />
+            <col style="width: 25%" />
+            <col style="width: 12%" />
+        </ColGroup>
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">All movies</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="@searchTerm" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
+        </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.Title)">Title</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.IMDbRating)">IMDb Rating</MudTableSortLabel></MudTh>
@@ -36,7 +50,17 @@ else
 }
 
 @code {
-    private Movie[] movies;
+    private Movie[]? movies;
+    private string searchTerm = string.Empty;
+
+    private bool FilterCheck(Movie movie)
+    {
+        int parsedYear;
+        bool parsingSucceeded = int.TryParse(searchTerm, out parsedYear);
+        return movie.Title.Contains(searchTerm)
+        || movie.Directors.Contains(searchTerm)
+        || (parsingSucceeded && movie.Year == parsedYear);
+    }
 
     protected override async Task OnInitializedAsync()
     {
