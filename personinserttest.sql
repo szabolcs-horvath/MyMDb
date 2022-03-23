@@ -1,4 +1,4 @@
-DECLARE @person nvarchar(60) = 'Joaquin Phoenix'
+DECLARE @person nvarchar(60) = 'Brett Cullen'
 
 Select *
 From Person

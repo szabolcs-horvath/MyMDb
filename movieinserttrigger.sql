@@ -1,5 +1,5 @@
 CREATE OR ALTER TRIGGER UpdateJoiningTableAfterMovieInsert
-	ON Movie
+	ON [Movie]
 	FOR INSERT, UPDATE
 AS
 BEGIN

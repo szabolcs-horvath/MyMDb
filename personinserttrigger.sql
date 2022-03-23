@@ -1,5 +1,5 @@
 CREATE OR ALTER TRIGGER UpdateJoiningTableAfterPersonInsert
-	ON Person
+	ON [Person]
 	FOR INSERT, UPDATE
 AS 
 BEGIN
