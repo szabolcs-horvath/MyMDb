@@ -1,6 +1,6 @@
 CREATE OR ALTER TRIGGER UpdateJoiningTableAfterMovieInsert
 	ON [Movie]
-	FOR INSERT, UPDATE
+	FOR INSERT
 AS
 BEGIN
 	DECLARE @movieID int = (SELECT TOP(1) [ID] FROM INSERTED i)

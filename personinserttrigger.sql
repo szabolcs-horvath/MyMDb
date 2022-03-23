@@ -1,6 +1,6 @@
 CREATE OR ALTER TRIGGER UpdateJoiningTableAfterPersonInsert
 	ON [Person]
-	FOR INSERT, UPDATE
+	FOR INSERT
 AS 
 BEGIN
 	DECLARE @personID int = (SELECT TOP(1) [ID] FROM INSERTED i)

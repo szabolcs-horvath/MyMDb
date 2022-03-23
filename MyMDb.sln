@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMDb.Server", "MyMDb\Server\MyMDb.Server.csproj", "{7A00EAED-5431-41BF-9DE2-DD987305BE93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMDb.Server", "MyMDb\Server\MyMDb.Server.csproj", "{7A00EAED-5431-41BF-9DE2-DD987305BE93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMDb.Client", "MyMDb\Client\MyMDb.Client.csproj", "{617127F8-F295-46E6-A800-2577CA1A5933}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMDb.Client", "MyMDb\Client\MyMDb.Client.csproj", "{617127F8-F295-46E6-A800-2577CA1A5933}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMDb.Shared", "MyMDb\Shared\MyMDb.Shared.csproj", "{45B26E57-5346-4E6E-8961-F98C3EE3F3C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyMDb.Shared", "MyMDb\Shared\MyMDb.Shared.csproj", "{45B26E57-5346-4E6E-8961-F98C3EE3F3C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

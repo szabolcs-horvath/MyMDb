@@ -10,16 +10,16 @@ namespace MyMDb.Shared
     {
         public Movie(int yourRating, string dateRated, string title, string uRL, string titleType, double iMDbRating, int runtimemins, int year, string genres, string releaseDate, string directors, string cast)
         {
-            YourRating = yourRating;
-            DateRated = dateRated;
-            Title = title;
-            URL = uRL;
-            TitleType = titleType;
-            IMDbRating = iMDbRating;
-            Runtimemins = runtimemins;
-            Year = year;
+                YourRating = yourRating;
+                DateRated = dateRated;
+                Title = title;
+                URL = uRL;
+                TitleType = titleType;
+                IMDbRating = iMDbRating;
+                Runtimemins = runtimemins;
+                Year = year;
             Genres = genres;
-            ReleaseDate = releaseDate;
+                ReleaseDate = releaseDate;
             Directors = directors;
             Cast = cast;
         }
