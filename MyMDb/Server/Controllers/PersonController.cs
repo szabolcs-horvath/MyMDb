@@ -53,5 +53,21 @@ namespace MyMDb.Server.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetPerson), new { id = person.Id }, person);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Person>> DeletePerson(int id)
+        {
+            var person = await _context.Person.FindAsync(id);
+
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            _context.Person.Remove(person);
+            await _context.SaveChangesAsync();
+
+            return person;
+        }
     }
 }

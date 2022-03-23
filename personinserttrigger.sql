@@ -1,15 +1,13 @@
 CREATE OR ALTER TRIGGER UpdateJoiningTableAfterPersonInsert
 	ON Person
-	FOR INSERT
+	FOR INSERT, UPDATE
 AS 
 BEGIN
 	DECLARE @personID int = (SELECT TOP(1) [ID] FROM INSERTED i)
-	PRINT(CONCAT('Inserted Person ID: ', CONVERT(nvarchar, @personID)))
 	DECLARE @personFullName nvarchar(60) = (SELECT TOP(1) [FullName] FROM INSERTED i)
-	PRINT(CONCAT('Inserted Person FullName: ', @personFullName))
 	DECLARE @movieID int
 
-	DECLARE MovieCursor CURSOR
+	DECLARE MovieCursor CURSOR FORWARD_ONLY
 		FOR 
 		SELECT [ID]
 		FROM [Movie]
@@ -17,13 +15,12 @@ BEGIN
 
 	OPEN MovieCursor
 	FETCH NEXT FROM MovieCursor INTO @movieID
-	PRINT (CONVERT(nvarchar, @movieID))
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
 		INSERT INTO [MoviePersonJoiningTable]
 		VALUES (@movieID, @personID)
 
-		PRINT(CONCAT('MovieID: ', CONVERT(nvarchar, @movieID), ' PersonID: ', CONVERT(nvarchar, @personID)))
+		PRINT(CONCAT('Inserted into joining table: MovieID: ', CONVERT(nvarchar, @movieID), ' PersonID: ', CONVERT(nvarchar, @personID)))
 
 		FETCH NEXT FROM MovieCursor INTO @movieID
 	END
