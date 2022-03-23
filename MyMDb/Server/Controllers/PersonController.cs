@@ -27,7 +27,11 @@ namespace MyMDb.Server.Controllers
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
             //Circular references will appear as null in the JSON string (see IgnoreCycles in MyMDb.Server.Program.cs)
-            var result = await _context.Person.Include(p => p.Movie).Where(p => p.Id == id).FirstAsync();
+            var result = await _context.Person
+                .Include(p => p.Movie)
+                .Where(p => p.Id == id)
+                .FirstAsync();
+            Console.WriteLine(result.FullName);
             if (result == null)
             {
                 return NotFound();
@@ -36,6 +40,18 @@ namespace MyMDb.Server.Controllers
             {
                 return Ok(result);
             }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> PostPerson([FromBody] Person person)
+        {
+            if (person == null)
+            {
+                throw new ArgumentNullException(nameof(person));
+            }
+            _context.Person.Add(person);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetPerson), new { id = person.Id }, person);
         }
     }
 }

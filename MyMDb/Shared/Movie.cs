@@ -8,22 +8,37 @@ namespace MyMDb.Shared
 {
     public class Movie
     {
-        public int Id { get; set; }
-        public int YourRating { get; set; }
-        public string DateRated { get; set; } = string.Empty;
-        public string Title { get; set; } = string.Empty;
-        public string URL { get; set; } = string.Empty;
-        public string TitleType { get; set; } = string.Empty;
-        public double IMDbRating { get; set; }
-        public int Runtimemins { get; set; }
-        public int Year { get; set; }
-        public string Genres { get; set; } = string.Empty;
-        public string ReleaseDate { get; set; } = string.Empty;
-        public string Directors { get; set; } = string.Empty;
-        public string Cast { get; set; } = string.Empty;
+        public Movie(int yourRating, string dateRated, string title, string uRL, string titleType, double iMDbRating, int runtimemins, int year, string genres, string releaseDate, string directors, string cast)
+        {
+            YourRating = yourRating;
+            DateRated = dateRated;
+            Title = title;
+            URL = uRL;
+            TitleType = titleType;
+            IMDbRating = iMDbRating;
+            Runtimemins = runtimemins;
+            Year = year;
+            Genres = genres;
+            ReleaseDate = releaseDate;
+            Directors = directors;
+            Cast = cast;
+        }
 
-        public ICollection<Person> Person { get; set; } = new List<Person>();
+        public int Id { get; private set; }
+        public int YourRating { get; private set; }
+        public string DateRated { get; private set; } = string.Empty;
+        public string Title { get; private set; } = string.Empty;
+        public string URL { get; private set; } = string.Empty;
+        public string TitleType { get; private set; } = string.Empty;
+        public double IMDbRating { get; private set; }
+        public int Runtimemins { get; private set; }
+        public int Year { get; private set; }
+        public string Genres { get; private set; } = string.Empty;
+        public string ReleaseDate { get; private set; } = string.Empty;
+        public string Directors { get; private set; } = string.Empty;
+        public string Cast { get; private set; } = string.Empty;
 
+        public ICollection<Person> Person { get; private set; } = new List<Person>();
         public override string ToString()
         {
             return GetType().GetProperties()
