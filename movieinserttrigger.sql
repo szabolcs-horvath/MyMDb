@@ -21,7 +21,7 @@ BEGIN
 		INSERT INTO [MoviePersonJoiningTable]
 		VALUES (@movieID, @personID)
 
-		PRINT(CONCAT('Inserted into joining table: MovieID: ', CONVERT(nvarchar, @movieID), ' PersonID: ', CONVERT(nvarchar, @personID)))
+		PRINT(CONCAT('Inserted into joining table through insert trigger: MovieID: ', CONVERT(nvarchar, @movieID), ' PersonID: ', CONVERT(nvarchar, @personID)))
 
 		FETCH NEXT FROM PersonCursor INTO @personID
 	END
