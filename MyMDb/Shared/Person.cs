@@ -15,15 +15,15 @@ namespace MyMDb.Shared
             Birthplace = birthplace;
         }
 
-        public int Id { get; private set; }
-        public string FullName { get; private set; } = string.Empty;
-        public string Birthdate { get; private set; } = string.Empty;
-        public string Birthplace { get; private set; } = string.Empty;
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Birthdate { get; set; } = string.Empty;
+        public string Birthplace { get; set; } = string.Empty;
 
         //This annotation isn't ideal, if we want to access movies through a person using the REST API,
         //but it is necessary to prevent circular references when we request movies
         //[System.Text.Json.Serialization.JsonIgnore]
-        public ICollection<Movie> Movie { get; private set; } = new List<Movie>();
+        public ICollection<Movie> Movie { get; set; } = new List<Movie>();
 
         public override string ToString()
         {
