@@ -54,6 +54,26 @@ namespace MyMDb.Server.Controllers
             return CreatedAtAction(nameof(GetPerson), new { id = person.Id }, person);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> ModifyPerson(int id, [FromBody] Person person)
+        {
+            if (id != person.Id)
+                return BadRequest();
+
+            var personfromDb = await _context.Person.SingleOrDefaultAsync(p => p.Id == id);
+
+            if (personfromDb == null)
+                return NotFound();
+
+            personfromDb.FullName = person.FullName;
+            personfromDb.Birthdate = person.Birthdate;
+            personfromDb.Birthplace = person.Birthplace;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult<Person>> DeletePerson(int id)
         {

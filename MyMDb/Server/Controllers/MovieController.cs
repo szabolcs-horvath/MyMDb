@@ -53,6 +53,36 @@ namespace MyMDb.Server.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetMovie), new {id = movie.Id}, movie);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> ModifyMovie(int id, [FromBody] Movie movie)
+        {
+            if (id != movie.Id)
+                return BadRequest();
+
+            var movieFromDb = await _context.Movie.SingleOrDefaultAsync(m => m.Id == id);
+            
+            if (movieFromDb == null)
+                return NotFound();
+
+            movieFromDb.YourRating = movie.YourRating;
+            movieFromDb.DateRated = movie.DateRated;
+            movieFromDb.Title = movie.Title;
+            movieFromDb.URL = movie.URL;
+            movieFromDb.TitleType = movie.TitleType;
+            movieFromDb.IMDbRating = movie.IMDbRating;
+            movieFromDb.Runtimemins = movie.Runtimemins;
+            movieFromDb.Year = movie.Year;
+            movieFromDb.Genres = movie.Genres;
+            movieFromDb.ReleaseDate = movie.ReleaseDate;
+            movieFromDb.Directors = movie.Directors;
+            movieFromDb.Cast = movie.Cast;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
+        }
         
         [HttpDelete("{id}")]
         public async Task<ActionResult<Movie>> DeleteMovie(int id)
