@@ -33,6 +33,7 @@ namespace MyMDb.Server.Controllers
                 .Include(m => m.Person)
                 .Where(m => m.Id == id)
                 .FirstAsync();
+
             if (result == null)
             {
                 return NotFound();
@@ -49,6 +50,7 @@ namespace MyMDb.Server.Controllers
             {
                 throw new ArgumentNullException(nameof(movie));
             }
+
             _context.Movie.Add(movie);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetMovie), new {id = movie.Id}, movie);

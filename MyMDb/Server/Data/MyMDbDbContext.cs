@@ -7,8 +7,8 @@ namespace MyMDb.Server.Data
         public MyMDbDbContext(DbContextOptions<MyMDbDbContext> options)
             : base(options) { }
 
-        public DbSet<Movie> Movie { get; set; }
-        public DbSet<Person> Person { get; set; }
+        public DbSet<Movie>? Movie { get; set; }
+        public DbSet<Person>? Person { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
