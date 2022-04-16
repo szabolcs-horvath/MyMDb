@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace MyMDb.Server.Data
+namespace MyMDb.Server.DAL
 {
     public class MyMDbDbContext : DbContext
     {
         public MyMDbDbContext(DbContextOptions<MyMDbDbContext> options)
             : base(options) { }
 
-        public DbSet<Movie>? Movie { get; set; }
-        public DbSet<Person>? Person { get; set; }
+        public DbSet<DbMovie> Movie { get; set; }
+        public DbSet<DbPerson> Person { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -23,7 +23,7 @@ namespace MyMDb.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Movie>()
+            modelBuilder.Entity<DbMovie>()
                 .HasMany(m => m.Person)
                 .WithMany(p => p.Movie)
                 .UsingEntity(j => j.ToTable("MoviePersonJoiningTable"));

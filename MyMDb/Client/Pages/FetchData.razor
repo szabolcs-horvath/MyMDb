@@ -1,5 +1,4 @@
 ﻿@page "/fetchdata"
-@using MyMDb.Shared
 @using System
 @inject HttpClient Http
 
@@ -13,7 +12,7 @@
 }
 else
 {
-    <MudTable Items="movies" Height="400px" Hover="true" SortLabel="Sort By" FixedHeader=true Virtualize="true" Filter="new Func<Movie, bool>(FilterCheck)">
+    <MudTable Items="movies" Height="400px" Hover="true" SortLabel="Sort By" FixedHeader=true Virtualize="true" Filter="new Func<DisplayMovie, bool>(FilterCheck)">
         <ColGroup>
             <col />
             <col style="width: 12%" />
@@ -28,12 +27,12 @@ else
             <MudTextField @bind-Value="@searchTerm" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.Title)">Title</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.IMDbRating)">IMDb Rating</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.Runtimemins)">Runtime</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.Year)">Year</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.Directors)">Director(s)</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Movie, object>(x=>x.ReleaseDate)">Release Date</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.Title)">Title</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.IMDbRating)">IMDb Rating</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.Runtimemins)">Runtime</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.Year)">Year</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.Directors)">Director(s)</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.ReleaseDate)">Release Date</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Title">@context.Title</MudTd>
@@ -50,10 +49,10 @@ else
 }
 
 @code {
-    private Movie[]? movies;
+    private IEnumerable<DisplayMovie>? movies;
     private string searchTerm = string.Empty;
 
-    private bool FilterCheck(Movie movie)
+    private bool FilterCheck(DisplayMovie movie)
     {
         int parsedYear;
         bool parsingSucceeded = int.TryParse(searchTerm, out parsedYear);
@@ -62,21 +61,36 @@ else
         || (parsingSucceeded && movie.Year == parsedYear);
     }
 
+    public class DisplayMovie
+    {
+        public DisplayMovie(Movie value)
+        {
+            Title = value.Title;
+            IMDbRating = value.IMDbRating;
+            Runtimemins = value.Runtimemins;
+            Year = value.Year;
+            Directors = value.Directors == null ? "" : string.Join(", ", value.Directors);
+            ReleaseDate = value.ReleaseDate;
+        }
+        public string Title { get; }
+        public double IMDbRating { get; }
+        public int Runtimemins { get; }
+        public int Year { get; }
+        public string Directors { get; }
+        public string ReleaseDate { get; }
+
+    }
+
     protected override async Task OnInitializedAsync()
     {
         var result = await Http.GetFromJsonAsync<Movie[]>("api/movie");
         if (result != null)
         {
-            movies = result;
-            //foreach (Movie m in movies)
-            //{
-            //    Console.Write($"{m.Title}'s Cast: ");
-            //    foreach (Person p in m.Person)
-            //    {
-            //        Console.Write($"{p.FullName}, ");
-            //    }
-            //    Console.WriteLine();
-            //}
+            List<DisplayMovie> temp = new List<DisplayMovie>(result.Length);
+            foreach (Movie m in result) {
+                temp.Add(new DisplayMovie(m));
+            }
+            movies = temp;
         }
     }
 }
