@@ -5,7 +5,8 @@
         public Movie(int id, int? yourRating, string? dateRated, string title,
             string url, string titleType, double iMDbRating, int runtimemins,
             int year, IEnumerable<string> genres, string releaseDate,
-            IEnumerable<string> directors, IEnumerable<string> cast)
+            IEnumerable<string> directors, IEnumerable<string> cast,
+            IEnumerable<string> people)
         {
             Id = id;
             YourRating = yourRating;
@@ -20,6 +21,7 @@
             ReleaseDate = releaseDate;
             Directors = directors;
             Cast = cast;
+            People = people;
         }
 
         public int Id { get; }
@@ -35,5 +37,6 @@
         public string ReleaseDate { get; }
         public IEnumerable<string>? Directors { get; }
         public IEnumerable<string>? Cast { get; }
+        public IEnumerable<string>? People { get; }
     }
 }
