@@ -15,7 +15,7 @@ namespace MyMDb.Server.DAL
 
         public async Task<Movie?> Delete(int id)
         {
-            var dbRecord = await db.Movie.FirstOrDefaultAsync(x => x.Id == id);
+            var dbRecord = await db.Movie.Include(m => m.Person).FirstOrDefaultAsync(x => x.Id == id);
             if (dbRecord != null)
             {
                 db.Remove(dbRecord);
@@ -55,13 +55,14 @@ namespace MyMDb.Server.DAL
 
             await db.Movie.AddAsync(toInsert);
             await db.SaveChangesAsync();
+            var result = await db.Movie.Include(m => m.Person).FirstOrDefaultAsync(m => m.Id == toInsert.Id);
 
-            return ToModel(toInsert);
+            return ToModel(result ?? toInsert);
         }
 
         public async Task<Movie?> Update(Movie value)
         {
-            var dbRecord = await db.Movie.FirstOrDefaultAsync(x => x.Id == value.Id);
+            var dbRecord = await db.Movie.Include(m => m.Person).FirstOrDefaultAsync(x => x.Id == value.Id);
             if (dbRecord == null)
             {
                 return null;
