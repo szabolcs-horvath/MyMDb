@@ -26,14 +26,12 @@ namespace MyMDb.Server.DAL
 
         public async Task<Movie?> Get(int id)
         {
-            var dbRecord = await db.Movie.Include(m => m.Person).FirstOrDefaultAsync(x => x.Id == id);
+            var dbRecord = await db.Movie.FirstOrDefaultAsync(x => x.Id == id);
             return dbRecord == null ? null : ToModel(dbRecord);
         }
 
         public IReadOnlyCollection<Movie> GetAll()
         {
-            //Notice, when requesting all movies through the REST API, it doesnt Include() the Persons
-            //through the Movie.DbPerson navigation property, to avoid circular references
             return db.Movie.Select(ToModel).ToList();
         }
 
@@ -41,8 +39,8 @@ namespace MyMDb.Server.DAL
         {
             var toInsert = new DbMovie()
             {
-                YourRating = value.YourRating,
-                DateRated = value.DateRated.ToString("yyyy-MM-dd"),
+                YourRating = value.YourRating ?? 0,
+                DateRated = value.DateRated ?? "",
                 Title = value.Title,
                 URL = value.URL,
                 TitleType = value.TitleType,
@@ -50,9 +48,9 @@ namespace MyMDb.Server.DAL
                 Runtimemins = value.Runtimemins,
                 Year = value.Year,
                 Genres = value.Genres,
-                ReleaseDate = value.ReleaseDate.ToString("yyyy-MM-dd"),
-                Directors = value.Directors,
-                Cast = value.Cast
+                ReleaseDate = value.ReleaseDate,
+                Directors = value.Directors ?? "",
+                Cast = value.Cast ?? ""
             };
 
             await db.Movie.AddAsync(toInsert);
@@ -108,7 +106,8 @@ namespace MyMDb.Server.DAL
                 value.Genres.Split(",").Select(s => s.Trim()).ToList(),
                 value.ReleaseDate.Trim(),
                 value.Directors.Split(",").Select(s => s.Trim()).ToList(),
-                value.Cast.Split(",").Select(s => s.Trim()).ToList());
+                value.Cast.Split(",").Select(s => s.Trim()).ToList(),
+                value.Person.Select(p => p.FullName));
         }
     }
 }

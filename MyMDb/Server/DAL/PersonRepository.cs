@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyMDb.Server.Controllers.CreateModel;
-using System.Globalization;
 
 namespace MyMDb.Server.DAL
 {
@@ -26,13 +25,13 @@ namespace MyMDb.Server.DAL
 
         public async Task<Person?> Get(int id)
         {
-            var dbRecord = await db.Person.FirstOrDefaultAsync(x => x.Id == id);
+            var dbRecord = await db.Person.Include(p => p.Movie).FirstOrDefaultAsync(x => x.Id == id);
             return dbRecord == null ? null : ToModel(dbRecord);
         }
 
         public IReadOnlyCollection<Person> GetAll()
         {
-            return db.Person.Select(ToModel).ToList();
+            return db.Person.Include(p => p.Movie).Select(ToModel).ToList();
         }
 
         public async Task<Person> Insert(CreatePerson value)
@@ -40,7 +39,7 @@ namespace MyMDb.Server.DAL
             var toInsert = new DbPerson()
             {
                 FullName = value.FullName,
-                Birthdate = value.Birthdate.ToString("yyyy-MM-dd"),
+                Birthdate = value.Birthdate,
                 Birthplace = value.Birthplace
             };
 
@@ -59,7 +58,7 @@ namespace MyMDb.Server.DAL
             } else
             {
                 dbRecord.FullName = value.FullName;
-                dbRecord.Birthdate = value.Birthdate.ToString("yyyy-MM-dd");
+                dbRecord.Birthdate = value.Birthdate;
                 dbRecord.Birthplace = value.Birthplace;
 
                 await db.SaveChangesAsync();
@@ -78,8 +77,9 @@ namespace MyMDb.Server.DAL
             return new Person(
                 value.Id,
                 value.FullName,
-                DateTime.ParseExact(value.Birthdate, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                value.Birthplace);
+                value.Birthdate,
+                value.Birthplace,
+                value.Movie.Select(m => m.Title));
         }
     }
 }
