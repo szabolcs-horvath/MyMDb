@@ -26,13 +26,13 @@ namespace MyMDb.Server.DAL
 
         public async Task<Movie?> Get(int id)
         {
-            var dbRecord = await db.Movie.FirstOrDefaultAsync(x => x.Id == id);
+            var dbRecord = await db.Movie.Include(m => m.Person).FirstOrDefaultAsync(x => x.Id == id);
             return dbRecord == null ? null : ToModel(dbRecord);
         }
 
         public IReadOnlyCollection<Movie> GetAll()
         {
-            return db.Movie.Select(ToModel).ToList();
+            return db.Movie.Include(m => m.Person).Select(ToModel).ToList();
         }
 
         public async Task<Movie> Insert(CreateMovie value)
