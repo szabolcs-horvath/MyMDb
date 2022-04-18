@@ -1,4 +1,4 @@
-create or alter trigger UpdateJoiningTableOnDelete
+create or alter trigger UpdateJoiningTable_Movie_Delete
 	on [Movie]
 	instead of delete
 as
