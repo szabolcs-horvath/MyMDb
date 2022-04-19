@@ -39,8 +39,8 @@ namespace MyMDb.Server.DAL
         {
             var toInsert = new DbMovie()
             {
-                YourRating = value.YourRating ?? 0,
-                DateRated = value.DateRated ?? "",
+                YourRating = value.YourRating,
+                DateRated = value.DateRated,
                 Title = value.Title,
                 URL = value.URL,
                 TitleType = value.TitleType,
@@ -78,8 +78,8 @@ namespace MyMDb.Server.DAL
                 dbRecord.Year = value.Year;
                 dbRecord.Genres = string.Join(", ", value.Genres);
                 dbRecord.ReleaseDate = value.ReleaseDate;
-                dbRecord.Directors = string.Join(", ", value.Directors == null ? "" : value.Directors);
-                dbRecord.Cast = string.Join(", ", value.Cast == null ? "" : value.Cast);
+                dbRecord.Directors = string.Join(", ", value.Directors);
+                dbRecord.Cast = string.Join(", ", value.Cast);
 
                 await db.SaveChangesAsync();
             }
@@ -97,18 +97,18 @@ namespace MyMDb.Server.DAL
             return new Movie(
                 value.Id,
                 value.YourRating,
-                value.DateRated.Trim(),
+                value.DateRated?.Trim(),
                 value.Title,
                 value.URL,
                 value.TitleType,
                 value.IMDbRating,
                 value.Runtimemins,
                 value.Year,
-                value.Genres.Split(",").Select(s => s.Trim()).ToList(),
-                value.ReleaseDate.Trim(),
-                value.Directors.Split(",").Select(s => s.Trim()).ToList(),
-                value.Cast.Split(",").Select(s => s.Trim()).ToList(),
-                value.Person.Select(p => p.FullName));
+                value.Genres?.Split(",").Select(s => s.Trim()).ToList(),
+                value.ReleaseDate?.Trim(),
+                value.Directors?.Split(",").Select(s => s.Trim()).ToList(),
+                value.Cast?.Split(",").Select(s => s.Trim()).ToList(),
+                value.Person?.Select(p => p.FullName ?? ""));
         }
     }
 }

@@ -12,12 +12,12 @@
                 <MudTextField Label="Title" @bind-Value="Title" Margin="Margin.Dense" Variant="Variant.Outlined" />
             
                 <MudSelect Label="Title type" @bind-Value="TitleType" Margin="Margin.Dense" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Class="mt-4" >
-                    <MudSelectItem Value="@("DbMovie")" />
+                    <MudSelectItem Value="@("Movie")" />
                     <MudSelectItem Value="@("TV Series")" />
                     <MudSelectItem Value="@("TV Mini Series")" />
                 </MudSelect>
 
-                @*Validate with regex: ^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$ *@
+                @*(NOT NEEDED ANYMORE) Validate with regex: ^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$ *@
                 <MudTextField Label="Release date" @bind-Value="ReleaseDate" HelperText="YYYY-MM-DD" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mt-4" />
 
                 <MudGrid>

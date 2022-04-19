@@ -80,7 +80,7 @@ namespace MyMDb.Server.DAL
                 value.FullName,
                 value.Birthdate,
                 value.Birthplace,
-                value.Movie.Select(m => m.Title));
+                value.Movie?.Select(m => m.Title ?? ""));
         }
     }
 }

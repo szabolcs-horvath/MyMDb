@@ -8,7 +8,7 @@ namespace MyMDb.Shared
 {
     public class Person
     {
-        public Person(int id, string fullName, string birthdate, string birthplace, IEnumerable<string> movies)
+        public Person(int id, string? fullName, string? birthdate, string? birthplace, IEnumerable<string>? movies)
         {
             Id = id;
             FullName = fullName;
@@ -18,9 +18,9 @@ namespace MyMDb.Shared
         }
 
         public int Id { get; }
-        public string FullName { get; }
-        public string Birthdate { get; }
-        public string Birthplace { get; }
+        public string? FullName { get; }
+        public string? Birthdate { get; }
+        public string? Birthplace { get; }
         public IEnumerable<string>? Movies { get; }
     }
 }
