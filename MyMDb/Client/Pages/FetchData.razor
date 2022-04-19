@@ -12,7 +12,7 @@
 }
 else
 {
-    <MudTable Items="movies" Height="400px" Hover="true" SortLabel="Sort By" FixedHeader=true Virtualize="true" Filter="new Func<DisplayMovie, bool>(FilterCheck)">
+    <MudTable Items="movies" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true Virtualize="true" Filter="new Func<DisplayMovie, bool>(FilterCheck)">
         <ColGroup>
             <col />
             <col style="width: 12%" />
@@ -24,7 +24,8 @@ else
         <ToolBarContent>
             <MudText Typo="Typo.h6">Movies</MudText>
             <MudSpacer />
-            <MudTextField @bind-Value="@searchTerm" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
+            <MudAutocomplete @bind-Value="@searchTerm" Placeholder="Search" ResetValueOnEmptyText="true" SearchFunc="@AutocompletePopulate" CoerceValue="true"
+                Margin="Margin.Dense" Dense="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.Title)">Title</MudTableSortLabel></MudTh>
@@ -50,15 +51,17 @@ else
 
 @code {
     private IEnumerable<DisplayMovie>? movies;
-    private string searchTerm = string.Empty;
+    private string? searchTerm = string.Empty;
 
     private bool FilterCheck(DisplayMovie movie)
     {
-        int parsedYear;
-        bool parsingSucceeded = int.TryParse(searchTerm, out parsedYear);
-        return movie.Title.Contains(searchTerm)
-        || movie.Directors.Contains(searchTerm)
-        || (parsingSucceeded && movie.Year == parsedYear);
+        return movie.Title.Contains(searchTerm ?? "");
+    }
+
+    private async Task<IEnumerable<string>> AutocompletePopulate(string? value)
+    {
+        return movies.Select(m => m.Title).Where(m => m.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase));
+
     }
 
     public class DisplayMovie

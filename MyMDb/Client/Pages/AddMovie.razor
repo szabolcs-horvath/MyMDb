@@ -5,72 +5,56 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true" >Add a new movie to the database</MudText>
 
-<MudGrid>
-    <MudItem xs="12" sm="7">
-        <MudCard Class="pa-4" Elevation="10">
-            <MudForm>
+<MudCard Class="pa-4" Elevation="10">
+    <MudForm>
+        <MudGrid>
+            <MudItem xs="12" sm="7">
                 <MudTextField Label="Title" @bind-Value="Title" Margin="Margin.Dense" Variant="Variant.Outlined" />
             
-                <MudSelect Label="Title type" @bind-Value="TitleType" Margin="Margin.Dense" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" Class="mt-4" >
+                <MudSelect Label="Title type" @bind-Value="TitleType" Margin="Margin.Dense" Variant="Variant.Outlined"
+                    Dense="true" AnchorOrigin="Origin.BottomCenter" Class="mt-4" >
                     <MudSelectItem Value="@("Movie")" />
                     <MudSelectItem Value="@("TV Series")" />
                     <MudSelectItem Value="@("TV Mini Series")" />
                 </MudSelect>
 
-                @*(NOT NEEDED ANYMORE) Validate with regex: ^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$ *@
-                <MudTextField Label="Release date" @bind-Value="ReleaseDate" HelperText="YYYY-MM-DD" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mt-4" />
+                <MudDatePicker Label="Release date" @bind-Date="ReleaseDate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
+                    Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mt-4" />
 
                 <MudGrid>
                     <MudItem xs="4">
-                        <MudNumericField Label="IMDb rating" T="decimal" @bind-Value="IMDbRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true" Min="0.0M" Max="10.0M" Step=".1M" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning" Class="mt-4" />
+                        <MudNumericField Label="IMDb rating" T="decimal" @bind-Value="IMDbRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true"
+                            Min="0.0M" Max="10.0M" Step=".1M" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning" Class="mt-4" />
                     </MudItem>
                     <MudItem xs="8">
                         <MudTextField Label="IMDb URL" @bind-Value="URL" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mt-4" />
                     </MudItem>
                 </MudGrid>
 
-                <MudNumericField Label="Runtime" T="int" @bind-Value="Runtimemins" Margin="Margin.Dense" Variant="Variant.Outlined" HideSpinButtons="true" Adornment="Adornment.End" AdornmentText="minutes" Class="mt-4" />
+                <MudNumericField Label="Runtime" T="int" @bind-Value="Runtimemins" Margin="Margin.Dense" Variant="Variant.Outlined" HideSpinButtons="true"
+                    Adornment="Adornment.End" AdornmentText="minutes" Class="mt-4" />
             
                 <MudGrid>
                     <MudItem xs="4">
-                        <MudNumericField Label="Your rating" xs="4" T="int" @bind-Value="YourRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true" Min="0" Max="10" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning" Class="mt-4" />
+                        <MudNumericField Label="Your rating" T="int" @bind-Value="YourRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true" Min="0" Max="10" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning" Class="mt-4" />
                     </MudItem>
                     <MudItem xs="8">
-                        @*Validate with regex: ^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$ *@
-                        <MudTextField Label="Date rated" xs="8" @bind-Value="DateRated" HelperText="YYYY-MM-DD" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mt-4" />
+                        <MudDatePicker Label="Date rated" @bind-Date="DateRated" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
+                            Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mt-4" />
                     </MudItem>
                 </MudGrid>
+            </MudItem>
 
-
-            </MudForm>
-        </MudCard>
-    </MudItem>
-
-    <MudItem xs="12" sm="5">
-        <MudCard Class="pa-4 mt-4" Elevation="10">
-
-        </MudCard>
-    </MudItem>
-</MudGrid>
-
+            <MudItem xs="12" sm="5">
+                Ide jön a színész meg rendező hozzáadása.
+            </MudItem>
+        </MudGrid>
+    </MudForm>
+</MudCard>
 
 @code {
     public string Title { get; set; } = string.Empty;
-    private DateTime? _releaseDate;
-    public DateTime? ReleaseDate 
-    { 
-        get
-        {
-            return _releaseDate;
-        }
-        set
-        {
-            _releaseDate = value;
-
-            if (ReleaseDate.HasValue)
-                Year = ReleaseDate.Value.Year;
-        } 
-    }
+    public DateTime? ReleaseDate { get; set; }
     public int Year { get; set; }
     public string TitleType { get; set; } = string.Empty;
     public decimal IMDbRating { get; set; } = 5.0M;
