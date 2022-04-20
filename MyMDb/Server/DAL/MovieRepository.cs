@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyMDb.Server.Controllers.CreateModel;
+using MyMDb.Shared.CreateModel;
 using System.Globalization;
 
 namespace MyMDb.Server.DAL

@@ -1,4 +1,5 @@
 ﻿@page "/addmovie"
+@using MyMDb.Shared.CreateModel
 @inject HttpClient Http
 
 <PageTitle>Add Movie</PageTitle>
@@ -6,56 +7,77 @@
 <MudText Typo="Typo.h3" GutterBottom="true" >Add a new movie to the database</MudText>
 
 <MudCard Class="pa-4" Elevation="10">
-    <MudForm>
+    <MudForm Model="@model"  >
         <MudGrid>
+
             <MudItem xs="12" sm="7">
-                <MudTextField Label="Title" @bind-Value="Title" Margin="Margin.Dense" Variant="Variant.Outlined" />
-            
-                <MudSelect Label="Title type" @bind-Value="TitleType" Margin="Margin.Dense" Variant="Variant.Outlined"
-                    Dense="true" AnchorOrigin="Origin.BottomCenter" Class="mt-4" >
-                    <MudSelectItem Value="@("Movie")" />
-                    <MudSelectItem Value="@("TV Series")" />
-                    <MudSelectItem Value="@("TV Mini Series")" />
-                </MudSelect>
+                <MudGrid Spacing="1">
+                    <MudItem xs="12">
+                        <MudTextField Label="Title" @bind-Value="Title" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                    </MudItem>
 
-                <MudDatePicker Label="Release date" @bind-Date="ReleaseDate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
-                    Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mt-4" />
+                    <MudItem xs="8">
+                        <MudSelect Label="Title type" @bind-Value="TitleType" Margin="Margin.Dense" Variant="Variant.Outlined"
+                            Dense="true" AnchorOrigin="Origin.BottomCenter" >
+                            <MudSelectItem Value="@("Movie")" />
+                            <MudSelectItem Value="@("TV Series")" />
+                            <MudSelectItem Value="@("TV Mini Series")" />
+                        </MudSelect>
+                    </MudItem>
 
-                <MudGrid>
                     <MudItem xs="4">
+                        <MudNumericField Label="Year" T="int" @bind-Value="Year" Margin="Margin.Dense" Variant="Variant.Outlined" 
+                            Immediate="true" Min="1800" Step="1" />
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudDatePicker Label="Release date" @bind-Date="ReleaseDate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
+                            Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                    </MudItem>
+                        
+                    <MudItem xs="2">
                         <MudNumericField Label="IMDb rating" T="decimal" @bind-Value="IMDbRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true"
-                            Min="0.0M" Max="10.0M" Step=".1M" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning" Class="mt-4" />
+                            Min="0.0M" Max="10.0M" Step=".1M" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning" />
                     </MudItem>
-                    <MudItem xs="8">
-                        <MudTextField Label="IMDb URL" @bind-Value="URL" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mt-4" />
-                    </MudItem>
-                </MudGrid>
 
-                <MudNumericField Label="Runtime" T="int" @bind-Value="Runtimemins" Margin="Margin.Dense" Variant="Variant.Outlined" HideSpinButtons="true"
-                    Adornment="Adornment.End" AdornmentText="minutes" Class="mt-4" />
-            
-                <MudGrid>
-                    <MudItem xs="4">
-                        <MudNumericField Label="Your rating" T="int" @bind-Value="YourRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true" Min="0" Max="10" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning" Class="mt-4" />
+                    <MudItem xs="10">
+                        <MudTextField Label="IMDb URL" @bind-Value="URL" Margin="Margin.Dense" Variant="Variant.Outlined" />
                     </MudItem>
-                    <MudItem xs="8">
+
+                    <MudItem xs="12">
+                        <MudNumericField Label="Runtime" T="int" @bind-Value="Runtimemins" Margin="Margin.Dense" Variant="Variant.Outlined" HideSpinButtons="true"
+                            Adornment="Adornment.End" AdornmentText="minutes" />
+                    </MudItem>
+
+                    <MudItem xs="2">
+                        <MudNumericField Label="Your rating" T="int" @bind-Value="YourRating" Margin="Margin.Dense" Variant="Variant.Outlined"
+                            Immediate="true" Min="0" Max="10" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate"
+                            AdornmentColor="Color.Warning" />
+                    </MudItem>
+
+                    <MudItem xs="10">
                         <MudDatePicker Label="Date rated" @bind-Date="DateRated" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
-                            Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mt-4" />
+                            Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" />
                     </MudItem>
                 </MudGrid>
             </MudItem>
 
             <MudItem xs="12" sm="5">
-                Ide jön a színész meg rendező hozzáadása.
+                Ide jön a genre, cast meg director hozzáadása.
             </MudItem>
+
         </MudGrid>
     </MudForm>
 </MudCard>
 
 @code {
+    CreateMovie model = new CreateMovie();
+    CreateMovieValidator validator = new CreateMovieValidator();
+
+    // Ezeket ki kéne törölni, és a komponenseknek a model property-jeire kéne hivatkoznia
     public string Title { get; set; } = string.Empty;
     public DateTime? ReleaseDate { get; set; }
-    public int Year { get; set; }
+    public int Year { get; set; } = 2022;
     public string TitleType { get; set; } = string.Empty;
     public decimal IMDbRating { get; set; } = 5.0M;
     public string URL { get; set; } = string.Empty;

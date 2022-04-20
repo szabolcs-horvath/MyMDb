@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyMDb.Server.Controllers.CreateModel
+namespace MyMDb.Shared.CreateModel
 {
     public class CreatePerson
     {

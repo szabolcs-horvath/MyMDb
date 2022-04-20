@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyMDb.Server.Controllers.CreateModel;
 using MyMDb.Server.DAL;
+using MyMDb.Shared.CreateModel;
 
 namespace MyMDb.Server.Controllers
 {

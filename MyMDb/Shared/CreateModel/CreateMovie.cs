@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyMDb.Server.Controllers.CreateModel
+namespace MyMDb.Shared.CreateModel
 {
     public class CreateMovie
     {
+        public CreateMovie() {}
+
         public int? YourRating { get; set; }
         public string? DateRated { get; set; }
         [Required]

@@ -1,4 +1,4 @@
-﻿using MyMDb.Server.Controllers.CreateModel;
+﻿using MyMDb.Shared.CreateModel;
 
 namespace MyMDb.Server.DAL
 {
