@@ -7,9 +7,8 @@
 <MudText Typo="Typo.h3" GutterBottom="true" >Add a new movie to the database</MudText>
 
 <MudCard Class="pa-4" Elevation="10">
-    <MudForm Model="@model"  >
-        <MudGrid>
-
+    <MudForm>
+        <MudGrid Spacing="1" >
             <MudItem xs="12" sm="7">
                 <MudGrid Spacing="1">
                     <MudItem xs="12">
@@ -65,16 +64,11 @@
             <MudItem xs="12" sm="5">
                 Ide jön a genre, cast meg director hozzáadása.
             </MudItem>
-
         </MudGrid>
     </MudForm>
 </MudCard>
 
 @code {
-    CreateMovie model = new CreateMovie();
-    CreateMovieValidator validator = new CreateMovieValidator();
-
-    // Ezeket ki kéne törölni, és a komponenseknek a model property-jeire kéne hivatkoznia
     public string Title { get; set; } = string.Empty;
     public DateTime? ReleaseDate { get; set; }
     public int Year { get; set; } = 2022;
