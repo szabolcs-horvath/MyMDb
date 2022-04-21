@@ -1,5 +1,6 @@
 ﻿@page "/addmovie"
 @using MyMDb.Shared.CreateModel
+@using System.Text.RegularExpressions
 @inject HttpClient Http
 
 <PageTitle>Add Movie</PageTitle>
@@ -7,17 +8,19 @@
 <MudText Typo="Typo.h3" GutterBottom="true" >Add a new movie to the database</MudText>
 
 <MudCard Class="pa-4" Elevation="10">
-    <MudForm>
+    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
         <MudGrid Spacing="1" >
             <MudItem xs="12" sm="7">
                 <MudGrid Spacing="1">
                     <MudItem xs="12">
-                        <MudTextField Label="Title" @bind-Value="Title" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        <MudTextField Label="Title" @bind-Value="Title" Margin="Margin.Dense" Variant="Variant.Outlined"
+                            Required="true" RequiredError="Title is required" />
                     </MudItem>
 
                     <MudItem xs="8">
-                        <MudSelect Label="Title type" @bind-Value="TitleType" Margin="Margin.Dense" Variant="Variant.Outlined"
-                            Dense="true" AnchorOrigin="Origin.BottomCenter" >
+                        <MudSelect Label="Title type" @bind-Value="TitleType" Margin="Margin.Dense"
+                        Variant="Variant.Outlined" Dense="true" AnchorOrigin="Origin.BottomCenter"
+                        Required="true" RequiredError="Title type is required" >
                             <MudSelectItem Value="@("Movie")" />
                             <MudSelectItem Value="@("TV Series")" />
                             <MudSelectItem Value="@("TV Mini Series")" />
@@ -25,33 +28,37 @@
                     </MudItem>
 
                     <MudItem xs="4">
-                        <MudNumericField Label="Year" T="int" @bind-Value="Year" Margin="Margin.Dense" Variant="Variant.Outlined" 
-                            Immediate="true" Min="1800" Step="1" />
+                        <MudNumericField Label="Year" T="int" @bind-Value="Year" Margin="Margin.Dense"
+                        Variant="Variant.Outlined" Immediate="true" Step="1"
+                        Required="true" RequiredError="Year is required" Validation="@(new Func<int, string>(YearCheck))" />
                     </MudItem>
 
                     <MudItem xs="12">
                         <MudDatePicker Label="Release date" @bind-Date="ReleaseDate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
-                            Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                            Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined"
+                            Required="true" RequiredError="Release date is required" />
                     </MudItem>
                         
                     <MudItem xs="2">
                         <MudNumericField Label="IMDb rating" T="decimal" @bind-Value="IMDbRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true"
-                            Min="0.0M" Max="10.0M" Step=".1M" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning" />
+                            Min="0.0M" Max="10.0M" Step=".1M" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning"
+                            Required="true" RequiredError="IMDb rating is required" Validation="@(new Func<decimal, string>(RatingCheck))" />
                     </MudItem>
 
                     <MudItem xs="10">
-                        <MudTextField Label="IMDb URL" @bind-Value="URL" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        <MudTextField Label="IMDb URL" @bind-Value="URL" Margin="Margin.Dense" Variant="Variant.Outlined"
+                        Required="true" RequiredError="IMDb URL is required" Validation="@(new Func<string, string>(URLFormatCheck))" />
                     </MudItem>
 
                     <MudItem xs="12">
-                        <MudNumericField Label="Runtime" T="int" @bind-Value="Runtimemins" Margin="Margin.Dense" Variant="Variant.Outlined" HideSpinButtons="true"
-                            Adornment="Adornment.End" AdornmentText="minutes" />
+                        <MudNumericField Label="Runtime" T="int" @bind-Value="Runtimemins" Margin="Margin.Dense" 
+                        Variant="Variant.Outlined" HideSpinButtons="true" Adornment="Adornment.End" AdornmentText="minutes"
+                        Required="true" RequiredError="Runtime is required" Validation="@(new Func<int, string>(RuntimeCheck))" />
                     </MudItem>
 
                     <MudItem xs="2">
-                        <MudNumericField Label="Your rating" T="int" @bind-Value="YourRating" Margin="Margin.Dense" Variant="Variant.Outlined"
-                            Immediate="true" Min="0" Max="10" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate"
-                            AdornmentColor="Color.Warning" />
+                        <MudNumericField Label="Your rating" T="int" @bind-Value="YourRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true" 
+                            Min="0" Max="10" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning" />
                     </MudItem>
 
                     <MudItem xs="10">
@@ -64,18 +71,48 @@
             <MudItem xs="12" sm="5">
                 Ide jön a genre, cast meg director hozzáadása.
             </MudItem>
+
+            <MudItem>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>form.Validate())">Submit</MudButton>
+            </MudItem>
         </MudGrid>
     </MudForm>
 </MudCard>
 
 @code {
+    bool success;
+    string[] errors = { };
+    MudForm? form;
+    Regex urlRegex = new Regex(@"https://www\.imdb\.com/title/tt[0-9]*/.*");
+
     public string Title { get; set; } = string.Empty;
     public DateTime? ReleaseDate { get; set; }
-    public int Year { get; set; } = 2022;
+    public int Year { get; set; }
     public string TitleType { get; set; } = string.Empty;
-    public decimal IMDbRating { get; set; } = 5.0M;
+    public decimal IMDbRating { get; set; }
     public string URL { get; set; } = string.Empty;
     public int Runtimemins { get; set; }
     public int YourRating { get; set; }
     public DateTime? DateRated { get; set; }
+
+    public string YearCheck(int arg)
+    {
+        return arg > 1800 ? null : "There were no movies made before the 1800s";
+    }
+
+    public string URLFormatCheck(string arg)
+    {
+        var doesMatch = urlRegex.IsMatch(arg);
+        return doesMatch ? null : "The specified URL's format is incorrect (eg https://www.imdb.com/title/tt2582802/)";
+    }
+
+    public string RatingCheck(decimal arg)
+    {
+        return arg != 0M ? null : "IMDB rating cannot be 0";
+    }
+
+    public string RuntimeCheck(int arg)
+    {
+        return arg > 0 ? null : "Runtime must be larger than 0";
+    }
 }
