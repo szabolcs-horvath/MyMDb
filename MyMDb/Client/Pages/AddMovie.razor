@@ -7,7 +7,7 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true" >Add a new movie to the database</MudText>
 
-<MudCard Class="pa-4" Elevation="10">
+<MudPaper Class="pa-4" Elevation="10">
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
         <MudGrid Spacing="1" >
             <MudItem xs="12" sm="7">
@@ -77,7 +77,14 @@
             </MudItem>
         </MudGrid>
     </MudForm>
-</MudCard>
+</MudPaper>
+
+<MudPaper>
+    @foreach (var error in errors)
+        {
+            <MudText Color="@Color.Error">@error</MudText>
+        }
+</MudPaper>
 
 @code {
     bool success;
