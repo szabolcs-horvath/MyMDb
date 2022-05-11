@@ -10,15 +10,15 @@
 }
 else
 {
-    <MudList Clickable="true" >
+    <MudList Clickable="true" Dense="true" >
         @foreach (SearchMovie movie in movieResults)
         {
-            <MudListItem Text="@movie.Title" Icon="@Icons.TwoTone.Movie" IconColor="@Color.Primary" IconSize="Size.Large" />
+            <MudListItem Href=@($"/movies/{movie.Id}") Text="@movie.Title" Icon="@Icons.TwoTone.Movie" IconColor="@Color.Primary" IconSize="Size.Large" />
         }
 
         @foreach (SearchPerson person in personResults)
         {
-            <MudListItem Text="@person.FullName" Icon="@Icons.TwoTone.Person" IconColor="@Color.Primary" IconSize="Size.Large" />
+            <MudListItem Href=@($"/people/{person.Id}") Text="@person.FullName" Icon="@Icons.TwoTone.Person" IconColor="@Color.Primary" IconSize="Size.Large" />
         }
     </MudList>
 }
