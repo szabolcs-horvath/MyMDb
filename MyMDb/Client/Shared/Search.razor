@@ -1,0 +1,47 @@
+﻿@using MyMDb.Shared.SearchModel
+@inject HttpClient Http
+
+<MudTextField @bind-Value="@searchTerm" Placeholder="Search for a Movie, Show or Person" OnAdornmentClick="GetResults"
+Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
+
+@foreach (var item in movieResults)
+{
+    <MudText>@item.Title</MudText>
+}
+@foreach (var item in personResults)
+{
+    <MudText>@item.FullName</MudText>
+}
+
+@code {
+    private string? searchTerm = string.Empty;
+    private List<SearchMovie> movieResults = new List<SearchMovie>();
+    private List<SearchPerson> personResults = new List<SearchPerson>();
+
+    private async void GetResults()
+    {
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            var movies = await Http.GetFromJsonAsync<SearchMovie[]>($"api/movie/search?title={searchTerm}");
+            var people = await Http.GetFromJsonAsync<SearchPerson[]>($"api/person/search?name={searchTerm}");
+
+            if (movies?.Length > 0)
+            {
+                movieResults = new List<SearchMovie>(movies);
+            } else
+            {
+                movieResults = new List<SearchMovie>();
+            }
+
+            if (people?.Length > 0)
+            {
+                personResults = new List<SearchPerson>(people);
+            } else
+            {
+                personResults = new List<SearchPerson>();
+            }
+
+            StateHasChanged();
+        }
+    }
+}
