@@ -1,0 +1,35 @@
+﻿@page "/movies/{movieId:int}"
+@inject HttpClient Http
+
+@if (movie is null)
+{
+    @if (notFound)
+    {
+        <PageTitle>Not found</PageTitle>
+
+        <MudText>Couldn't find the title matching the given ID</MudText>
+    } else
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    }
+}
+else
+{
+    <PageTitle>@movie.Title</PageTitle>
+
+    <MudText Typo="Typo.h3" GutterBottom="true">@movie.Title</MudText>
+
+
+}
+
+
+@code {
+    [Parameter] public int MovieID { get; set; }
+    private Movie? movie;
+    private bool notFound = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        movie = await Http.GetFromJsonAsync<Movie>($"api/movie/{MovieID}");
+    }
+}
