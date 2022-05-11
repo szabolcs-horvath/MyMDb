@@ -50,6 +50,11 @@ namespace MyMDb.Server.DAL
             return ToModel(result ?? toInsert);
         }
 
+        public async Task<IReadOnlyCollection<Person>> SearchByName(string name)
+        {
+            return await db.Person.Where(p => p.FullName.Contains(name)).Select(p => ToModel(p)).ToListAsync();
+        }
+
         public async Task<Person?> Update(Person value)
         {
             var dbRecord = await db.Person.Include(p => p.Movie).FirstOrDefaultAsync(p => p.Id == value.Id);

@@ -39,6 +39,24 @@ namespace MyMDb.Server.Controllers
             }
         }
 
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IReadOnlyCollection<Person>>> SearchByName(string name)
+        {
+            var results = await repository.SearchByName(name);
+            if (results is null)
+            {
+                return NotFound();
+            }
+            foreach (var item in results)
+            {
+                Console.WriteLine(item.FullName);
+            }
+
+            return Ok(results);
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult> PostPerson([FromBody] CreatePerson person)

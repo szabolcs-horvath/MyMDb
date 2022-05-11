@@ -41,6 +41,19 @@ namespace MyMDb.Server.Controllers
             }
         }
 
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IReadOnlyCollection<Movie>>> SearchByTitle([FromQuery] string title)
+        {
+            var results = await repository.SearchByTitle(title);
+            if (results == null)
+            {
+                return NotFound();
+            }
+            return Ok(results);
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<Movie>> PostMovie(CreateMovie movie)
