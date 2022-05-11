@@ -68,8 +68,60 @@
                 </MudGrid>
             </MudItem>
 
-            <MudItem xs="12" sm="5">
-                Ide jön a genre, cast meg director hozzáadása.
+            <MudItem xs="12" sm="5" >
+                <MudGrid Spacing="1" >
+                    <MudItem xs="2" >
+                        <MudIconButton xs="2" Icon="@Icons.Material.Filled.Add" OnClick="AddGenreChip" />
+                    </MudItem>
+
+                    <MudItem xs="10" >
+                        <MudTextField Label="Add new genre" @bind-Value="NewGenre" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <MudItem xs="12" >
+                        <MudChipSet AllClosable="true" OnClose="CloseGenreChip" >
+                            @foreach (var chip in genres) 
+                            {
+                                <MudChip Text="@chip" />
+                            }
+                        </MudChipSet>
+                    </MudItem>
+
+
+                    <MudItem xs="2" >
+                        <MudIconButton xs="2" Icon="@Icons.Material.Filled.Add" OnClick="AddDirectorChip" />
+                    </MudItem>
+
+                    <MudItem xs="10" >
+                        <MudTextField Label="Add a director" @bind-Value="NewDirector" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <MudItem xs="12" >
+                        <MudChipSet AllClosable="true" OnClose="CloseDirectorChip" >
+                            @foreach (var chip in directors) 
+                            {
+                                <MudChip Text="@chip" />
+                            }
+                        </MudChipSet>
+                    </MudItem>
+
+                    <MudItem xs="2" >
+                        <MudIconButton xs="2" Icon="@Icons.Material.Filled.Add" OnClick="AddCastChip" />
+                    </MudItem>
+
+                    <MudItem xs="10" >
+                        <MudTextField Label="Add an actor/actress" @bind-Value="NewCast" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <MudItem xs="12" >
+                        <MudChipSet AllClosable="true" OnClose="CloseCastChip" >
+                            @foreach (var chip in cast) 
+                            {
+                                <MudChip Text="@chip" />
+                            }
+                        </MudChipSet>
+                    </MudItem>
+                </MudGrid>
             </MudItem>
 
             <MudItem>
@@ -91,6 +143,9 @@
     string[] errors = { };
     MudForm? form;
     Regex urlRegex = new Regex(@"https://www\.imdb\.com/title/tt[0-9]*/.*");
+    List<string> genres = new List<string>();
+    List<string> directors = new List<string>();
+    List<string> cast = new List<string>();
 
     public string Title { get; set; } = string.Empty;
     public DateTime? ReleaseDate { get; set; }
@@ -101,6 +156,42 @@
     public int Runtimemins { get; set; }
     public int YourRating { get; set; }
     public DateTime? DateRated { get; set; }
+    public string NewGenre { get; set; } = string.Empty;
+    public string NewDirector { get; set; } = string.Empty;
+    public string NewCast { get; set; } = string.Empty;
+
+    public void AddGenreChip()
+    {
+        if (!string.IsNullOrEmpty(NewGenre))
+        {
+            genres.Add(NewGenre);
+            NewGenre = string.Empty;
+        }
+    }
+
+    public void CloseGenreChip(MudChip chip) => genres.Remove(chip.Text);
+
+    public void AddDirectorChip()
+    {
+        if (!string.IsNullOrEmpty(NewDirector))
+        {
+            directors.Add(NewDirector);
+            NewDirector = string.Empty;
+        }
+    }
+
+    public void CloseDirectorChip(MudChip chip) => directors.Remove(chip.Text);
+
+    public void AddCastChip()
+    {
+        if (!string.IsNullOrEmpty(NewCast))
+        {
+            cast.Add(NewCast);
+            NewCast = string.Empty;
+        }
+    }
+
+    public void CloseCastChip(MudChip chip) => cast.Remove(chip.Text);
 
     public string YearCheck(int arg)
     {
