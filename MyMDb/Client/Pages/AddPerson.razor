@@ -9,25 +9,30 @@
 <MudPaper Class="pa-4" Elevation="10">
     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
         <MudGrid Spacing="1">
-            <MudItem xs="12" >
+            <MudItem xs="7" >
                 <MudTextField Label="Full Name" @bind-Value="FullName" Margin="Margin.Dense" Variant="Variant.Outlined"
                     Required="true" RequiredError="Full Name is required" />
-            </MudItem>
 
-            <MudItem xs="12" >
                 <MudDatePicker @ref="datePicker" Label="Birthdate" @bind-Date="Birthdate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
                     Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined"
                     Required="true" RequiredError="Birthdate is required" />
-            </MudItem>
 
-            <MudItem xs="12" >
                 <MudTextField Label="Birthplace" @bind-Value="Birthplace" Margin="Margin.Dense" Variant="Variant.Outlined"
                     Required="true" RequiredError="Birthplace is required" />
+
+            </MudItem>
+
+            <MudItem xs="5" >
+                @foreach (var error in errors)
+                {
+                    <MudText Color="@Color.Error">@error</MudText>
+                }
             </MudItem>
 
             <MudItem xs="12" >
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">Submit</MudButton>
             </MudItem>
+
         </MudGrid>
     </MudForm>
 </MudPaper>

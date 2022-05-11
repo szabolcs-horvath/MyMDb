@@ -121,6 +121,14 @@
                             }
                         </MudChipSet>
                     </MudItem>
+
+                    <MudItem xs="12">
+                        @foreach (var error in errors)
+                        {
+                            <MudText Color="@Color.Error">@error</MudText>
+                        }
+                    </MudItem>
+
                 </MudGrid>
             </MudItem>
 
@@ -129,13 +137,6 @@
             </MudItem>
         </MudGrid>
     </MudForm>
-</MudPaper>
-
-<MudPaper>
-    @foreach (var error in errors)
-        {
-            <MudText Color="@Color.Error">@error</MudText>
-        }
 </MudPaper>
 
 @code {
