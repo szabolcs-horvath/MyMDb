@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyMDb.Shared.CreateModel;
+using MyMDb.Shared.SearchModel;
 using System.Globalization;
 
 namespace MyMDb.Server.DAL
@@ -60,9 +61,9 @@ namespace MyMDb.Server.DAL
             return ToModel(result ?? toInsert);
         }
 
-        public async Task<IReadOnlyCollection<Movie>> SearchByTitle(string name)
+        public async Task<IReadOnlyCollection<SearchMovie>> SearchByTitle(string name)
         {
-            return await db.Movie.Where(m => m.Title.Contains(name)).Select(m => ToModel(m)).ToListAsync();
+            return await db.Movie.Where(m => m.Title.Contains(name)).Select(m => ToSearchModel(m)).ToListAsync();
         }
 
         public async Task<Movie?> Update(Movie value)
@@ -114,6 +115,16 @@ namespace MyMDb.Server.DAL
                 value.Directors?.Split(",").Select(s => s.Trim()).ToList(),
                 value.Cast?.Split(",").Select(s => s.Trim()).ToList(),
                 value.Person?.Select(p => p.FullName ?? ""));
+        }
+
+        private static SearchMovie ToSearchModel(DbMovie value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return new SearchMovie(value.Id, value.Title);
         }
     }
 }

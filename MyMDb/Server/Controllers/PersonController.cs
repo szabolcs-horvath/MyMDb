@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyMDb.Server.DAL;
 using MyMDb.Shared.CreateModel;
+using MyMDb.Shared.SearchModel;
 
 namespace MyMDb.Server.Controllers
 {
@@ -42,7 +43,7 @@ namespace MyMDb.Server.Controllers
         [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IReadOnlyCollection<Person>>> SearchByName(string name)
+        public async Task<ActionResult<IReadOnlyCollection<SearchPerson>>> SearchByName(string name)
         {
             var results = await repository.SearchByName(name);
             if (results is null)

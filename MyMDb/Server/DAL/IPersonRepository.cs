@@ -1,4 +1,5 @@
 ﻿using MyMDb.Shared.CreateModel;
+using MyMDb.Shared.SearchModel;
 
 namespace MyMDb.Server.DAL
 {
@@ -9,6 +10,6 @@ namespace MyMDb.Server.DAL
         Task<Person> Insert(CreatePerson value);
         Task<Person?> Update(Person value);
         Task<Person?> Delete(int id);
-        Task<IReadOnlyCollection<Person>> SearchByName(string name);
+        Task<IReadOnlyCollection<SearchPerson>> SearchByName(string name);
     }
 }

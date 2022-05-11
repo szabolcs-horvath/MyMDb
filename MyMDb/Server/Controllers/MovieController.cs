@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyMDb.Server.DAL;
 using MyMDb.Shared.CreateModel;
+using MyMDb.Shared.SearchModel;
 using System.Linq;
 
 namespace MyMDb.Server.Controllers
@@ -44,7 +45,7 @@ namespace MyMDb.Server.Controllers
         [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IReadOnlyCollection<Movie>>> SearchByTitle([FromQuery] string title)
+        public async Task<ActionResult<IReadOnlyCollection<SearchMovie>>> SearchByTitle([FromQuery] string title)
         {
             var results = await repository.SearchByTitle(title);
             if (results == null)
