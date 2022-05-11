@@ -1,5 +1,6 @@
 ﻿@page "/people"
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 <PageTitle>People</PageTitle>
 
@@ -11,7 +12,8 @@
 }
 else
 {
-    <MudTable Items="people" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true Virtualize="true" Filter="new Func<Person, bool>(FilterCheck)">
+    <MudTable Items="people" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true 
+        Virtualize="true" Filter="new Func<Person, bool>(FilterCheck)" T="Person" OnRowClick="@RowClicked">
         <ColGroup>
             <col />
             <col style="width: 20%" />
@@ -52,7 +54,11 @@ else
     private async Task<IEnumerable<string>> AutocompletePopulate(string? value)
     {
         return people.Select(p => p.FullName).Where(p => p.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase));
+    }
 
+    private void RowClicked(TableRowClickEventArgs<Person> args)
+    {
+        NavigationManager.NavigateTo($"/people/{args.Item.Id}", false);
     }
 
     protected override async Task OnInitializedAsync()

@@ -1,6 +1,7 @@
 ﻿@page "/movies"
 @using System
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 <PageTitle>Movies</PageTitle>
 
@@ -12,7 +13,8 @@
 }
 else
 {
-    <MudTable Items="movies" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true Virtualize="true" Filter="new Func<DisplayMovie, bool>(FilterCheck)">
+    <MudTable Items="movies" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true
+        Virtualize="true" Filter="new Func<DisplayMovie, bool>(FilterCheck)" T="DisplayMovie" OnRowClick="@RowClicked">
         <ColGroup>
             <col />
             <col style="width: 12%" />
@@ -63,10 +65,16 @@ else
         return movies.Select(m => m.Title).Where(m => m.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase));
     }
 
+    private void RowClicked(TableRowClickEventArgs<DisplayMovie> args)
+    {
+        NavigationManager.NavigateTo($"/movies/{args.Item.ID}", false);
+    }
+
     private class DisplayMovie
     {
         public DisplayMovie(Movie value)
         {
+            ID = value.Id;
             Title = value.Title;
             IMDbRating = value.IMDbRating;
             Runtimemins = value.Runtimemins;
@@ -74,6 +82,7 @@ else
             Directors = value.Directors == null ? "" : string.Join(", ", value.Directors);
             ReleaseDate = value.ReleaseDate ?? "";
         }
+        public int ID { get; }
         public string Title { get; }
         public double IMDbRating { get; }
         public int Runtimemins { get; }
