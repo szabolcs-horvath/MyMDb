@@ -1,4 +1,5 @@
 ﻿@page "/addmovie"
+@using System
 @using MyMDb.Shared.CreateModel
 @using System.Text.RegularExpressions
 @inject HttpClient Http
@@ -125,7 +126,7 @@
             </MudItem>
 
             <MudItem>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>form.Validate())">Submit</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">Submit</MudButton>
             </MudItem>
         </MudGrid>
     </MudForm>
@@ -212,5 +213,38 @@
     public string RuntimeCheck(int arg)
     {
         return arg > 0 ? null : "Runtime must be larger than 0";
+    }
+
+    public async void Submit()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            var movie = new CreateMovie
+            {
+                YourRating = this.YourRating,
+                DateRated = this.DateRated?.ToString("yyyy-MM-dd"),
+                Title = this.Title,
+                URL = this.URL,
+                TitleType = this.TitleType,
+                IMDbRating = Decimal.ToDouble(this.IMDbRating),
+                Runtimemins = this.Runtimemins,
+                Year = this.Year,
+                Genres = string.Join(", ", this.genres),
+                ReleaseDate = this.ReleaseDate?.ToString("yyyy-MM-dd"),
+                Directors = string.Join(", ", this.directors),
+                Cast = string.Join(", ", this.cast)
+            };
+
+            var result = await Http.PostAsJsonAsync<CreateMovie>("api/movie", movie);
+
+            if (result.IsSuccessStatusCode)
+            {
+                form.Reset();
+                genres.RemoveAll(_ => true);
+                directors.RemoveAll(_ => true);
+                cast.RemoveAll(_ => true);
+            }
+        }
     }
 }
