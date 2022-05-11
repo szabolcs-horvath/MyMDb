@@ -18,9 +18,9 @@ namespace MyMDb.Shared
         }
 
         public int Id { get; }
-        public string? FullName { get; }
-        public string? Birthdate { get; }
-        public string? Birthplace { get; }
+        public string FullName { get; }
+        public string Birthdate { get; }
+        public string Birthplace { get; }
         public IEnumerable<string>? Movies { get; }
     }
 }

@@ -61,17 +61,16 @@ else
     private async Task<IEnumerable<string>> AutocompletePopulate(string? value)
     {
         return movies.Select(m => m.Title).Where(m => m.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase));
-
     }
 
-    public class DisplayMovie
+    private class DisplayMovie
     {
         public DisplayMovie(Movie value)
         {
-            Title = value.Title ?? "";
-            IMDbRating = value.IMDbRating ?? 0;
-            Runtimemins = value.Runtimemins ?? 0;
-            Year = value.Year ?? 0;
+            Title = value.Title;
+            IMDbRating = value.IMDbRating;
+            Runtimemins = value.Runtimemins;
+            Year = value.Year;
             Directors = value.Directors == null ? "" : string.Join(", ", value.Directors);
             ReleaseDate = value.ReleaseDate ?? "";
         }
