@@ -33,7 +33,6 @@
         _drawerOpen = !_drawerOpen;
     }
 
-
     private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
     public bool _themeManagerOpen = false;
 
@@ -51,6 +50,6 @@
     protected override void OnInitialized()
     {
         StateHasChanged();
-        _themeManager.DrawerClipMode = DrawerClipMode.Docked;
+        _themeManager.DrawerClipMode = DrawerClipMode.Always;
     }
 }
