@@ -1,5 +1,17 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
 
 <PageTitle>Home</PageTitle>
 
-<Search />
+<Search SearchTerm="@_searchTerm" />
+
+@code {
+    private string? _searchTerm;
+
+    protected override void OnInitialized()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        QueryHelpers.ParseQuery(uri.Query).TryGetValue("searchTerm", out var queryParam);
+        _searchTerm = queryParam;
+    }
+}

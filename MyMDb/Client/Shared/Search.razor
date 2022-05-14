@@ -1,7 +1,7 @@
 ﻿@using MyMDb.Shared.SearchModel
 @inject HttpClient Http
 
-<MudTextField @bind-Value="@searchTerm" Placeholder="Search for a Movie, Show or Person" OnAdornmentClick="GetResults" OnKeyPress="Submit"
+<MudTextField @bind-Value="@SearchTerm" Placeholder="Search for a Movie, Show or Person" OnAdornmentClick="GetResults" OnKeyPress="Submit"
     Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
 
 @if (searching)
@@ -25,23 +25,24 @@ else
 
 @code {
     private bool searching = false;
+    private MudTextField<string>? textField;
     private MudProgressLinear? progress;
 
-    private string? searchTerm = string.Empty;
+    [Parameter] public string? SearchTerm { get; set; } = string.Empty;
     private List<SearchMovie> movieResults = new List<SearchMovie>();
     private List<SearchPerson> personResults = new List<SearchPerson>();
 
     private async Task GetResults()
     {
-        if (!string.IsNullOrEmpty(searchTerm))
+        if (!string.IsNullOrEmpty(SearchTerm))
         {
             searching = true;
             movieResults = new List<SearchMovie>();
             personResults = new List<SearchPerson>();
             StateHasChanged();
 
-            var moviesTask = Http.GetFromJsonAsync<SearchMovie[]>($"api/movie/search?title={searchTerm}");
-            var peopleTask = Http.GetFromJsonAsync<SearchPerson[]>($"api/person/search?name={searchTerm}");
+            var moviesTask = Http.GetFromJsonAsync<SearchMovie[]>($"api/movie/search?title={SearchTerm}");
+            var peopleTask = Http.GetFromJsonAsync<SearchPerson[]>($"api/person/search?name={SearchTerm}");
             await Task.WhenAll(moviesTask, peopleTask);
 
             var movies = await moviesTask;
