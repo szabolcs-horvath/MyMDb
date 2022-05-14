@@ -1,0 +1,76 @@
+﻿@page "/statistics"
+@inject HttpClient Http
+
+<PageTitle>Statistics</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Statistics</MudText>
+
+@if (movies == null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudGrid>
+        <MudItem xs="12" sm="6">
+            <MudText Typo="Typo.h5">IMDb rating by decade</MudText>
+            <MudChart ChartType="ChartType.Line" XAxisLabels="@Decades" ChartSeries="@LineSeries" ChartOptions="@LineChartOpts"
+                Width="100%" Height="350px"/>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudText Typo="Typo.h5">Number of ratings by decade</MudText>
+            <MudChart ChartType="ChartType.Pie" InputData="@PieData" InputLabels="@Decades" @bind-SelectedIndex="@PieSelectedIndex"
+                Width="300px" Height="300px" />
+            <MudText Typo="Typo.h6">@($"Value: {(PieSelectedIndex >= 0 ? PieData[PieSelectedIndex] : "")}%")</MudText>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    private IEnumerable<Movie>? movies;
+    private string[] Decades = {"50s", "60s", "70s", "80s", "90s", "00s", "10s", "20s"};
+    private List<ChartSeries> LineSeries = new List<ChartSeries>();
+    private ChartOptions LineChartOpts = new ChartOptions();
+    private double[] PieData;
+    private int PieSelectedIndex = -1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LineChartOpts.MaxNumYAxisTicks = 11;
+        LineChartOpts.YAxisTicks = 1;
+        LineChartOpts.YAxisLines = true;
+        LineChartOpts.XAxisLines = true;
+
+        var result = await Http.GetFromJsonAsync<Movie[]>("api/movie");
+        if (result != null)
+        {
+            movies = result;
+
+            List<double> averages = new List<double>();
+            List<double> medians = new List<double>();
+            List<double> minimums = new List<double>();
+            List<double> maximums = new List<double>();
+            List<double> pieData = new List<double>();
+
+            for (int i = 1950; i < 2030; i += 10)
+            {
+                IEnumerable<double> ratings = movies.Where(m => m.Year % i < 10).Select(m => m.IMDbRating).OrderBy(r => r);
+
+                averages.Add(ratings.Average());
+                medians.Add((ratings.Count() % 2) == 1 ?
+                    ratings.ElementAt(ratings.Count() / 2) :
+                    (ratings.ElementAt(ratings.Count() / 2 - 1) + ratings.ElementAt(ratings.Count() / 2)) / 2);
+                minimums.Add(ratings.Min());
+                maximums.Add(ratings.Max());
+
+                pieData.Add(ratings.Count());
+            }
+            LineSeries.Add(new ChartSeries() { Name = "Average", Data = averages.ToArray() });
+            LineSeries.Add(new ChartSeries() { Name = "Median", Data = medians.ToArray() });
+            LineSeries.Add(new ChartSeries() { Name = "Minimum", Data = minimums.ToArray() });
+            LineSeries.Add(new ChartSeries() { Name = "Maximum", Data = maximums.ToArray() });
+            PieData = pieData.ToArray();
+        }
+
+    }
+}
