@@ -1,5 +1,8 @@
 ﻿@page "/movies/{movieId:int}"
 @inject HttpClient Http
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 @if (movie is null)
 {
@@ -31,6 +34,9 @@ else
         <MudText Typo="Typo.h6" Class="mt-5 ml-4">IMDb Rating:</MudText>
         <MudIcon Icon="@Icons.Filled.StarRate" Color="Color.Warning" Size="Size.Large" Class="mt-4"/>
         <MudText Typo="Typo.h5" Color="Color.Warning" Class="mt-5">@movie.IMDbRating</MudText>
+        <MudTooltip Text="Delete title from database">
+            <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error" Size="Size.Large" OnClick="DeleteTitleAsync" Class="mt-4" />
+        </MudTooltip>
     </MudStack>
 
     <MudGrid Class="mt-2">
@@ -67,7 +73,6 @@ else
     [Parameter] public int MovieID { get; set; }
     private Movie? movie;
     private bool notFound = false;
-    private string? imageURL;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -75,6 +80,18 @@ else
         if (movie is null)
         {
             notFound = true;
+        }
+    }
+
+    private async Task DeleteTitleAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        var dialog = DialogService.Show<DeleteTitleDialog>(movie.Title, options);
+        if (!(await dialog.Result).Cancelled )
+        {
+            await Http.DeleteAsync($"api/movie/{movie.Id}");
+            Snackbar.Add("Title deleted", Severity.Success);
+            NavigationManager.NavigateTo("/movies");
         }
     }
 }

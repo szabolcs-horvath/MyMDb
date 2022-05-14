@@ -1,0 +1,19 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudStack Row="true">
+            <MudIcon Icon="@Icons.Filled.DeleteForever" Color="Color.Error"/>
+            <MudText>Are you sure you want to delete this title?</MudText>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="Submit">Delete</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}

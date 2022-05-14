@@ -2,6 +2,7 @@
 @using MyMDb.Shared.CreateModel
 @using System.Text.RegularExpressions
 @inject HttpClient Http
+@inject ISnackbar Snackbar
 
 <PageTitle>Add a Movie or Show</PageTitle>
 
@@ -218,8 +219,18 @@
         return arg > 0 ? null : "Runtime must be larger than 0";
     }
 
+    public string GenresCheck(List<string> args) {
+        return args.Count != 0 ? null : "You must add at least 1 Genre";
+    }
+
     public async void Submit()
     {
+        var genresCheckResult = GenresCheck(genres);
+        if (genresCheckResult is not null)
+        {
+            return;
+        }
+
         await form.Validate();
         if (form.IsValid)
         {
@@ -241,6 +252,9 @@
 
             var result = await Http.PostAsJsonAsync<CreateMovie>("api/movie", movie);
 
+            var testString = string.Join(", ", this.genres);
+            Console.WriteLine(testString);
+
             if (result.IsSuccessStatusCode)
             {
                 form.Reset();
@@ -249,6 +263,8 @@
                 genres.RemoveAll(_ => true);
                 directors.RemoveAll(_ => true);
                 cast.RemoveAll(_ => true);
+                StateHasChanged();
+                Snackbar.Add("Title successfully added", Severity.Success);
             }
         }
     }
