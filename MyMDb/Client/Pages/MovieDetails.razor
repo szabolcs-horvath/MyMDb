@@ -17,9 +17,49 @@ else
 {
     <PageTitle>@movie.Title</PageTitle>
 
-    <MudText Typo="Typo.h3" GutterBottom="true">@movie.Title</MudText>
+    <MudText Typo="Typo.h3" GutterBottom="true" Class="mt-8" >@($"{movie.Title} ({movie.Year})")</MudText>
+    <MudText Typo="Typo.subtitle2">@($"{movie.Runtimemins} minutes | {movie.ReleaseDate} | {movie.TitleType}")</MudText>
 
+    <MudStack Row="true">
+        <MudText Typo="Typo.h6" Class="mt-5">Genres:</MudText>
+        <MudChipSet Class="mt-4" >
+            @foreach (var genre in movie.Genres)
+            {
+                <MudChip Text="@genre" />
+            }
+        </MudChipSet>
+        <MudText Typo="Typo.h6" Class="mt-5 ml-4">IMDb Rating:</MudText>
+        <MudIcon Icon="@Icons.Filled.StarRate" Color="Color.Warning" Size="Size.Large" Class="mt-4"/>
+        <MudText Typo="Typo.h5" Color="Color.Warning" Class="mt-5">@movie.IMDbRating</MudText>
+    </MudStack>
 
+    <MudGrid Class="mt-2">
+        <MudItem xs="12" sm="7" >
+            <MudText Typo="Typo.h6">Cast:</MudText>
+            <MudList>
+                @foreach (var person in movie.Cast)
+                {
+                    <MudListItem Icon="@Icons.TwoTone.Person" IconColor="@Color.Primary" IconSize="Size.Medium"
+                        Href="@($"/?searchTerm={person}")" >
+                        @person
+                    </MudListItem>
+                }
+            </MudList>
+        </MudItem>
+
+        <MudItem xs="12" sm="5" >
+            <MudText Typo="Typo.h6">Director(s):</MudText>
+            <MudList>
+                @foreach (var person in movie.Directors)
+                {
+                    <MudListItem Icon="@Icons.TwoTone.Person" IconColor="@Color.Primary" IconSize="Size.Medium"
+                        Href="@($"/?searchTerm={person}")" >
+                        @person
+                    </MudListItem>
+                }
+            </MudList>
+        </MudItem>
+    </MudGrid>
 }
 
 
@@ -27,9 +67,14 @@ else
     [Parameter] public int MovieID { get; set; }
     private Movie? movie;
     private bool notFound = false;
+    private string? imageURL;
 
     protected override async Task OnParametersSetAsync()
     {
         movie = await Http.GetFromJsonAsync<Movie>($"api/movie/{MovieID}");
+        if (movie is null)
+        {
+            notFound = true;
+        }
     }
 }
