@@ -3,27 +3,29 @@
 
 <PageTitle>Statistics</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Statistics</MudText>
+<MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4" >Statistics</MudText>
 
 @if (movies == null)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    <MudProgressLinear Color="Color.Secondary" Indeterminate="true" />
 }
 else
 {
-    <MudGrid>
-        <MudItem xs="12" sm="6">
-            <MudText Typo="Typo.h5">IMDb rating by decade</MudText>
-            <MudChart ChartType="ChartType.Line" XAxisLabels="@Decades" ChartSeries="@LineSeries" ChartOptions="@LineChartOpts"
-                Width="100%" Height="350px"/>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudText Typo="Typo.h5">Number of ratings by decade</MudText>
-            <MudChart ChartType="ChartType.Pie" InputData="@PieData" InputLabels="@Decades" @bind-SelectedIndex="@PieSelectedIndex"
-                Width="300px" Height="300px" />
-            <MudText Typo="Typo.h6">@($"Value: {(PieSelectedIndex >= 0 ? PieData[PieSelectedIndex] : "")}%")</MudText>
-        </MudItem>
-    </MudGrid>
+    <MudPaper Class="pa-4" Elevation="10">
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudText Typo="Typo.h5">IMDb rating by decade</MudText>
+                <MudChart ChartType="ChartType.Line" XAxisLabels="@Decades" ChartSeries="@LineSeries" ChartOptions="@LineChartOpts"
+                    Width="100%" Height="350px"/>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudText Typo="Typo.h5">Number of ratings by decade</MudText>
+                <MudChart ChartType="ChartType.Pie" InputData="@PieData" InputLabels="@Decades" @bind-SelectedIndex="@PieSelectedIndex"
+                    Width="300px" Height="300px" />
+                <MudText Typo="Typo.h6">@($"Value: {(PieSelectedIndex >= 0 ? PieData[PieSelectedIndex] : "")}%")</MudText>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
 }
 
 @code {

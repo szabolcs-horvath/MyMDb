@@ -4,41 +4,43 @@
 
 <PageTitle>People</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">People</MudText>
+<MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4">People</MudText>
 
 @if (people == null)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    <MudProgressLinear Color="Color.Secondary" Indeterminate="true" />
 }
 else
 {
-    <MudTable Items="people" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true 
-        Virtualize="true" Filter="new Func<Person, bool>(FilterCheck)" T="Person" OnRowClick="@RowClicked">
-        <ColGroup>
-            <col />
-            <col style="width: 20%" />
-            <col style="width: 30%" />
-        </ColGroup>
-        <ToolBarContent>
-            <MudText Typo="Typo.h6">People</MudText>
-            <MudSpacer />
-            <MudAutocomplete @bind-Value="@searchTerm" Placeholder="Search" ResetValueOnEmptyText="true" SearchFunc="@AutocompletePopulate" CoerceValue="true"
-                Margin="Margin.Dense" Dense="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
-        </ToolBarContent>
-        <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.FullName)">Full Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.Birthdate)">Birthdate</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.Birthplace)">Birthplace</MudTableSortLabel></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Full Name">@context.FullName</MudTd>
-            <MudTd DataLabel="Birthdate">@context.Birthdate</MudTd>
-            <MudTd DataLabel="Birthplace">@context.Birthplace</MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager PageSizeOptions="new int[]{10, 20, 50, 100}" />
-        </PagerContent>
-    </MudTable>
+    <MudPaper Class="pa-4" Elevation="10">
+        <MudTable Items="people" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true 
+            Virtualize="true" Filter="new Func<Person, bool>(FilterCheck)" T="Person" OnRowClick="@RowClicked">
+            <ColGroup>
+                <col />
+                <col style="width: 20%" />
+                <col style="width: 30%" />
+            </ColGroup>
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">People</MudText>
+                <MudSpacer />
+                <MudAutocomplete @bind-Value="@searchTerm" Placeholder="Search" ResetValueOnEmptyText="true" SearchFunc="@AutocompletePopulate" CoerceValue="true"
+                    Margin="Margin.Dense" Dense="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.FullName)">Full Name</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.Birthdate)">Birthdate</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.Birthplace)">Birthplace</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Full Name">@context.FullName</MudTd>
+                <MudTd DataLabel="Birthdate">@context.Birthdate</MudTd>
+                <MudTd DataLabel="Birthplace">@context.Birthplace</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[]{10, 20, 50, 100}" />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
 }
 
 

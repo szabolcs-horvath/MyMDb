@@ -1,14 +1,17 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="_themeManager.Theme" />
+<MudThemeProvider Theme="_themeManager.Theme" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
     <MudAppBar Elevation="_themeManager.AppBarElevation" >
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => DrawerToggle())" />
-        <MudText Typo="Typo.h4">MyMDb</MudText>
+        <MudText Typo="Typo.h4" Class="fw-bolder">MyMDb</MudText>
         <MudSpacer />
+        <MudTooltip Text="Switch Dark mode">
+            <MudIconButton Icon="@Icons.Outlined.ModeNight" Color="Color.Inherit" OnClick="SwitchDarkMode" />
+        </MudTooltip>
         <MudTooltip Text="MyMDb GitHub repository">
             <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Edge="Edge.End" Link="https://github.com/szabolcs-horvath/MyMDb" Target="_blank" />
         </MudTooltip>
@@ -29,6 +32,7 @@
 
 @code {
     bool _drawerOpen = true;
+    private bool _isDarkMode = false;
 
     void DrawerToggle()
     {
@@ -53,5 +57,21 @@
     {
         StateHasChanged();
         _themeManager.DrawerClipMode = DrawerClipMode.Always;
+
+        _themeManager.Theme.Palette.Background = new MudBlazor.Utilities.MudColor("264653");
+
+        _themeManager.Theme.Palette.Primary = new MudBlazor.Utilities.MudColor("264653");
+        _themeManager.Theme.Palette.Secondary = new MudBlazor.Utilities.MudColor("2a9d8f");
+
+        _themeManager.Theme.Palette.AppbarBackground = new MudBlazor.Utilities.MudColor("6addcf");
+        _themeManager.Theme.Palette.DrawerBackground = new MudBlazor.Utilities.MudColor("2a9d8f");
+        _themeManager.Theme.Palette.DrawerText = new MudBlazor.Utilities.MudColor("ffffff");
+        _themeManager.Theme.Palette.DrawerIcon = new MudBlazor.Utilities.MudColor("ffffff");
+
+    }
+
+    private void SwitchDarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
     }
 }

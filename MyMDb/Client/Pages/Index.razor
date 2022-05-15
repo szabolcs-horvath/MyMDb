@@ -3,7 +3,9 @@
 
 <PageTitle>Home</PageTitle>
 
-<Search SearchTerm="@_searchTerm" />
+<MudPaper Class="pa-4 mt-4" Elevation="10">
+    <Search SearchTerm="@_searchTerm" />
+</MudPaper>
 
 @code {
     private string? _searchTerm;
