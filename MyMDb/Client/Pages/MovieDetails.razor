@@ -20,7 +20,7 @@ else
 {
     <PageTitle>@movie.Title</PageTitle>
 
-    <MudPaper Class="pa-4" Elevation="10">
+    <MudPaper Class="pa-4 mt-4" Elevation="10">
         <MudText Typo="Typo.h3" GutterBottom="true" Class="mt-4" >@($"{movie.Title} ({movie.Year})")</MudText>
         <MudText Typo="Typo.subtitle2">@($"{movie.Runtimemins} minutes | {movie.ReleaseDate} | {movie.TitleType}")</MudText>
 
@@ -36,7 +36,7 @@ else
             <MudIcon Icon="@Icons.Filled.StarRate" Color="Color.Warning" Size="Size.Large" Class="mt-4"/>
             <MudText Typo="Typo.h5" Color="Color.Warning" Class="mt-5">@movie.IMDbRating</MudText>
             <MudTooltip Text="Delete title from database">
-                <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error" Size="Size.Large" OnClick="DeleteTitleAsync" Class="mt-4" />
+                <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error" Size="Size.Large" OnClick="DeleteTitleAsync" Class="mt-1" />
             </MudTooltip>
         </MudStack>
 
