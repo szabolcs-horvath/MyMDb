@@ -77,7 +77,14 @@ namespace MyMDb.Server.Controllers
                 return NotFound();
             }
 
-            var toUpdate = new Person(id, person.FullName, person.Birthdate, person.Birthplace, personfromDb.Movies ?? Array.Empty<string>());
+            var toUpdate = new Person
+            {
+                Id = id,
+                FullName = person.FullName,
+                Birthdate = person.Birthdate,
+                Birthplace = person.Birthplace,
+                Movies = personfromDb.Movies ?? Array.Empty<string>()
+            };
 
             var result = await _repository.Update(toUpdate);
             return Ok(result);

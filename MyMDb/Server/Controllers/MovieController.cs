@@ -72,10 +72,23 @@ namespace MyMDb.Server.Controllers
                 return NotFound();
             }
 
-            var toUpdate = new Movie(id, movie.YourRating, movie.DateRated, movie.Title, movie.URL,
-                movie.TitleType, movie.IMDbRating, movie.Runtimemins, movie.Year, movie.Genres, movie.ReleaseDate,
-                movie.Directors ?? Array.Empty<string>(), movie.Cast ?? Array.Empty<string>(),
-                movie.People ?? Array.Empty<string>());
+            var toUpdate = new Movie 
+            {
+                Id = id, 
+                YourRating = movie.YourRating, 
+                DateRated = movie.DateRated, 
+                Title = movie.Title, 
+                URL = movie.URL,
+                TitleType = movie.TitleType, 
+                IMDbRating = movie.IMDbRating, 
+                Runtimemins = movie.Runtimemins, 
+                Year = movie.Year,
+                Genres = movie.Genres, 
+                ReleaseDate = movie.ReleaseDate,
+                Directors = movie.Directors ?? Array.Empty<string>(), 
+                Cast = movie.Cast ?? Array.Empty<string>(),
+                People = movie.People ?? Array.Empty<string>()
+            };
 
             var result = await _repository.Update(toUpdate);
             return Ok(result);

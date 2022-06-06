@@ -100,21 +100,23 @@ namespace MyMDb.Server.DAL
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return new Movie(
-                value.Id,
-                value.YourRating,
-                value.DateRated?.Trim(),
-                value.Title,
-                value.URL,
-                value.TitleType,
-                value.IMDbRating ?? 0.0,
-                value.Runtimemins ?? 0,
-                value.Year ?? 0,
-                value.Genres?.Split(",").Select(s => s.Trim()).ToList(),
-                value.ReleaseDate ?? "1900-01-01",
-                value.Directors?.Split(",").Select(s => s.Trim()).ToList(),
-                value.Cast?.Split(",").Select(s => s.Trim()).ToList(),
-                value.Person?.Select(p => p.FullName ?? ""));
+            return new Movie
+            {
+                Id = value.Id,
+                YourRating = value.YourRating,
+                DateRated = value.DateRated?.Trim(),
+                Title = value.Title,
+                URL = value.URL,
+                TitleType = value.TitleType,
+                IMDbRating = value.IMDbRating ?? 0.0,
+                Runtimemins = value.Runtimemins ?? 0,
+                Year = value.Year ?? 0,
+                Genres = value.Genres?.Split(",").Select(s => s.Trim()).ToList(),
+                ReleaseDate = value.ReleaseDate ?? "1900-01-01",
+                Directors = value.Directors?.Split(",").Select(s => s.Trim()).ToList(),
+                Cast = value.Cast?.Split(",").Select(s => s.Trim()).ToList(),
+                People = value.Person?.Select(p => p.FullName ?? "")
+            };
         }
 
         private static SearchMovie ToSearchModel(DbMovie value)

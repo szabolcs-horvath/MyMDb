@@ -82,12 +82,14 @@ namespace MyMDb.Server.DAL
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return new Person(
-                value.Id,
-                value.FullName,
-                value.Birthdate,
-                value.Birthplace,
-                value.Movie.Select(m => m.Title ?? ""));
+            return new Person
+            {
+                Id = value.Id,
+                FullName = value.FullName,
+                Birthdate = value.Birthdate,
+                Birthplace = value.Birthplace,
+                Movies = value.Movie.Select(m => m.Title ?? "")
+            };
         }
 
         private static SearchPerson ToSearchModel(DbPerson value)
