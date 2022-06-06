@@ -67,6 +67,7 @@
                 _datePicker.Date = null;
                 _form.Reset();
 
+                StateHasChanged();
                 Snackbar.Add("Person successfully added", Severity.Success);
             }
         }
