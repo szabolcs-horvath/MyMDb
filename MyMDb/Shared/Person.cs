@@ -17,10 +17,10 @@ namespace MyMDb.Shared
             Movies = movies;
         }
 
-        public int Id { get; }
-        public string FullName { get; }
-        public string Birthdate { get; }
-        public string Birthplace { get; }
-        public IEnumerable<string>? Movies { get; }
+        public int Id { get; init; }
+        public string FullName { get; init; }
+        public string Birthdate { get; init; }
+        public string Birthplace { get; init; }
+        public IEnumerable<string>? Movies { get; init; }
     }
 }

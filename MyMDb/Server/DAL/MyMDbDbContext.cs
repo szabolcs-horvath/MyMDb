@@ -1,11 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyMDb.Server.DAL.Entities;
 
 namespace MyMDb.Server.DAL
 {
     public class MyMDbDbContext : DbContext
     {
-        public MyMDbDbContext(DbContextOptions<MyMDbDbContext> options)
-            : base(options) { }
+        public MyMDbDbContext(DbContextOptions<MyMDbDbContext> options, DbSet<DbMovie> movie, DbSet<DbPerson> person)
+            : base(options)
+        {
+            Movie = movie;
+            Person = person;
+        }
 
         public DbSet<DbMovie> Movie { get; set; }
         public DbSet<DbPerson> Person { get; set; }

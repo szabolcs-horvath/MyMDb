@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MyMDb.Server.DAL;
 using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.SearchModel;
@@ -10,25 +9,25 @@ namespace MyMDb.Server.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private readonly IPersonRepository repository;
+        private readonly IPersonRepository _repository;
 
         public PersonController(IPersonRepository repository)
         {
-            this.repository = repository;
+            this._repository = repository;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<List<Person>> GetPersons()
         {
-            return Ok(repository.GetAll());
+            return Ok(_repository.GetAll());
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
-            var result = await repository.Get(id);
+            var result = await _repository.Get(id);
 
             if (result == null)
             {
@@ -45,8 +44,8 @@ namespace MyMDb.Server.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IReadOnlyCollection<SearchPerson>>> SearchByName(string name)
         {
-            var results = await repository.SearchByName(name);
-            if (results is null)
+            var results = await _repository.SearchByName(name);
+            if (results.Count == 0)
             {
                 return NotFound();
             }
@@ -62,7 +61,7 @@ namespace MyMDb.Server.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult> PostPerson([FromBody] CreatePerson person)
         {
-            var created = await repository.Insert(person);
+            var created = await _repository.Insert(person);
             return CreatedAtAction(nameof(GetPerson), new { id = created.Id }, created);
         }
 
@@ -71,7 +70,7 @@ namespace MyMDb.Server.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Person>> ModifyPerson(int id, [FromBody] Person person)
         {
-            var personfromDb = await repository.Get(id);
+            var personfromDb = await _repository.Get(id);
 
             if (personfromDb == null) 
             {
@@ -80,7 +79,7 @@ namespace MyMDb.Server.Controllers
 
             var toUpdate = new Person(id, person.FullName, person.Birthdate, person.Birthplace, personfromDb.Movies ?? Array.Empty<string>());
 
-            var result = await repository.Update(toUpdate);
+            var result = await _repository.Update(toUpdate);
             return Ok(result);
         }
 
@@ -89,7 +88,7 @@ namespace MyMDb.Server.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Person>> DeletePerson(int id)
         {
-            var person = await repository.Delete(id);
+            var person = await _repository.Delete(id);
 
             if (person == null)
             {

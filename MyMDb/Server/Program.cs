@@ -1,9 +1,6 @@
 global using MyMDb.Shared;
-using Microsoft.AspNetCore.Http.Json;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using MyMDb.Server.DAL;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 

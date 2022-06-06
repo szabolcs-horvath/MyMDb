@@ -6,25 +6,25 @@ namespace MyMDb.Shared.CreateModel
     {
         public CreateMovie() {}
 
-        public int? YourRating { get; set; }
-        public string? DateRated { get; set; }
+        public int? YourRating { get; init; }
+        public string? DateRated { get; init; }
         [Required]
-        public string Title { get; set; }
+        public string Title { get; init; }
         [Required]
-        public string URL { get; set; }
+        public string URL { get; init; }
         [Required]
-        public string TitleType { get; set; }
+        public string TitleType { get; init; }
         [Required]
-        public double IMDbRating { get; set; }
+        public double IMDbRating { get; init; }
         [Required]
-        public int Runtimemins { get; set; }
+        public int Runtimemins { get; init; }
         [Required]
-        public int Year { get; set; }
+        public int Year { get; init; }
         [Required]
-        public string Genres { get; set; }
+        public string Genres { get; init; }
         [Required]
-        public string ReleaseDate { get; set; }
-        public string? Directors { get; set; }
-        public string? Cast { get; set; }
+        public string ReleaseDate { get; init; }
+        public string? Directors { get; init; }
+        public string? Cast { get; init; }
     }
 }

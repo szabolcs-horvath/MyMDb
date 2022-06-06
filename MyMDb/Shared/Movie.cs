@@ -22,19 +22,19 @@
             People = people;
         }
 
-        public int Id { get; }
-        public int? YourRating { get; }
-        public string? DateRated { get; }
-        public string Title { get; }
-        public string URL { get; }
-        public string TitleType { get; }
-        public double IMDbRating { get; }
-        public int Runtimemins { get; }
-        public int Year { get; }
-        public IEnumerable<string>? Genres { get; }
-        public string ReleaseDate { get; }
-        public IEnumerable<string>? Directors { get; }
-        public IEnumerable<string>? Cast { get; }
-        public IEnumerable<string>? People { get; }
+        public int Id { get; init; }
+        public int? YourRating { get; init; }
+        public string? DateRated { get; init; }
+        public string Title { get; init; }
+        public string URL { get; init; }
+        public string TitleType { get; init; }
+        public double IMDbRating { get; init; }
+        public int Runtimemins { get; init; }
+        public int Year { get; init; }
+        public IEnumerable<string>? Genres { get; init; }
+        public string ReleaseDate { get; init; }
+        public IEnumerable<string>? Directors { get; init; }
+        public IEnumerable<string>? Cast { get; init; }
+        public IEnumerable<string>? People { get; init; }
     }
 }

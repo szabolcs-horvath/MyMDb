@@ -1,39 +1,39 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.SearchModel;
-using System.Globalization;
+using MyMDb.Server.DAL.Entities;
 
 namespace MyMDb.Server.DAL
 {
     public class MovieRepository : IMovieRepository
     {
-        private readonly MyMDbDbContext db;
+        private readonly MyMDbDbContext _db;
 
         public MovieRepository(MyMDbDbContext db)
         {
-            this.db = db;
+            this._db = db;
         }
 
         public async Task<Movie?> Delete(int id)
         {
-            var dbRecord = await db.Movie.Include(m => m.Person).FirstOrDefaultAsync(x => x.Id == id);
+            var dbRecord = await _db.Movie.Include(m => m.Person).FirstOrDefaultAsync(x => x.Id == id);
             if (dbRecord != null)
             {
-                db.Remove(dbRecord);
-                await db.SaveChangesAsync();
+                _db.Remove(dbRecord);
+                await _db.SaveChangesAsync();
             }
             return dbRecord == null ? null : ToModel(dbRecord);
         }
 
         public async Task<Movie?> Get(int id)
         {
-            var dbRecord = await db.Movie.Include(m => m.Person).FirstOrDefaultAsync(x => x.Id == id);
+            var dbRecord = await _db.Movie.Include(m => m.Person).FirstOrDefaultAsync(x => x.Id == id);
             return dbRecord == null ? null : ToModel(dbRecord);
         }
 
         public IReadOnlyCollection<Movie> GetAll()
         {
-            return db.Movie.Include(m => m.Person).Select(ToModel).ToList();
+            return _db.Movie.Include(m => m.Person).Select(ToModel).ToList();
         }
 
         public async Task<Movie> Insert(CreateMovie value)
@@ -54,21 +54,21 @@ namespace MyMDb.Server.DAL
                 Cast = value.Cast ?? ""
             };
 
-            await db.Movie.AddAsync(toInsert);
-            await db.SaveChangesAsync();
-            var result = await db.Movie.Include(m => m.Person).FirstOrDefaultAsync(m => m.Id == toInsert.Id);
+            await _db.Movie.AddAsync(toInsert);
+            await _db.SaveChangesAsync();
+            var result = await _db.Movie.Include(m => m.Person).FirstOrDefaultAsync(m => m.Id == toInsert.Id);
 
             return ToModel(result ?? toInsert);
         }
 
         public async Task<IReadOnlyCollection<SearchMovie>> SearchByTitle(string name)
         {
-            return await db.Movie.Where(m => m.Title.Contains(name)).Select(m => ToSearchModel(m)).ToListAsync();
+            return await _db.Movie.Where(m => m.Title != null && m.Title.Contains(name)).Select(m => ToSearchModel(m)).ToListAsync();
         }
 
         public async Task<Movie?> Update(Movie value)
         {
-            var dbRecord = await db.Movie.Include(m => m.Person).FirstOrDefaultAsync(x => x.Id == value.Id);
+            var dbRecord = await _db.Movie.Include(m => m.Person).FirstOrDefaultAsync(x => x.Id == value.Id);
             if (dbRecord == null)
             {
                 return null;
@@ -82,12 +82,12 @@ namespace MyMDb.Server.DAL
                 dbRecord.IMDbRating = value.IMDbRating;
                 dbRecord.Runtimemins = value.Runtimemins;
                 dbRecord.Year = value.Year;
-                dbRecord.Genres = string.Join(", ", value.Genres);
+                if (value.Genres != null) dbRecord.Genres = string.Join(", ", value.Genres);
                 dbRecord.ReleaseDate = value.ReleaseDate;
-                dbRecord.Directors = string.Join(", ", value.Directors);
-                dbRecord.Cast = string.Join(", ", value.Cast);
+                if (value.Directors != null) dbRecord.Directors = string.Join(", ", value.Directors);
+                if (value.Cast != null) dbRecord.Cast = string.Join(", ", value.Cast);
 
-                await db.SaveChangesAsync();
+                await _db.SaveChangesAsync();
             }
 
             return ToModel(dbRecord);
