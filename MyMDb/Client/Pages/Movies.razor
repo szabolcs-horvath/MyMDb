@@ -1,5 +1,4 @@
 ﻿@page "/movies"
-@using System
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
@@ -7,14 +6,14 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4">Movies and Shows</MudText>
 
-@if (movies == null)
+@if (_movies == null)
 {
     <MudProgressLinear Color="Color.Secondary" Indeterminate="true" />
 }
 else
 {
     <MudPaper Class="pa-4" Elevation="10">
-        <MudTable Items="movies" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true
+        <MudTable Items="_movies" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true
             Virtualize="true" Filter="new Func<DisplayMovie, bool>(FilterCheck)" T="DisplayMovie" OnRowClick="@RowClicked">
             <ColGroup>
                 <col />
@@ -27,7 +26,7 @@ else
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Movies</MudText>
                 <MudSpacer />
-                <MudAutocomplete @bind-Value="@searchTerm" Placeholder="Search by title" ResetValueOnEmptyText="true" SearchFunc="@AutocompletePopulate" CoerceValue="true"
+                <MudAutocomplete @bind-Value="@_searchTerm" Placeholder="Search by title" ResetValueOnEmptyText="true" SearchFunc="@AutocompletePopulate" CoerceValue="true"
                     Margin="Margin.Dense" Dense="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
             </ToolBarContent>
             <HeaderContent>
@@ -47,24 +46,24 @@ else
                 <MudTd DataLabel="Release Date">@context.ReleaseDate</MudTd>
             </RowTemplate>
             <PagerContent>
-                <MudTablePager PageSizeOptions="new int[]{10, 20, 50, 100}" />
+                <MudTablePager PageSizeOptions="new[]{10, 20, 50, 100}" />
             </PagerContent>
         </MudTable>
     </MudPaper>
 }
 
 @code {
-    private IEnumerable<DisplayMovie>? movies;
-    private string? searchTerm = string.Empty;
+    private IEnumerable<DisplayMovie>? _movies;
+    private string? _searchTerm = string.Empty;
 
     private bool FilterCheck(DisplayMovie movie)
     {
-        return movie.Title.Contains(searchTerm ?? "");
+        return movie.Title.Contains(_searchTerm ?? "");
     }
 
-    private async Task<IEnumerable<string>> AutocompletePopulate(string? value)
+    private Task<IEnumerable<string>> AutocompletePopulate(string? value)
     {
-        return movies.Select(m => m.Title).Where(m => m.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase));
+        return Task.FromResult(_movies.Select(m => m.Title).Where(m => m.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase)));
     }
 
     private void RowClicked(TableRowClickEventArgs<DisplayMovie> args)
@@ -82,7 +81,7 @@ else
             Runtimemins = value.Runtimemins;
             Year = value.Year;
             Directors = value.Directors == null ? "" : string.Join(", ", value.Directors);
-            ReleaseDate = value.ReleaseDate ?? "";
+            ReleaseDate = value.ReleaseDate;
         }
         public int ID { get; }
         public string Title { get; }
@@ -103,7 +102,7 @@ else
             foreach (Movie m in result) {
                 temp.Add(new DisplayMovie(m));
             }
-            movies = temp;
+            _movies = temp;
         }
     }
 }

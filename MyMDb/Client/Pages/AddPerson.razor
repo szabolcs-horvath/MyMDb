@@ -8,13 +8,13 @@
 <MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4">Add a new person to the database</MudText>
 
 <MudPaper Class="pa-4" Elevation="10">
-    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
+    <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" >
         <MudGrid Spacing="1">
             <MudItem xs="7" >
                 <MudTextField Label="Full Name" @bind-Value="FullName" Margin="Margin.Dense" Variant="Variant.Outlined"
                     Required="true" RequiredError="Full Name is required" />
 
-                <MudDatePicker @ref="datePicker" Label="Birthdate" @bind-Date="Birthdate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
+                <MudDatePicker @ref="_datePicker" Label="Birthdate" @bind-Date="Birthdate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
                     Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined"
                     Required="true" RequiredError="Birthdate is required" />
 
@@ -24,7 +24,7 @@
             </MudItem>
 
             <MudItem xs="5" >
-                @foreach (var error in errors)
+                @foreach (var error in _errors)
                 {
                     <MudText Color="@Color.Error">@error</MudText>
                 }
@@ -39,10 +39,10 @@
 </MudPaper>
 
 @code {
-    bool success;
-    string[] errors = { };
-    MudForm? form;
-    MudDatePicker? datePicker;
+    bool _success;
+    string[] _errors = { };
+    MudForm? _form;
+    MudDatePicker? _datePicker;
 
     public string FullName { get; set; }
     public DateTime? Birthdate { get; set; }
@@ -50,8 +50,8 @@
 
     public async void Submit()
     {
-        await form.Validate();
-        if (form.IsValid)
+        await _form.Validate();
+        if (_form.IsValid)
         {
             var person = new CreatePerson
             {
@@ -64,8 +64,8 @@
 
             if (result.IsSuccessStatusCode)
             {
-                form.Reset();
-                datePicker.Reset();
+                _form.Reset();
+                _datePicker.Reset();
                 Snackbar.Add("Person successfully added", Severity.Success);
             }
         }

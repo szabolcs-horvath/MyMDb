@@ -5,7 +5,7 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4" >Statistics</MudText>
 
-@if (movies == null)
+@if (_movies == null)
 {
     <MudProgressLinear Color="Color.Secondary" Indeterminate="true" />
 }
@@ -15,38 +15,38 @@ else
         <MudGrid>
             <MudItem xs="12" sm="6">
                 <MudText Typo="Typo.h5">IMDb rating by decade</MudText>
-                <MudChart ChartType="ChartType.Line" XAxisLabels="@Decades" ChartSeries="@LineSeries" ChartOptions="@LineChartOpts"
+                <MudChart ChartType="ChartType.Line" XAxisLabels="@_decades" ChartSeries="@_lineSeries" ChartOptions="@_lineChartOpts"
                     Width="100%" Height="350px"/>
             </MudItem>
             <MudItem xs="12" sm="6">
                 <MudText Typo="Typo.h5">Number of ratings by decade</MudText>
-                <MudChart ChartType="ChartType.Pie" InputData="@PieData" InputLabels="@Decades" @bind-SelectedIndex="@PieSelectedIndex"
+                <MudChart ChartType="ChartType.Pie" InputData="@_pieData" InputLabels="@_decades" @bind-SelectedIndex="@_pieSelectedIndex"
                     Width="300px" Height="300px" />
-                <MudText Typo="Typo.h6">@($"Value: {(PieSelectedIndex >= 0 ? PieData[PieSelectedIndex] : "")}%")</MudText>
+                <MudText Typo="Typo.h6">@($"Value: {(_pieSelectedIndex >= 0 ? _pieData[_pieSelectedIndex] : "")}%")</MudText>
             </MudItem>
         </MudGrid>
     </MudPaper>
 }
 
 @code {
-    private IEnumerable<Movie>? movies;
-    private string[] Decades = {"50s", "60s", "70s", "80s", "90s", "00s", "10s", "20s"};
-    private List<ChartSeries> LineSeries = new List<ChartSeries>();
-    private ChartOptions LineChartOpts = new ChartOptions();
-    private double[] PieData;
-    private int PieSelectedIndex = -1;
+    private IEnumerable<Movie>? _movies;
+    private string[] _decades = {"50s", "60s", "70s", "80s", "90s", "00s", "10s", "20s"};
+    private List<ChartSeries> _lineSeries = new List<ChartSeries>();
+    private ChartOptions _lineChartOpts = new ChartOptions();
+    private double[] _pieData;
+    private int _pieSelectedIndex = -1;
 
     protected override async Task OnInitializedAsync()
     {
-        LineChartOpts.MaxNumYAxisTicks = 11;
-        LineChartOpts.YAxisTicks = 1;
-        LineChartOpts.YAxisLines = true;
-        LineChartOpts.XAxisLines = true;
+        _lineChartOpts.MaxNumYAxisTicks = 11;
+        _lineChartOpts.YAxisTicks = 1;
+        _lineChartOpts.YAxisLines = true;
+        _lineChartOpts.XAxisLines = true;
 
         var result = await Http.GetFromJsonAsync<Movie[]>("api/movie");
         if (result != null)
         {
-            movies = result;
+            _movies = result;
 
             List<double> averages = new List<double>();
             List<double> medians = new List<double>();
@@ -56,10 +56,10 @@ else
 
             for (int i = 1950; i < 2030; i += 10)
             {
-                IEnumerable<double> ratings = movies.Where(m => m.Year % i < 10).Select(m => m.IMDbRating).OrderBy(r => r);
+                IEnumerable<double> ratings = _movies.Where(m => m.Year % i < 10).Select(m => m.IMDbRating).OrderBy(r => r);
 
                 averages.Add(ratings.Average());
-                medians.Add((ratings.Count() % 2) == 1 ?
+                medians.Add(ratings.Count() % 2 == 1 ?
                     ratings.ElementAt(ratings.Count() / 2) :
                     (ratings.ElementAt(ratings.Count() / 2 - 1) + ratings.ElementAt(ratings.Count() / 2)) / 2);
                 minimums.Add(ratings.Min());
@@ -67,11 +67,11 @@ else
 
                 pieData.Add(ratings.Count());
             }
-            LineSeries.Add(new ChartSeries() { Name = "Average", Data = averages.ToArray() });
-            LineSeries.Add(new ChartSeries() { Name = "Median", Data = medians.ToArray() });
-            LineSeries.Add(new ChartSeries() { Name = "Minimum", Data = minimums.ToArray() });
-            LineSeries.Add(new ChartSeries() { Name = "Maximum", Data = maximums.ToArray() });
-            PieData = pieData.ToArray();
+            _lineSeries.Add(new ChartSeries() { Name = "Average", Data = averages.ToArray() });
+            _lineSeries.Add(new ChartSeries() { Name = "Median", Data = medians.ToArray() });
+            _lineSeries.Add(new ChartSeries() { Name = "Minimum", Data = minimums.ToArray() });
+            _lineSeries.Add(new ChartSeries() { Name = "Maximum", Data = maximums.ToArray() });
+            _pieData = pieData.ToArray();
         }
 
     }

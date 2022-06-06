@@ -4,19 +4,19 @@
 <MudTextField @bind-Value="@SearchTerm" Placeholder="Search for a Movie, Show or Person" OnAdornmentClick="GetResults" OnKeyPress="Submit"
     Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
 
-@if (searching)
+@if (_searching)
 {
-    <MudProgressLinear @ref="progress" Color="Color.Primary" Indeterminate="true" />
+    <MudProgressLinear @ref="_progress" Color="Color.Primary" Indeterminate="true" />
 }
 else
 {
     <MudList Clickable="true" Dense="true" >
-        @foreach (SearchMovie movie in movieResults)
+        @foreach (SearchMovie movie in _movieResults)
         {
             <MudListItem Href=@($"/movies/{movie.Id}") Text="@movie.Title" Icon="@Icons.TwoTone.Movie" IconColor="@Color.Primary" IconSize="Size.Large" />
         }
 
-        @foreach (SearchPerson person in personResults)
+        @foreach (SearchPerson person in _personResults)
         {
             <MudListItem Href=@($"/people/{person.Id}") Text="@person.FullName" Icon="@Icons.TwoTone.Person" IconColor="@Color.Primary" IconSize="Size.Large" />
         }
@@ -24,20 +24,20 @@ else
 }
 
 @code {
-    private bool searching = false;
-    private MudProgressLinear? progress;
+    private bool _searching = false;
+    private MudProgressLinear? _progress;
 
     [Parameter] public string? SearchTerm { get; set; } = string.Empty;
-    private List<SearchMovie> movieResults = new List<SearchMovie>();
-    private List<SearchPerson> personResults = new List<SearchPerson>();
+    private List<SearchMovie> _movieResults = new List<SearchMovie>();
+    private List<SearchPerson> _personResults = new List<SearchPerson>();
 
     private async Task GetResults()
     {
         if (!string.IsNullOrEmpty(SearchTerm))
         {
-            searching = true;
-            movieResults = new List<SearchMovie>();
-            personResults = new List<SearchPerson>();
+            _searching = true;
+            _movieResults = new List<SearchMovie>();
+            _personResults = new List<SearchPerson>();
             StateHasChanged();
 
             var moviesTask = Http.GetFromJsonAsync<SearchMovie[]>($"api/movie/search?title={SearchTerm}");
@@ -49,15 +49,15 @@ else
 
             if (movies?.Length > 0)
             {
-                movieResults = new List<SearchMovie>(movies);
+                _movieResults = new List<SearchMovie>(movies);
             } 
 
             if (people?.Length > 0)
             {
-                personResults = new List<SearchPerson>(people);
+                _personResults = new List<SearchPerson>(people);
             } 
 
-            searching = false;
+            _searching = false;
             StateHasChanged();
         }
     }
@@ -65,7 +65,7 @@ else
     private async Task Submit(KeyboardEventArgs args) {
         if (args.Code == "Enter")
         {
-            searching = true;
+            _searching = true;
             await GetResults();
             StateHasChanged();
         }

@@ -9,7 +9,7 @@
 <MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4" >Add a new movie or show to the database</MudText>
 
 <MudPaper Class="pa-4" Elevation="10">
-    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
+    <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" >
         <MudGrid Spacing="1" >
             <MudItem xs="12" sm="7">
                 <MudGrid Spacing="1">
@@ -35,7 +35,7 @@
                     </MudItem>
 
                     <MudItem xs="12">
-                        <MudDatePicker @ref="releaseDateDatePicker" Label="Release date" @bind-Date="ReleaseDate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
+                        <MudDatePicker @ref="_releaseDateDatePicker" Label="Release date" @bind-Date="ReleaseDate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
                             Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined"
                             Required="true" RequiredError="Release date is required" />
                     </MudItem>
@@ -63,7 +63,7 @@
                     </MudItem>
 
                     <MudItem xs="10">
-                        <MudDatePicker @ref="dateRatedDatePicker" Label="Date rated" @bind-Date="DateRated" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
+                        <MudDatePicker @ref="_dateRatedDatePicker" Label="Date rated" @bind-Date="DateRated" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
                             Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" />
                     </MudItem>
                 </MudGrid>
@@ -124,7 +124,7 @@
                     </MudItem>
 
                     <MudItem xs="12">
-                        @foreach (var error in errors)
+                        @foreach (var error in _errors)
                         {
                             <MudText Color="@Color.Error">@error</MudText>
                         }
@@ -141,11 +141,11 @@
 </MudPaper>
 
 @code {
-    bool success;
-    string[] errors = { };
-    MudForm? form;
-    MudDatePicker? releaseDateDatePicker;
-    MudDatePicker? dateRatedDatePicker;
+    bool _success;
+    string[] _errors = { };
+    MudForm? _form;
+    MudDatePicker? _releaseDateDatePicker;
+    MudDatePicker? _dateRatedDatePicker;
 
     Regex urlRegex = new Regex(@"https://www\.imdb\.com/title/tt[0-9]*/.*");
     List<string> genres = new List<string>();
@@ -231,8 +231,8 @@
             return;
         }
 
-        await form.Validate();
-        if (form.IsValid)
+        await _form.Validate();
+        if (_form.IsValid)
         {
             var movie = new CreateMovie
             {
@@ -257,9 +257,9 @@
 
             if (result.IsSuccessStatusCode)
             {
-                form.Reset();
-                releaseDateDatePicker.Reset();
-                dateRatedDatePicker.Reset();
+                _form.Reset();
+                _releaseDateDatePicker.Reset();
+                _dateRatedDatePicker.Reset();
                 genres.RemoveAll(_ => true);
                 directors.RemoveAll(_ => true);
                 cast.RemoveAll(_ => true);
