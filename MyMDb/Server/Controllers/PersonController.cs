@@ -49,10 +49,6 @@ namespace MyMDb.Server.Controllers
             {
                 return NotFound();
             }
-            foreach (var item in results)
-            {
-                Console.WriteLine(item.FullName);
-            }
 
             return Ok(results);
         }
