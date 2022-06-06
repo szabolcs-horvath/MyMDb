@@ -54,7 +54,7 @@ namespace MyMDb.Server.DAL
 
         public async Task<IReadOnlyCollection<SearchPerson>> SearchByName(string name)
         {
-            return await _db.Person.Where(p => p.FullName != null && p.FullName.Contains(name)).Select(p => ToSearchModel(p)).ToListAsync();
+            return await _db.Person.Where(p => p.FullName.Contains(name)).Select(p => new SearchPerson(p.Id, p.FullName)).ToListAsync();
         }
 
         public async Task<Person?> Update(Person value)
@@ -90,16 +90,6 @@ namespace MyMDb.Server.DAL
                 Birthplace = value.Birthplace ?? throw new InvalidOperationException(),
                 Movies = value.Movie.Select(m => m.Title ?? "")
             };
-        }
-
-        private static SearchPerson ToSearchModel(DbPerson value)
-        {
-            if (value.FullName is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            return new SearchPerson(value.Id, value.FullName);
         }
     }
 }

@@ -63,7 +63,7 @@ namespace MyMDb.Server.DAL
 
         public async Task<IReadOnlyCollection<SearchMovie>> SearchByTitle(string name)
         {
-            return await _db.Movie.Where(m => m.Title != null && m.Title.Contains(name)).Select(m => ToSearchModel(m)).ToListAsync();
+            return await _db.Movie.Where(m => m.Title.Contains(name)).Select(m => new SearchMovie(m.Id, m.Title)).ToListAsync();
         }
 
         public async Task<Movie?> Update(Movie value)
@@ -117,16 +117,6 @@ namespace MyMDb.Server.DAL
                 Cast = value.Cast?.Split(",").Select(s => s.Trim()).ToList(),
                 People = value.Person.Select(p => p.FullName ?? "")
             };
-        }
-
-        private static SearchMovie ToSearchModel(DbMovie value)
-        {
-            if (value.Title is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            return new SearchMovie(value.Id, value.Title);
         }
     }
 }
