@@ -257,12 +257,14 @@
 
             if (result.IsSuccessStatusCode)
             {
+                _releaseDateDatePicker.Date = null;
+                _dateRatedDatePicker.Date = null;
                 _form.Reset();
-                _releaseDateDatePicker.Reset();
-                _dateRatedDatePicker.Reset();
+
                 genres.RemoveAll(_ => true);
                 directors.RemoveAll(_ => true);
                 cast.RemoveAll(_ => true);
+
                 StateHasChanged();
                 Snackbar.Add("Title successfully added", Severity.Success);
             }

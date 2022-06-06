@@ -64,8 +64,9 @@
 
             if (result.IsSuccessStatusCode)
             {
+                _datePicker.Date = null;
                 _form.Reset();
-                _datePicker.Reset();
+
                 Snackbar.Add("Person successfully added", Severity.Success);
             }
         }
