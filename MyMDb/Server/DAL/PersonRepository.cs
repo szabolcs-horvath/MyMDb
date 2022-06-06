@@ -85,9 +85,9 @@ namespace MyMDb.Server.DAL
             return new Person
             {
                 Id = value.Id,
-                FullName = value.FullName,
-                Birthdate = value.Birthdate,
-                Birthplace = value.Birthplace,
+                FullName = value.FullName ?? throw new InvalidOperationException(),
+                Birthdate = value.Birthdate ?? throw new InvalidOperationException(),
+                Birthplace = value.Birthplace ?? throw new InvalidOperationException(),
                 Movies = value.Movie.Select(m => m.Title ?? "")
             };
         }

@@ -105,23 +105,23 @@ namespace MyMDb.Server.DAL
                 Id = value.Id,
                 YourRating = value.YourRating,
                 DateRated = value.DateRated?.Trim(),
-                Title = value.Title,
-                URL = value.URL,
-                TitleType = value.TitleType,
-                IMDbRating = value.IMDbRating ?? 0.0,
-                Runtimemins = value.Runtimemins ?? 0,
-                Year = value.Year ?? 0,
-                Genres = value.Genres?.Split(",").Select(s => s.Trim()).ToList(),
-                ReleaseDate = value.ReleaseDate ?? "1900-01-01",
+                Title = value.Title ?? throw new InvalidOperationException(),
+                URL = value.URL ?? throw new InvalidOperationException(),
+                TitleType = value.TitleType ?? throw new InvalidOperationException(),
+                IMDbRating = value.IMDbRating ?? throw new InvalidOperationException(),
+                Runtimemins = value.Runtimemins ?? throw new InvalidOperationException(),
+                Year = value.Year ?? throw new InvalidOperationException(),
+                Genres = value.Genres?.Split(",").Select(s => s.Trim()).ToList() ?? throw new InvalidOperationException(),
+                ReleaseDate = value.ReleaseDate ?? throw new InvalidOperationException(),
                 Directors = value.Directors?.Split(",").Select(s => s.Trim()).ToList(),
                 Cast = value.Cast?.Split(",").Select(s => s.Trim()).ToList(),
-                People = value.Person?.Select(p => p.FullName ?? "")
+                People = value.Person.Select(p => p.FullName ?? "")
             };
         }
 
         private static SearchMovie ToSearchModel(DbMovie value)
         {
-            if (value is null)
+            if (value.Title is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
