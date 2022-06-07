@@ -41,14 +41,9 @@ namespace MyMDb.Server.Controllers
 
         [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IReadOnlyCollection<SearchMovie>>> SearchByTitle([FromQuery] string title)
+        public async Task<ActionResult<IReadOnlyCollection<SearchMovie>>> SearchByTitle(string title)
         {
             var results = await _repository.SearchByTitle(title);
-            if (results.Count == 0)
-            {
-                return NotFound();
-            }
             return Ok(results);
         }
 
