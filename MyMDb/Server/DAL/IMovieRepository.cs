@@ -10,6 +10,6 @@ namespace MyMDb.Server.DAL
         Task<Movie> Insert(CreateMovie value);
         Task<Movie?> Update(Movie value);
         Task<Movie?> Delete(int id);
-        Task<IReadOnlyCollection<SearchMovie>> SearchByTitle(string name);
+        Task<IReadOnlyCollection<SearchMovie>> SearchByTitle(string title);
     }
 }
