@@ -72,23 +72,22 @@ namespace MyMDb.Server.DAL
             if (dbRecord == null)
             {
                 return null;
-            } else
-            {
-                dbRecord.YourRating = value.YourRating ?? 0;
-                dbRecord.DateRated = value.DateRated ?? "";
-                dbRecord.Title = value.Title;
-                dbRecord.URL = value.URL;
-                dbRecord.TitleType = value.TitleType;
-                dbRecord.IMDbRating = value.IMDbRating;
-                dbRecord.Runtimemins = value.Runtimemins;
-                dbRecord.Year = value.Year;
-                if (value.Genres != null) dbRecord.Genres = string.Join(", ", value.Genres);
-                dbRecord.ReleaseDate = value.ReleaseDate;
-                if (value.Directors != null) dbRecord.Directors = string.Join(", ", value.Directors);
-                if (value.Cast != null) dbRecord.Cast = string.Join(", ", value.Cast);
-
-                await _db.SaveChangesAsync();
             }
+
+            dbRecord.YourRating = value.YourRating ?? 0;
+            dbRecord.DateRated = value.DateRated ?? "";
+            dbRecord.Title = value.Title;
+            dbRecord.URL = value.URL;
+            dbRecord.TitleType = value.TitleType;
+            dbRecord.IMDbRating = value.IMDbRating;
+            dbRecord.Runtimemins = value.Runtimemins;
+            dbRecord.Year = value.Year;
+            dbRecord.Genres = string.Join(", ", value.Genres);
+            dbRecord.ReleaseDate = value.ReleaseDate;
+            if (value.Directors != null) dbRecord.Directors = string.Join(", ", value.Directors);
+            if (value.Cast != null) dbRecord.Cast = string.Join(", ", value.Cast);
+
+            await _db.SaveChangesAsync();
 
             return ToModel(dbRecord);
         }
@@ -111,7 +110,7 @@ namespace MyMDb.Server.DAL
                 IMDbRating = value.IMDbRating,
                 Runtimemins = value.Runtimemins,
                 Year = value.Year,
-                Genres = value.Genres?.Split(",").Select(s => s.Trim()).ToList(),
+                Genres = value.Genres.Split(",").Select(s => s.Trim()).ToList(),
                 ReleaseDate = value.ReleaseDate,
                 Directors = value.Directors?.Split(",").Select(s => s.Trim()).ToList(),
                 Cast = value.Cast?.Split(",").Select(s => s.Trim()).ToList(),

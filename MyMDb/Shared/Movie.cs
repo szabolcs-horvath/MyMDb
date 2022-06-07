@@ -11,8 +11,8 @@
         public double IMDbRating { get; init; }
         public int Runtimemins { get; init; }
         public int Year { get; init; }
-        public IEnumerable<string>? Genres { get; init; }
-        public string ReleaseDate { get; init; }
+        public IEnumerable<string> Genres { get; init; }
+        public string? ReleaseDate { get; init; }
         public IEnumerable<string>? Directors { get; init; }
         public IEnumerable<string>? Cast { get; init; }
         public IEnumerable<string>? People { get; init; }
