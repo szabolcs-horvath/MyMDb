@@ -61,9 +61,9 @@ namespace MyMDb.Server.DAL
             return ToModel(result ?? toInsert);
         }
 
-        public async Task<IReadOnlyCollection<SearchMovie>> SearchByTitle(string name)
+        public async Task<IReadOnlyCollection<SearchMovie>> SearchByTitle(string title)
         {
-            return await _db.Movie.Where(m => m.Title.Contains(name)).Select(m => new SearchMovie(m.Id, m.Title)).ToListAsync();
+            return await _db.Movie.Where(m => m.Title.Contains(title)).Select(m => new SearchMovie(m.Id, m.Title)).ToListAsync();
         }
 
         public async Task<Movie?> Update(Movie value)
