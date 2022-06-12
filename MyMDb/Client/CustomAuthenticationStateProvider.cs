@@ -39,7 +39,7 @@ namespace MyMDb.Client
             return state;
         }
 
-        public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
+        private static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64WithoutPadding(payload);
