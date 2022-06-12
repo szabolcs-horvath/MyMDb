@@ -1,0 +1,30 @@
+﻿@page "/login"
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+
+<PageTitle>Login</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4" >Login</MudText>
+
+<MudForm Model="user" @bind-IsValid="_success" @bind-Errors="_errors" >
+    <MudTextField Label="Username" @bind-Value="user.Username" Margin="Margin.Dense" Variant="Variant.Outlined"
+                  Required="true" RequiredError="Username is required" />
+    <MudTextField Label="Password" @bind-Value="user.Password" Margin="Margin.Dense" Variant="Variant.Outlined"
+                  Required="true" RequiredError="Password is required" InputType="InputType.Password" />
+    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="HandleLogin">Login</MudButton>
+</MudForm>
+
+@code {
+    UserLoginDto user = new UserLoginDto();
+    bool _success;
+    string[] _errors = { };
+
+    async Task HandleLogin()
+    {
+        var response = await Http.PostAsJsonAsync("/api/auth", user);
+        var token = await response.Content.ReadAsStringAsync();
+        await LocalStorage.SetItemAsync("token", token);
+        await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+}
