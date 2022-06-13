@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyMDb.Server.DAL.Entities;
+﻿using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.SearchModel;
 
-namespace MyMDb.Server.DAL
+namespace MyMDb.Server.DAL.Repositories
 {
     public class PersonRepository : IPersonRepository
     {
@@ -11,7 +10,7 @@ namespace MyMDb.Server.DAL
 
         public PersonRepository(MyMDbDbContext db)
         {
-            this._db = db;
+            _db = db;
         }
 
         public async Task<Person?> Delete(int id)
@@ -63,7 +62,8 @@ namespace MyMDb.Server.DAL
             if (dbRecord == null)
             {
                 return null;
-            } else
+            }
+            else
             {
                 dbRecord.FullName = value.FullName;
                 dbRecord.Birthdate = value.Birthdate;

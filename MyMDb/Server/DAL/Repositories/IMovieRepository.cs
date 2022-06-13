@@ -1,7 +1,7 @@
 ﻿using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.SearchModel;
 
-namespace MyMDb.Server.DAL
+namespace MyMDb.Server.DAL.Repositories
 {
     public interface IMovieRepository
     {

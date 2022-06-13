@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyMDb.Server.DAL.Entities;
+﻿using MyMDb.Server.DAL.Entities;
 
 namespace MyMDb.Server.DAL
 {

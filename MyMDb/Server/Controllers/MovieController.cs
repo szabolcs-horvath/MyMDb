@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyMDb.Server.DAL;
+using MyMDb.Server.DAL.Repositories;
 using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.SearchModel;
 

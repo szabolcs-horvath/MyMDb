@@ -1,5 +1,4 @@
-﻿@using MyMDb.Shared.SearchModel
-@inject HttpClient Http
+﻿@inject HttpClient Http
 
 <MudTextField @bind-Value="@SearchTerm" Placeholder="Search for a Movie, Show or Person" OnAdornmentClick="GetResults" OnKeyPress="Submit"
     Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />

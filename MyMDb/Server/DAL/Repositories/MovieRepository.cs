@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyMDb.Shared.CreateModel;
+﻿using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.SearchModel;
 using MyMDb.Server.DAL.Entities;
 
-namespace MyMDb.Server.DAL
+namespace MyMDb.Server.DAL.Repositories
 {
     public class MovieRepository : IMovieRepository
     {
@@ -11,7 +10,7 @@ namespace MyMDb.Server.DAL
 
         public MovieRepository(MyMDbDbContext db)
         {
-            this._db = db;
+            _db = db;
         }
 
         public async Task<Movie?> Delete(int id)

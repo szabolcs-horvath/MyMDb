@@ -1,6 +1,7 @@
 global using MyMDb.Shared;
-using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore;
 using MyMDb.Server.DAL;
+using MyMDb.Server.DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
