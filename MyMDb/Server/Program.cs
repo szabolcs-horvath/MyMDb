@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSwaggerGen();
+
 var connectionString = builder.Configuration.GetConnectionString("MyMDbDbContext");
 builder.Services.AddDbContext<MyMDbDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
@@ -25,6 +27,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyMDb Web API"));
 }
 else
 {
