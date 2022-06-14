@@ -1,19 +1,30 @@
-﻿IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Rating') AND type in (N'U'))
-	DROP TABLE [Rating]
-
-IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Review') AND type in (N'U'))
+﻿IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Review') AND type in (N'U'))
 	DROP TABLE [Review]
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Rating') AND type in (N'U'))
+	DROP TABLE [Rating]
 
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].MoviePersonJoiningTable') AND type in (N'U'))
 	DROP TABLE [MoviePersonJoiningTable]
 
-IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Movie') AND type in (N'U'))
-	DROP TABLE [Movie]
-
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Person') AND type in (N'U'))
 	DROP TABLE [Person]
 
-CREATE TABLE Movie (
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Movie') AND type in (N'U'))
+	DROP TABLE [Movie]
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].User') AND type in (N'U'))
+	DROP TABLE [User]
+
+CREATE TABLE [User] (
+	[ID] int IDENTITY PRIMARY KEY,
+	[Username] nvarchar(64) NOT NULL,
+	CONSTRAINT UQ_User_Username UNIQUE(Username),
+	[PasswordHash] binary(64) NOT NULL,
+	[PasswordSalt] binary(64) NOT NULL
+)
+
+CREATE TABLE [Movie] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[YourRating] int,
 	[DateRated] nvarchar(10),
@@ -29,30 +40,34 @@ CREATE TABLE Movie (
 	[Cast] nvarchar(MAX)
 )
 
-CREATE TABLE Person (
+CREATE TABLE [Person] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[FullName] nvarchar(MAX) NOT NULL,
 	[Birthdate] nvarchar(10) NOT NULL,
 	[Birthplace] nvarchar(MAX) NOT NULL
 )
 
-CREATE TABLE MoviePersonJoiningTable (
+CREATE TABLE [MoviePersonJoiningTable] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[MovieID] int FOREIGN KEY REFERENCES Movie(ID) NOT NULL,
-	[PersonID] int FOREIGN KEY REFERENCES Person(ID) NOT NULL
+	[PersonID] int FOREIGN KEY REFERENCES Person(ID) NOT NULL,
+	CONSTRAINT UQ_MoviePersonJoiningTable_MovieIDPersonID UNIQUE(MovieID, PersonID)
 )
 
-CREATE TABLE Rating (
+CREATE TABLE [Rating] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[MovieID] int FOREIGN KEY REFERENCES Movie(ID) NOT NULL,
-	[UserID] nvarchar(450) FOREIGN KEY REFERENCES AspNetUsers(Id) NOT NULL,
-	[Rating] int NOT NULL CONSTRAINT CHK_Rating_RatingValidValue CHECK (0 <= [Rating] AND [Rating] <= 10)
+	[UserID] int FOREIGN KEY REFERENCES [User](ID) NOT NULL,
+	CONSTRAINT UQ_Rating_MovieIDUserID UNIQUE(MovieId, UserID),
+	[Rating] int NOT NULL,
+	CONSTRAINT CHK_Rating_Rating CHECK (0 <= [Rating] AND [Rating] <= 10)
 )
 
-CREATE TABLE Review (
+CREATE TABLE [Review] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[MovieID] int FOREIGN KEY REFERENCES Movie(ID) NOT NULL,
-	[UserID] nvarchar(450) FOREIGN KEY REFERENCES AspNetUsers(Id) NOT NULL,
+	[UserID] int FOREIGN KEY REFERENCES [User](ID) NOT NULL,
+	CONSTRAINT UQ_Review_MovieIDUserID UNIQUE(MovieId, UserID),
 	[Headline] nvarchar(MAX) NOT NULL,
 	[Review] nvarchar(MAX) NOT NULL,
 	[Spoiler] bit NOT NULL DEFAULT 0
