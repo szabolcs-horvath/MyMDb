@@ -22,9 +22,12 @@
 
     async Task HandleLogin()
     {
-        var response = await Http.PostAsJsonAsync("/api/auth", user);
-        var token = await response.Content.ReadAsStringAsync();
-        await LocalStorage.SetItemAsync("token", token);
-        await AuthStateProvider.GetAuthenticationStateAsync();
+        var response = await Http.PostAsJsonAsync("/api/auth/login", user);
+        if (response.IsSuccessStatusCode)
+        {
+            var token = await response.Content.ReadAsStringAsync();
+            await LocalStorage.SetItemAsync("token", token);
+            await AuthStateProvider.GetAuthenticationStateAsync();
+        }
     }
 }
