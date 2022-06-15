@@ -6,7 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using MyMDb.Server.DAL;
-using MyMDb.Server.DAL.Repositories;
+using MyMDb.Server.DAL.Repositories.UserRepository;
+using MyMDb.Server.DAL.Repositories.MovieRepository;
+using MyMDb.Server.DAL.Repositories.PersonRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 

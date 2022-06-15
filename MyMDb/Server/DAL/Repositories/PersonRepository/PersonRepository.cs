@@ -3,7 +3,7 @@ using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.DTOs;
 using MyMDb.Shared.SearchModel;
 
-namespace MyMDb.Server.DAL.Repositories
+namespace MyMDb.Server.DAL.Repositories.PersonRepository
 {
     public class PersonRepository : IPersonRepository
     {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyMDb.Server.DAL.Repositories;
+using MyMDb.Server.DAL.Repositories.PersonRepository;
 using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.DTOs;
 using MyMDb.Shared.SearchModel;

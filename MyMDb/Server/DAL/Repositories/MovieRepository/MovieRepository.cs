@@ -3,7 +3,7 @@ using MyMDb.Shared.SearchModel;
 using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.DTOs;
 
-namespace MyMDb.Server.DAL.Repositories
+namespace MyMDb.Server.DAL.Repositories.MovieRepository
 {
     public class MovieRepository : IMovieRepository
     {
@@ -90,7 +90,7 @@ namespace MyMDb.Server.DAL.Repositories
             var dbRecord = await _db.Movie
                 .Include(m => m.Person)
                 .FirstOrDefaultAsync(x => x.Id == value.Id);
-            
+
             if (dbRecord == null)
             {
                 return null;

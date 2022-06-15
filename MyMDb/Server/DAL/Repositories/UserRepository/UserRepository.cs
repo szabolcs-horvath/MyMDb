@@ -1,6 +1,6 @@
 ﻿using MyMDb.Shared.DTOs;
 
-namespace MyMDb.Server.DAL.Repositories
+namespace MyMDb.Server.DAL.Repositories.UserRepository
 {
     public class UserRepository : IUserRepository
     {
