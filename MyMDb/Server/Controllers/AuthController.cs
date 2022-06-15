@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MyMDb.Server.DAL.Repositories;
 using MyMDb.Shared.DTOs;
 
 namespace MyMDb.Server.Controllers
@@ -12,27 +13,27 @@ namespace MyMDb.Server.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
+        private readonly IUserRepository _repository;
         private readonly IConfiguration _configuration;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IUserRepository repository, IConfiguration configuration)
         {
+            _repository = repository;
             _configuration = configuration;
         }
-
-        //TODO This is ALL VERY BAD right now, ONLY PROOF OF CONCEPT
-
-        private static User _user = new User();
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserLoginDto request)
         {
-            if (request.Username != _user.Username ||
-                !VerifyPasswordHash(request.Password, _user.PasswordHash, _user.PasswordSalt))
+            var user = await _repository.Get(request.Username);
+
+            if (user is null ||
+                !VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return BadRequest();
             }
 
-            var token = CreateToken(_user);
+            var token = CreateToken(user);
             return Ok(token);
         }
 
@@ -47,19 +48,25 @@ namespace MyMDb.Server.Controllers
 
             CreatePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
 
-            _user.Username = request.Username;
-            _user.PasswordHash = passwordHash;
-            _user.PasswordSalt = passwordSalt;
+            var user = new UserDto
+            {
+                Username = request.Username,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
+            };
 
-            return Ok(_user);
+            await _repository.Insert(user);
+
+            return Ok();
         }
 
-        private string CreateToken(User user)
+        private string CreateToken(UserDto user)
         {
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Role, "Admin"),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
@@ -80,6 +87,7 @@ namespace MyMDb.Server.Controllers
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
+            //TODO Add stretching
             using var hmac = new HMACSHA512();
             passwordSalt = hmac.Key;
             passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
@@ -88,7 +96,6 @@ namespace MyMDb.Server.Controllers
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             //TODO Get User's Salt from DB, initialize hmac with that
-            //TODO Add stretching
             using var hmac = new HMACSHA512(passwordSalt);
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return computedHash.SequenceEqual(passwordHash);

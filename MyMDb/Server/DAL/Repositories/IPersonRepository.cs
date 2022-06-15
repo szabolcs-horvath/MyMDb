@@ -6,7 +6,7 @@ namespace MyMDb.Server.DAL.Repositories
 {
     public interface IPersonRepository
     {
-        IReadOnlyCollection<PersonDto> GetAll();
+        Task<IReadOnlyCollection<PersonDto>> GetAll();
         Task<PersonDto?> Get(int id);
         Task<PersonDto> Insert(CreatePerson value);
         Task<PersonDto?> Update(PersonDto value);

@@ -21,7 +21,7 @@ CREATE TABLE [User] (
 	[Username] nvarchar(64) NOT NULL,
 	CONSTRAINT UQ_User_Username UNIQUE(Username),
 	[PasswordHash] binary(64) NOT NULL,
-	[PasswordSalt] binary(64) NOT NULL
+	[PasswordSalt] binary(128) NOT NULL
 )
 
 CREATE TABLE [Movie] (

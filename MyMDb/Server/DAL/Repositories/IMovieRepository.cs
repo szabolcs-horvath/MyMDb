@@ -6,7 +6,7 @@ namespace MyMDb.Server.DAL.Repositories
 {
     public interface IMovieRepository
     {
-        IReadOnlyCollection<MovieDto> GetAll();
+        Task<IReadOnlyCollection<MovieDto>> GetAll();
         Task<MovieDto?> Get(int id);
         Task<MovieDto> Insert(CreateMovie value);
         Task<MovieDto?> Update(MovieDto value);

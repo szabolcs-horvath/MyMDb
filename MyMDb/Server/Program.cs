@@ -42,6 +42,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var connectionString = builder.Configuration.GetConnectionString("MyMDbDbContext");
 builder.Services.AddDbContext<MyMDbDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 

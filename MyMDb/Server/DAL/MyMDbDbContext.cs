@@ -9,6 +9,7 @@ namespace MyMDb.Server.DAL
 
         public DbSet<Movie> Movie { get; set; }
         public DbSet<Person> Person { get; set; }
+        public DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
