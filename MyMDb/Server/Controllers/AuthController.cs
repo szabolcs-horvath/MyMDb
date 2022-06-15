@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.DTOs;
 
 namespace MyMDb.Server.Controllers
@@ -22,7 +21,7 @@ namespace MyMDb.Server.Controllers
 
         //TODO This is ALL VERY BAD right now, ONLY PROOF OF CONCEPT
 
-        private static DbUser _user = new DbUser();
+        private static User _user = new User();
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserLoginDto request)
@@ -39,7 +38,7 @@ namespace MyMDb.Server.Controllers
 
 
         [HttpPost("register")]
-        public async Task<ActionResult<DbUser>> Register(UserRegisterDto request)
+        public async Task<ActionResult<User>> Register(UserRegisterDto request)
         {
             if (request.Password != request.ConfirmPassword)
             {
@@ -55,7 +54,7 @@ namespace MyMDb.Server.Controllers
             return Ok(_user);
         }
 
-        private string CreateToken(DbUser user)
+        private string CreateToken(User user)
         {
             var claims = new List<Claim>
             {
@@ -88,6 +87,8 @@ namespace MyMDb.Server.Controllers
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
+            //TODO Get User's Salt from DB, initialize hmac with that
+            //TODO Add stretching
             using var hmac = new HMACSHA512(passwordSalt);
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return computedHash.SequenceEqual(passwordHash);

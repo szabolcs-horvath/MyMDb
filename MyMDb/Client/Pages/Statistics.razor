@@ -29,7 +29,7 @@ else
 }
 
 @code {
-    private IEnumerable<Movie>? _movies;
+    private IEnumerable<MovieDto>? _movies;
     private string[] _decades = {"50s", "60s", "70s", "80s", "90s", "00s", "10s", "20s"};
     private List<ChartSeries> _lineSeries = new List<ChartSeries>();
     private ChartOptions _lineChartOpts = new ChartOptions();
@@ -43,7 +43,7 @@ else
         _lineChartOpts.YAxisLines = true;
         _lineChartOpts.XAxisLines = true;
 
-        var result = await Http.GetFromJsonAsync<Movie[]>("api/movie");
+        var result = await Http.GetFromJsonAsync<MovieDto[]>("api/movie");
         if (result != null)
         {
             _movies = result;

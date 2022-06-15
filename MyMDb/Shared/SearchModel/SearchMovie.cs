@@ -2,13 +2,7 @@
 {
     public class SearchMovie
     {
-        public SearchMovie(int id, string title)
-        {
-            Id = id;
-            Title = title;
-        }
-
-        public int Id { get; }
-        public string Title { get; }
+        public int Id { get; init; }
+        public string Title { get; init; } = string.Empty;
     }
 }

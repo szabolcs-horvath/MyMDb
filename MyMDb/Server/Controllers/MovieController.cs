@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyMDb.Server.DAL.Repositories;
 using MyMDb.Shared.CreateModel;
+using MyMDb.Shared.DTOs;
 using MyMDb.Shared.SearchModel;
 
 namespace MyMDb.Server.Controllers
@@ -18,7 +19,7 @@ namespace MyMDb.Server.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IReadOnlyCollection<Movie>> GetMovies()
+        public ActionResult<IReadOnlyCollection<MovieDto>> GetMovies()
         {
             return Ok(_repository.GetAll());
         }
@@ -26,7 +27,7 @@ namespace MyMDb.Server.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Movie>> GetMovie(int id)
+        public async Task<ActionResult<MovieDto>> GetMovie(int id)
         {
             var result = await _repository.Get(id);
 
@@ -49,7 +50,7 @@ namespace MyMDb.Server.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Movie>> PostMovie(CreateMovie movie)
+        public async Task<ActionResult<MovieDto>> PostMovie(CreateMovie movie)
         {
             var created = await _repository.Insert(movie);
             return CreatedAtAction(nameof(GetMovie), new {id = created.Id}, created);
@@ -58,7 +59,7 @@ namespace MyMDb.Server.Controllers
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Movie>> ModifyMovie(int id, [FromBody] Movie movie)
+        public async Task<ActionResult<MovieDto>> ModifyMovie(int id, [FromBody] MovieDto movie)
         {
             var movieFromDb = await _repository.Get(id);
 
@@ -67,7 +68,7 @@ namespace MyMDb.Server.Controllers
                 return NotFound();
             }
 
-            var toUpdate = new Movie 
+            var toUpdate = new MovieDto 
             {
                 Id = id, 
                 YourRating = movie.YourRating, 
@@ -92,7 +93,7 @@ namespace MyMDb.Server.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Movie>> DeleteMovie(int id)
+        public async Task<ActionResult<MovieDto>> DeleteMovie(int id)
         {
             var movie = await _repository.Delete(id);
 

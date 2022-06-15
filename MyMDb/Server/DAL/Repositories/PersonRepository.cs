@@ -1,5 +1,6 @@
 ﻿using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.CreateModel;
+using MyMDb.Shared.DTOs;
 using MyMDb.Shared.SearchModel;
 
 namespace MyMDb.Server.DAL.Repositories
@@ -13,7 +14,7 @@ namespace MyMDb.Server.DAL.Repositories
             _db = db;
         }
 
-        public async Task<Person?> Delete(int id)
+        public async Task<PersonDto?> Delete(int id)
         {
             var dbRecord = await _db.Person.Include(p => p.Movie).FirstOrDefaultAsync(x => x.Id == id);
             if (dbRecord != null)
@@ -24,20 +25,20 @@ namespace MyMDb.Server.DAL.Repositories
             return dbRecord == null ? null : ToModel(dbRecord);
         }
 
-        public async Task<Person?> Get(int id)
+        public async Task<PersonDto?> Get(int id)
         {
             var dbRecord = await _db.Person.Include(p => p.Movie).FirstOrDefaultAsync(x => x.Id == id);
             return dbRecord == null ? null : ToModel(dbRecord);
         }
 
-        public IReadOnlyCollection<Person> GetAll()
+        public IReadOnlyCollection<PersonDto> GetAll()
         {
             return _db.Person.Include(p => p.Movie).Select(ToModel).ToList();
         }
 
-        public async Task<Person> Insert(CreatePerson value)
+        public async Task<PersonDto> Insert(CreatePerson value)
         {
-            var toInsert = new DbPerson()
+            var toInsert = new Person()
             {
                 FullName = value.FullName,
                 Birthdate = value.Birthdate,
@@ -53,10 +54,17 @@ namespace MyMDb.Server.DAL.Repositories
 
         public async Task<IReadOnlyCollection<SearchPerson>> SearchByName(string name)
         {
-            return await _db.Person.Where(p => p.FullName.Contains(name)).Select(p => new SearchPerson(p.Id, p.FullName)).ToListAsync();
+            return await _db.Person
+                .Where(p => p.FullName.Contains(name))
+                .Select(p => new SearchPerson
+                {
+                    Id = p.Id,
+                    FullName = p.FullName
+                })
+                .ToListAsync();
         }
 
-        public async Task<Person?> Update(Person value)
+        public async Task<PersonDto?> Update(PersonDto value)
         {
             var dbRecord = await _db.Person.Include(p => p.Movie).FirstOrDefaultAsync(p => p.Id == value.Id);
             if (dbRecord == null)
@@ -75,14 +83,14 @@ namespace MyMDb.Server.DAL.Repositories
             return ToModel(dbRecord);
         }
 
-        private static Person ToModel(DbPerson value)
+        private static PersonDto ToModel(Person value)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return new Person
+            return new PersonDto
             {
                 Id = value.Id,
                 FullName = value.FullName,

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyMDb.Server.DAL.Repositories;
 using MyMDb.Shared.CreateModel;
+using MyMDb.Shared.DTOs;
 using MyMDb.Shared.SearchModel;
 
 namespace MyMDb.Server.Controllers
@@ -18,14 +19,14 @@ namespace MyMDb.Server.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<List<Person>> GetPersons()
+        public ActionResult<List<PersonDto>> GetPersons()
         {
             return Ok(_repository.GetAll());
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Person>> GetPerson(int id)
+        public async Task<ActionResult<PersonDto>> GetPerson(int id)
         {
             var result = await _repository.Get(id);
 
@@ -58,7 +59,7 @@ namespace MyMDb.Server.Controllers
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Person>> ModifyPerson(int id, [FromBody] Person person)
+        public async Task<ActionResult<PersonDto>> ModifyPerson(int id, [FromBody] PersonDto person)
         {
             var personfromDb = await _repository.Get(id);
 
@@ -67,7 +68,7 @@ namespace MyMDb.Server.Controllers
                 return NotFound();
             }
 
-            var toUpdate = new Person
+            var toUpdate = new PersonDto
             {
                 Id = id,
                 FullName = person.FullName,
@@ -83,7 +84,7 @@ namespace MyMDb.Server.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Person>> DeletePerson(int id)
+        public async Task<ActionResult<PersonDto>> DeletePerson(int id)
         {
             var person = await _repository.Delete(id);
 

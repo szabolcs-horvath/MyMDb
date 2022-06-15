@@ -7,8 +7,8 @@ namespace MyMDb.Server.DAL
         public MyMDbDbContext(DbContextOptions<MyMDbDbContext> options)
             : base(options) {}
 
-        public DbSet<DbMovie> Movie { get; set; }
-        public DbSet<DbPerson> Person { get; set; }
+        public DbSet<Movie> Movie { get; set; }
+        public DbSet<Person> Person { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -23,7 +23,7 @@ namespace MyMDb.Server.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DbMovie>()
+            modelBuilder.Entity<Movie>()
                 .HasMany(m => m.Person)
                 .WithMany(p => p.Movie)
                 .UsingEntity(j => j.ToTable("MoviePersonJoiningTable"));
