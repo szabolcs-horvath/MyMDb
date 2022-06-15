@@ -1,9 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using MyMDb.Server.DAL.Repositories.UserRepository;
 using MyMDb.Server.DAL.Services.AuthService;
 using MyMDb.Shared.DTOs;
@@ -39,13 +35,19 @@ namespace MyMDb.Server.Controllers
                 PasswordSalt = user.PasswordSalt
             };
 
-            if (user is null ||
-                !(await _authService.VerifyPasswordHash(request.Password, hash)))
+            if (!await _authService.VerifyPasswordHash(request.Password, hash))
             {
                 return BadRequest();
             }
 
-            var token = _authService.CreateToken(user);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, "Admin"),
+            };
+
+            var token = _authService.CreateToken(user, claims);
 
             return Ok(token);
         }
