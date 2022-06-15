@@ -52,7 +52,7 @@ namespace MyMDb.Server.DAL.Services.AuthService
             }
 
             stopwatch.Stop();
-            Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} milliseconds");
+            Console.WriteLine($"Elapsed time at registration: {stopwatch.ElapsedMilliseconds} milliseconds");
 
             return new HashDto
             {
@@ -65,11 +65,19 @@ namespace MyMDb.Server.DAL.Services.AuthService
         {
             using var hmac = new HMACSHA512(hash.PasswordSalt);
             var computedHash = Array.Empty<byte>();
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             for (var i = 0; i < 1_000_000; i++)
             {
                 computedHash = await hmac.ComputeHashAsync(
                     new MemoryStream(Encoding.UTF8.GetBytes(password)));
             }
+
+            stopwatch.Stop();
+            Console.WriteLine($"Elapsed time at login: {stopwatch.ElapsedMilliseconds} milliseconds");
+
             return computedHash.SequenceEqual(hash.PasswordHash);
         }
     }
