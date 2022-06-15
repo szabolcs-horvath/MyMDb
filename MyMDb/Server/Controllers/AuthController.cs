@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -37,7 +38,6 @@ namespace MyMDb.Server.Controllers
             return Ok(token);
         }
 
-
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(UserRegisterDto request)
         {
@@ -57,7 +57,7 @@ namespace MyMDb.Server.Controllers
 
             await _repository.Insert(user);
 
-            return Ok();
+            return Ok("Successful registration!");
         }
 
         private string CreateToken(UserDto user)
@@ -87,17 +87,30 @@ namespace MyMDb.Server.Controllers
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            //TODO Add stretching
             using var hmac = new HMACSHA512();
+
             passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            passwordHash = Array.Empty<byte>();
+
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Start();
+            for (var i = 0; i < 1_000_000; i++) //Should calculate the hash in about 1-2 seconds depending on environment
+            {
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }
+            //stopwatch.Stop();
+            //Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} milliseconds");
         }
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            //TODO Get User's Salt from DB, initialize hmac with that
+            //TODO Get User's salt from DB with username, initialize hmac with that
             using var hmac = new HMACSHA512(passwordSalt);
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            var computedHash = Array.Empty<byte>();
+            for (var i = 0; i < 1_000_000; i++)
+            {
+                computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }
             return computedHash.SequenceEqual(passwordHash);
         }
     }
