@@ -40,14 +40,14 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
             return dbRecord?.ToDto();
         }
 
-        public async Task<ICollection<MovieDto>> GetAll()
+        public IReadOnlyCollection<MovieDto> GetAll()
         {
-            var result = await _db.Movie
+            var result = _db.Movie
                 .Include(m => m.Person)
                 .Include(m => m.Ratings).ThenInclude(r => r.User)
                 .Include(m => m.Reviews).ThenInclude(r => r.User)
                 .Select(m => m.ToDto())
-                .ToListAsync();
+                .ToList();
 
             return result;
         }
