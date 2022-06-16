@@ -10,6 +10,8 @@ namespace MyMDb.Server.DAL
         public DbSet<Movie> Movie { get; set; }
         public DbSet<Person> Person { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<Rating> Rating { get; set; }
+        public DbSet<Review> Review { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -28,6 +30,22 @@ namespace MyMDb.Server.DAL
                 .HasMany(m => m.Person)
                 .WithMany(p => p.Movie)
                 .UsingEntity(j => j.ToTable("MoviePersonJoiningTable"));
+
+            modelBuilder.Entity<Rating>()
+                .HasOne(r => r.Movie)
+                .WithMany(m => m.Ratings);
+
+            modelBuilder.Entity<Rating>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.Ratings);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Movie)
+                .WithMany(m => m.Reviews);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.Reviews);
         }
     }
 }

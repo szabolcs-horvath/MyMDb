@@ -17,5 +17,7 @@
         public string? Cast { get; set; }
 
         public ICollection<Person> Person { get; set; } = new List<Person>();
+        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }

@@ -48,5 +48,16 @@ namespace MyMDb.Server
                 People = value.Person.Select(p => p.FullName ?? "")
             };
         }
+
+        public static RatingDto ToDto(this Rating value)
+        {
+            return new RatingDto
+            {
+                Id = value.Id,
+                MovieId = value.MovieId,
+                UserId = value.UserId,
+                Score = value.Score
+            };
+        }
     }
 }

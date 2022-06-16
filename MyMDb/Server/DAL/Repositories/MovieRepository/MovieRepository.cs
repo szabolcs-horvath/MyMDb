@@ -33,6 +33,8 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
         {
             var dbRecord = await _db.Movie
                 .Include(m => m.Person)
+                .Include(m => m.Ratings).ThenInclude(r => r.User)
+                .Include(m => m.Reviews).ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return dbRecord?.ToDto();
@@ -42,6 +44,8 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
         {
             return await _db.Movie
                 .Include(m => m.Person)
+                .Include(m => m.Ratings).ThenInclude(r => r.User)
+                .Include(m => m.Reviews).ThenInclude(r => r.User)
                 .Select(m => m.ToDto())
                 .ToListAsync();
         }
@@ -68,6 +72,8 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
             await _db.SaveChangesAsync();
             var result = await _db.Movie
                 .Include(m => m.Person)
+                .Include(m => m.Ratings).ThenInclude(r => r.User)
+                .Include(m => m.Reviews).ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == toInsert.Id);
 
             return result?.ToDto() ?? toInsert.ToDto();
@@ -89,6 +95,8 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
         {
             var dbRecord = await _db.Movie
                 .Include(m => m.Person)
+                .Include(m => m.Ratings).ThenInclude(r => r.User)
+                .Include(m => m.Reviews).ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(x => x.Id == value.Id);
 
             if (dbRecord == null)

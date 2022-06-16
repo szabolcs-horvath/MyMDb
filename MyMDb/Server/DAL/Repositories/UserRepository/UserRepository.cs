@@ -63,11 +63,13 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
         {
             var result = await _db.User.FindAsync(id);
 
-            if (result is not null)
+            if (result is null)
             {
-                _db.Remove(result);
-                await _db.SaveChangesAsync();
+                return null;
             }
+
+            _db.Remove(result);
+            await _db.SaveChangesAsync();
 
             return result?.ToDto();
         }
