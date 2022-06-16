@@ -19,7 +19,7 @@ namespace MyMDb.Server.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IReadOnlyCollection<MovieDto>> GetMovies()
+        public ActionResult<ICollection<MovieDto>> GetMovies()
         {
             return Ok(_repository.GetAll());
         }
