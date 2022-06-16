@@ -59,8 +59,8 @@ CREATE TABLE [Rating] (
 	[MovieID] int FOREIGN KEY REFERENCES Movie(ID) NOT NULL,
 	[UserID] int FOREIGN KEY REFERENCES [User](ID) NOT NULL,
 	CONSTRAINT UQ_Rating_MovieIDUserID UNIQUE(MovieId, UserID),
-	[Rating] int NOT NULL,
-	CONSTRAINT CHK_Rating_Rating CHECK (0 <= [Rating] AND [Rating] <= 10)
+	[Score] int NOT NULL,
+	CONSTRAINT CHK_Rating_Score CHECK (0 <= [Score] AND [Score] <= 10)
 )
 
 CREATE TABLE [Review] (
@@ -69,7 +69,7 @@ CREATE TABLE [Review] (
 	[UserID] int FOREIGN KEY REFERENCES [User](ID) NOT NULL,
 	CONSTRAINT UQ_Review_MovieIDUserID UNIQUE(MovieId, UserID),
 	[Headline] nvarchar(MAX) NOT NULL,
-	[Review] nvarchar(MAX) NOT NULL,
+	[Description] nvarchar(MAX) NOT NULL,
 	[Spoiler] bit NOT NULL DEFAULT 0
 )
 GO
