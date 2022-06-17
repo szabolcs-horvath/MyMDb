@@ -48,17 +48,9 @@ namespace MyMDb.Server.Controllers
             return Ok(result.ToResponse());
         }
 
-        [HttpGet("search")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IReadOnlyCollection<SearchPerson>>> SearchByName(string name)
-        {
-            var results = await _repository.SearchByName(name);
-            return Ok(results);
-        }
-
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult> PostPerson([FromBody] CreatePerson person)
+        public async Task<ActionResult> Post([FromBody] CreatePerson person)
         {
             var created = await _repository.Insert(person);
             return CreatedAtAction(nameof(Get), new { id = created?.Id }, created);
@@ -67,7 +59,7 @@ namespace MyMDb.Server.Controllers
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PersonResponse>> ModifyPerson(int id, [FromBody] PersonResponse person)
+        public async Task<ActionResult<PersonResponse>> Update(int id, [FromBody] PersonResponse person)
         {
             var personfromDb = await _repository.GetExtended(id);
 
@@ -91,7 +83,7 @@ namespace MyMDb.Server.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PersonResponse>> DeletePerson(int id)
+        public async Task<ActionResult<PersonResponse>> Delete(int id)
         {
             var person = await _repository.Delete(id);
 
@@ -101,6 +93,14 @@ namespace MyMDb.Server.Controllers
             }
 
             return Ok(person);
+        }
+
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyCollection<SearchPerson>>> SearchByName(string name)
+        {
+            var results = await _repository.SearchByName(name);
+            return Ok(results);
         }
     }
 }
