@@ -24,7 +24,7 @@ namespace MyMDb.Server
                 FullName = value.FullName,
                 Birthdate = value.Birthdate,
                 Birthplace = value.Birthplace,
-                Movies = value.Movie.Select(m => m.ToResponse()) // Ez Cycle-t okoz
+                Movies = value.Movie.Select(m => m.ToBasic()) // Ez Cycle-t okoz
             };
         }
 
@@ -45,7 +45,7 @@ namespace MyMDb.Server
                 ReleaseDate = value.ReleaseDate,
                 Directors = value.Directors?.Split(",").Select(s => s.Trim()).ToList(),
                 Cast = value.Cast?.Split(",").Select(s => s.Trim()).ToList(),
-                People = value.Person.Select(p => p.ToResponse()), // Ez Cycle-t okoz
+                People = value.Person.Select(p => p.ToBasic()), // Ez Cycle-t okoz
                 Ratings = value.Ratings.Select(r => r.ToResponse()),
                 Reviews = value.Reviews.Select(r => r.ToResponse())
             };
@@ -74,6 +74,24 @@ namespace MyMDb.Server
                 Description = value.Description,
                 Spoiler = value.Spoiler,
                 Movie = value.Movie.ToResponse()
+            };
+        }
+
+        public static MovieBasic ToBasic(this Movie value)
+        {
+            return new MovieBasic
+            {
+                Id = value.Id,
+                Title = value.Title
+            };
+        }
+
+        public static PersonBasic ToBasic(this Person value)
+        {
+            return new PersonBasic
+            {
+                Id = value.Id,
+                FullName = value.FullName
             };
         }
     }

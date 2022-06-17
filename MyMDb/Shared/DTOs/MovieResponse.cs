@@ -15,7 +15,7 @@
         public string? ReleaseDate { get; set; }
         public IEnumerable<string>? Directors { get; set; }
         public IEnumerable<string>? Cast { get; set; }
-        public IEnumerable<PersonResponse>? People { get; set; }
+        public IEnumerable<PersonBasic>? People { get; set; }
         public IEnumerable<RatingResponse>? Ratings { get; set; }
         public IEnumerable<ReviewResponse>? Reviews { get; set; }
     }
