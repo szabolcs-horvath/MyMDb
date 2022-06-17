@@ -73,12 +73,12 @@ else
 
 @code {
     [Parameter] public int MovieID { get; set; }
-    private MovieDto? _movie;
+    private MovieResponse? _movie;
     private bool _notFound;
 
     protected override async Task OnParametersSetAsync()
     {
-        _movie = await Http.GetFromJsonAsync<MovieDto>($"api/movie/{MovieID}");
+        _movie = await Http.GetFromJsonAsync<MovieResponse>($"api/movie/{MovieID}");
         if (_movie is null)
         {
             _notFound = true;

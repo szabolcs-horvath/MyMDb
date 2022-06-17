@@ -16,21 +16,21 @@ namespace MyMDb.Server
             };
         }
 
-        public static PersonDto ToDto(this Person value)
+        public static PersonResponse ToResponse(this Person value)
         {
-            return new PersonDto
+            return new PersonResponse
             {
                 Id = value.Id,
                 FullName = value.FullName,
                 Birthdate = value.Birthdate,
                 Birthplace = value.Birthplace,
-                Movies = value.Movie.Select(m => m.Title ?? "")
+                Movies = value.Movie.Select(m => m.ToResponse()) // Ez Cycle-t okoz
             };
         }
 
-        public static MovieDto ToDto(this Movie value)
+        public static MovieResponse ToResponse(this Movie value)
         {
-            return new MovieDto
+            return new MovieResponse
             {
                 Id = value.Id,
                 YourRating = value.YourRating,
@@ -45,18 +45,35 @@ namespace MyMDb.Server
                 ReleaseDate = value.ReleaseDate,
                 Directors = value.Directors?.Split(",").Select(s => s.Trim()).ToList(),
                 Cast = value.Cast?.Split(",").Select(s => s.Trim()).ToList(),
-                People = value.Person.Select(p => p.FullName ?? "")
+                People = value.Person.Select(p => p.ToResponse()), // Ez Cycle-t okoz
+                Ratings = value.Ratings.Select(r => r.ToResponse()),
+                Reviews = value.Reviews.Select(r => r.ToResponse())
             };
         }
 
-        public static RatingDto ToDto(this Rating value)
+        public static RatingResponse ToResponse(this Rating value)
         {
-            return new RatingDto
+            return new RatingResponse
             {
                 Id = value.Id,
                 MovieId = value.MovieId,
                 UserId = value.UserId,
-                Score = value.Score
+                Score = value.Score,
+                Movie = value.Movie.ToResponse()
+            };
+        }
+
+        public static ReviewResponse ToResponse(this Review value)
+        {
+            return new ReviewResponse
+            {
+                Id = value.Id,
+                MovieId = value.MovieId,
+                UserId = value.UserId,
+                Headline = value.Headline,
+                Description = value.Description,
+                Spoiler = value.Spoiler,
+                Movie = value.Movie.ToResponse()
             };
         }
     }

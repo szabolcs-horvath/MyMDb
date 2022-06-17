@@ -14,10 +14,9 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
             _db = db;
         }
 
-        public IReadOnlyCollection<MovieDto> GetAll()
+        public ICollection<Movie> GetAll()
         {
             var result = _db.Movie
-                .Select(m => m.ToDto())
                 .ToList();
 
             return result;
@@ -30,7 +29,7 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
             return dbRecord;
         }
 
-        public async Task<MovieDto?> GetExtended(int id)
+        public async Task<Movie?> GetExtended(int id)
         {
             var dbRecord = await _db.Movie
                 .Include(m => m.Person)
@@ -38,10 +37,10 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
                 .Include(m => m.Reviews).ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return dbRecord?.ToDto();
+            return dbRecord;
         }
 
-        public async Task<MovieDto?> Insert(CreateMovie value)
+        public async Task<Movie?> Insert(CreateMovie value)
         {
             var toInsert = new Movie()
             {
@@ -63,10 +62,10 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
             await _db.SaveChangesAsync();
             var result = await _db.Movie.FindAsync(toInsert.Id);
 
-            return result?.ToDto();
+            return result;
         }
 
-        public async Task<MovieDto?> Update(MovieDto value)
+        public async Task<Movie?> Update(MovieResponse value)
         {
             var dbRecord = await _db.Movie.FindAsync(value.Id);
 
@@ -90,10 +89,10 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
 
             await _db.SaveChangesAsync();
 
-            return dbRecord.ToDto();
+            return dbRecord;
         }
 
-        public async Task<MovieDto?> Delete(int id)
+        public async Task<Movie?> Delete(int id)
         {
             var dbRecord = await _db.Movie.FindAsync(id);
 
@@ -103,7 +102,7 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
                 await _db.SaveChangesAsync();
             }
 
-            return dbRecord?.ToDto();
+            return dbRecord;
         }
 
         public async Task<IReadOnlyCollection<SearchMovie>> SearchByTitle(string title)

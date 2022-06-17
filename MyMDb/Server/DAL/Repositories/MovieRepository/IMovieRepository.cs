@@ -8,12 +8,12 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
     public interface IMovieRepository
     {
         //Has to be synchronous, otherwise serialization throws weird errors
-        IReadOnlyCollection<MovieDto> GetAll();
+        ICollection<Movie> GetAll();
         Task<Movie?> Get(int id);
-        Task<MovieDto?> GetExtended(int id);
-        Task<MovieDto?> Insert(CreateMovie value);
-        Task<MovieDto?> Update(MovieDto value);
-        Task<MovieDto?> Delete(int id);
+        Task<Movie?> GetExtended(int id);
+        Task<Movie?> Insert(CreateMovie value);
+        Task<Movie?> Update(MovieResponse value);
+        Task<Movie?> Delete(int id);
         Task<IReadOnlyCollection<SearchMovie>> SearchByTitle(string title);
     }
 }

@@ -14,10 +14,9 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
             _db = db;
         }
 
-        public IReadOnlyCollection<PersonDto> GetAll()
+        public IReadOnlyCollection<Person> GetAll()
         {
             var result = _db.Person
-                .Select(p => p.ToDto())
                 .ToList();
 
             return result;
@@ -30,16 +29,16 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
             return dbRecord;
         }
 
-        public async Task<PersonDto?> GetExtended(int id)
+        public async Task<Person?> GetExtended(int id)
         {
             var dbRecord = await _db.Person
                 .Include(p => p.Movie)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return dbRecord?.ToDto();
+            return dbRecord;
         }
 
-        public async Task<PersonDto?> Insert(CreatePerson value)
+        public async Task<Person?> Insert(CreatePerson value)
         {
             var toInsert = new Person()
             {
@@ -52,10 +51,10 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
             await _db.SaveChangesAsync();
             var result = await _db.Person.FindAsync(toInsert.Id);
 
-            return result?.ToDto();
+            return result;
         }
 
-        public async Task<PersonDto?> Update(PersonDto value)
+        public async Task<Person?> Update(PersonResponse value)
         {
             var dbRecord = await _db.Person.FindAsync(value.Id);
 
@@ -70,9 +69,9 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
 
             await _db.SaveChangesAsync();
 
-            return dbRecord.ToDto();
+            return dbRecord;
         }
-        public async Task<PersonDto?> Delete(int id)
+        public async Task<Person?> Delete(int id)
         {
             var dbRecord = await _db.Person.FindAsync(id);
 
@@ -82,7 +81,7 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
                 await _db.SaveChangesAsync();
             }
 
-            return dbRecord?.ToDto();
+            return dbRecord;
         }
 
         public async Task<IReadOnlyCollection<SearchPerson>> SearchByName(string name)

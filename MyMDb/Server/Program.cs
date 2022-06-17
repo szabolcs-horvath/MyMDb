@@ -1,6 +1,7 @@
 global using Microsoft.EntityFrameworkCore;
 global using MyMDb.Shared;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -51,8 +52,8 @@ builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // This setting causes circular references to be null instead, as soon as they are detected
-//builder.Services.AddControllers().AddJsonOptions(options => 
-//            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers().AddJsonOptions(options =>
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 
 var app = builder.Build();
