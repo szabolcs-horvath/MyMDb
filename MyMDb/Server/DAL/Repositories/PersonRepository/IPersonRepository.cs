@@ -1,4 +1,5 @@
-﻿using MyMDb.Shared.CreateModel;
+﻿using MyMDb.Server.DAL.Entities;
+using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.DTOs;
 using MyMDb.Shared.SearchModel;
 
@@ -8,8 +9,9 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
     {
         //Has to be synchronous, otherwise serialization throws weird errors
         IReadOnlyCollection<PersonDto> GetAll();
-        Task<PersonDto?> Get(int id);
-        Task<PersonDto> Insert(CreatePerson value);
+        Task<Person?> Get(int id);
+        Task<PersonDto?> GetExtended(int id);
+        Task<PersonDto?> Insert(CreatePerson value);
         Task<PersonDto?> Update(PersonDto value);
         Task<PersonDto?> Delete(int id);
         Task<IReadOnlyCollection<SearchPerson>> SearchByName(string name);

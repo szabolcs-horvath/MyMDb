@@ -28,7 +28,7 @@ namespace MyMDb.Server.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<PersonDto>> GetPerson(int id)
         {
-            var result = await _repository.Get(id);
+            var result = await _repository.GetExtended(id);
 
             if (result == null)
             {
@@ -61,7 +61,7 @@ namespace MyMDb.Server.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PersonDto>> ModifyPerson(int id, [FromBody] PersonDto person)
         {
-            var personfromDb = await _repository.Get(id);
+            var personfromDb = await _repository.GetExtended(id);
 
             if (personfromDb == null) 
             {

@@ -14,12 +14,19 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
 
         public async Task<Rating?> Get(int id)
         {
-            var result = await _db.Rating
+            var result = await _db.Rating.FindAsync(id);
+
+            return result;
+        }
+
+        public async Task<Rating?> GetExtended(int id)
+        {
+            var dbRecord = await _db.Rating
                 .Include(r => r.Movie)
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
-            return result;
+            return dbRecord;
         }
 
         public async Task<ICollection<Rating>> GetAllForMovie(int movieId)
@@ -54,9 +61,7 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
             await _db.Rating.AddAsync(toInsert);
             await _db.SaveChangesAsync();
             var result = await _db.Rating
-                .Include(r => r.Movie)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(r => r.Id == toInsert.Id);
+                .FindAsync(toInsert.Id);
 
             return result;
         }

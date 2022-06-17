@@ -14,12 +14,19 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
 
         public async Task<Review?> Get(int id)
         {
-            var result = await _db.Review
+            var result = await _db.Review.FindAsync(id);
+
+            return result;
+        }
+
+        public async Task<Review?> GetExtended(int id)
+        {
+            var dbRecord = await _db.Review
                 .Include(r => r.Movie)
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
-            return result;
+            return dbRecord;
         }
 
         public async Task<ICollection<Review>> GetAllForMovie(int movieId)
@@ -55,10 +62,7 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
 
             await _db.AddAsync(toInsert);
             await _db.SaveChangesAsync();
-            var result = await _db.Review
-                .Include(r => r.Movie)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(r => r.Id == toInsert.Id);
+            var result = await _db.Review.FindAsync(toInsert.Id);
 
             return result;
         }

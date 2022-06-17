@@ -18,6 +18,16 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             return result?.ToDto();
         }
 
+        public async Task<User?> GetExtended(int id)
+        {
+            var dbRecord = await _db.User
+                .Include(u => u.Ratings)
+                .Include(u => u.Reviews)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            return dbRecord;
+        }
+
         public async Task<UserDto?> Get(string username)
         {
             var result = await _db.User.FirstOrDefaultAsync(u => u.Username == username);

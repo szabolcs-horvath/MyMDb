@@ -29,7 +29,7 @@ namespace MyMDb.Server.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<MovieDto>> GetMovie(int id)
         {
-            var result = await _repository.Get(id);
+            var result = await _repository.GetExtended(id);
 
             if (result == null)
             {
@@ -61,7 +61,7 @@ namespace MyMDb.Server.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<MovieDto>> ModifyMovie(int id, [FromBody] MovieDto movie)
         {
-            var movieFromDb = await _repository.Get(id);
+            var movieFromDb = await _repository.GetExtended(id);
 
             if (movieFromDb == null)
             {

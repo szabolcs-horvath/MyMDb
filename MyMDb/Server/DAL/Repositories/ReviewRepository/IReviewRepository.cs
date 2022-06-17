@@ -6,6 +6,7 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
     public interface IReviewRepository
     {
         Task<Review?> Get(int id);
+        Task<Review?> GetExtended(int id);
         Task<ICollection<Review>> GetAllForMovie(int movieId);
         Task<ICollection<Review>> GetAllForUser(int userId);
         Task<Review?> Insert(Review value);

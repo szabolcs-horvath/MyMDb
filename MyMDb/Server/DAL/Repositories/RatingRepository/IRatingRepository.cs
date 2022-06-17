@@ -6,6 +6,7 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
     public interface IRatingRepository
     {
         Task<Rating?> Get(int id);
+        Task<Rating?> GetExtended(int id);
         Task<ICollection<Rating>> GetAllForMovie(int movieId);
         Task<ICollection<Rating>> GetAllForUser(int userId);
         Task<Rating?> Insert(Rating value);
