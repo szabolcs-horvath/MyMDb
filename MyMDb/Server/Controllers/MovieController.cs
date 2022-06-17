@@ -19,7 +19,7 @@ namespace MyMDb.Server.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IReadOnlyCollection<MovieDto>> GetMovies()
+        public ActionResult<IReadOnlyCollection<MovieDto>> GetAll()
         {
             return Ok(_repository.GetAll());
         }
@@ -27,8 +27,9 @@ namespace MyMDb.Server.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<MovieDto>> GetMovie(int id)
+        public async Task<ActionResult<MovieDto>> Get(int id, [FromQuery] string? extended)
         {
+            //TODO Handle extended parameter
             var result = await _repository.GetExtended(id);
 
             if (result == null)
@@ -53,7 +54,7 @@ namespace MyMDb.Server.Controllers
         public async Task<ActionResult<MovieDto>> PostMovie(CreateMovie movie)
         {
             var created = await _repository.Insert(movie);
-            return CreatedAtAction(nameof(GetMovie), new {id = created.Id}, created);
+            return CreatedAtAction(nameof(Get), new {id = created.Id}, created);
         }
 
         [HttpPatch("{id}")]

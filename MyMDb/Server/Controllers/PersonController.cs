@@ -19,15 +19,16 @@ namespace MyMDb.Server.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<List<PersonDto>> GetPersons()
+        public ActionResult<List<PersonDto>> GetAll()
         {
             return Ok(_repository.GetAll());
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<PersonDto>> GetPerson(int id)
+        public async Task<ActionResult<PersonDto>> Get(int id, [FromQuery] string? extended)
         {
+            //TODO Handle extended parameter
             var result = await _repository.GetExtended(id);
 
             if (result == null)
@@ -53,7 +54,7 @@ namespace MyMDb.Server.Controllers
         public async Task<ActionResult> PostPerson([FromBody] CreatePerson person)
         {
             var created = await _repository.Insert(person);
-            return CreatedAtAction(nameof(GetPerson), new { id = created.Id }, created);
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
         [HttpPatch("{id}")]
