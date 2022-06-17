@@ -16,18 +16,6 @@ namespace MyMDb.Server
             };
         }
 
-        public static PersonResponse ToResponse(this Person value)
-        {
-            return new PersonResponse
-            {
-                Id = value.Id,
-                FullName = value.FullName,
-                Birthdate = value.Birthdate,
-                Birthplace = value.Birthplace,
-                Movies = value.Movie.Select(m => m.ToBasic()) // Ez Cycle-t okoz
-            };
-        }
-
         public static MovieResponse ToResponse(this Movie value)
         {
             return new MovieResponse
@@ -45,9 +33,21 @@ namespace MyMDb.Server
                 ReleaseDate = value.ReleaseDate,
                 Directors = value.Directors?.Split(",").Select(s => s.Trim()).ToList(),
                 Cast = value.Cast?.Split(",").Select(s => s.Trim()).ToList(),
-                People = value.Person.Select(p => p.ToBasic()), // Ez Cycle-t okoz
-                Ratings = value.Ratings.Select(r => r.ToResponse()),
-                Reviews = value.Reviews.Select(r => r.ToResponse())
+                People = value.Person.Select(p => p.ToBasicResponse()),
+                Ratings = value.Ratings.Select(r => r.ToBasicResponse()),
+                Reviews = value.Reviews.Select(r => r.ToBasicResponse())
+            };
+        }
+
+        public static PersonResponse ToResponse(this Person value)
+        {
+            return new PersonResponse
+            {
+                Id = value.Id,
+                FullName = value.FullName,
+                Birthdate = value.Birthdate,
+                Birthplace = value.Birthplace,
+                Movies = value.Movie.Select(m => m.ToBasicResponse())
             };
         }
 
@@ -59,7 +59,7 @@ namespace MyMDb.Server
                 MovieId = value.MovieId,
                 UserId = value.UserId,
                 Score = value.Score,
-                Movie = value.Movie.ToResponse()
+                Movie = value.Movie.ToBasicResponse()
             };
         }
 
@@ -73,25 +73,49 @@ namespace MyMDb.Server
                 Headline = value.Headline,
                 Description = value.Description,
                 Spoiler = value.Spoiler,
-                Movie = value.Movie.ToResponse()
+                Movie = value.Movie.ToBasicResponse()
             };
         }
 
-        public static MovieBasic ToBasic(this Movie value)
+        public static MovieBasicResponse ToBasicResponse(this Movie value)
         {
-            return new MovieBasic
+            return new MovieBasicResponse
             {
                 Id = value.Id,
                 Title = value.Title
             };
         }
 
-        public static PersonBasic ToBasic(this Person value)
+        public static PersonBasicResponse ToBasicResponse(this Person value)
         {
-            return new PersonBasic
+            return new PersonBasicResponse
             {
                 Id = value.Id,
                 FullName = value.FullName
+            };
+        }
+
+        public static RatingBasicResponse ToBasicResponse(this Rating value)
+        {
+            return new RatingBasicResponse
+            {
+                Id = value.Id,
+                MovieId = value.MovieId,
+                UserId = value.UserId,
+                Score = value.Score
+            };
+        }
+
+        public static ReviewBasicResponse ToBasicResponse(this Review value)
+        {
+            return new ReviewBasicResponse
+            {
+                Id = value.Id,
+                MovieId = value.MovieId,
+                UserId = value.UserId,
+                Headline = value.Headline,
+                Description = value.Description,
+                Spoiler = value.Spoiler
             };
         }
     }

@@ -1,13 +1,10 @@
 ﻿namespace MyMDb.Shared.DTOs
 {
-    public class RatingResponse
+    public class RatingBasicResponse
     {
         public int Id { get; set; }
         public int MovieId { get; set; }
         public int UserId { get; set; }
         public int Score { get; set; }
-
-        public MovieBasicResponse Movie { get; set; }
-        //public UserResponse User { get; set; }
     }
 }
