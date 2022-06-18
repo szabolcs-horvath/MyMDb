@@ -11,11 +11,11 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             _db = db;
         }
 
-        public async Task<MyMDbUserDto?> Get(int id)
+        public async Task<MyMDbUser?> Get(int id)
         {
             var result = await _db.MyMDbUser.FindAsync(id);
 
-            return result?.ToDto();
+            return result;
         }
 
         public async Task<MyMDbUser?> GetExtended(int id)
@@ -28,14 +28,14 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             return dbRecord;
         }
 
-        public async Task<MyMDbUserDto?> Get(string username)
+        public async Task<MyMDbUser?> Get(string username)
         {
             var result = await _db.MyMDbUser.FirstOrDefaultAsync(u => u.Username == username);
 
-            return result?.ToDto();
+            return result;
         }
 
-        public async Task<MyMDbUserDto> Insert(MyMDbUserDto value)
+        public async Task<MyMDbUser?> Insert(MyMDbUserDto value)
         {
             var toInsert = new MyMDbUser
             {
@@ -49,10 +49,10 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             await _db.SaveChangesAsync();
             var result = await _db.MyMDbUser.FirstOrDefaultAsync(u => u.Username == toInsert.Username);
 
-            return result?.ToDto() ?? toInsert.ToDto();
+            return result;
         }
 
-        public async Task<MyMDbUserDto?> Update(MyMDbUserDto value)
+        public async Task<MyMDbUser?> Update(MyMDbUserDto value)
         {
             var dbRecord = await _db.MyMDbUser.FindAsync(value.Id);
 
@@ -67,10 +67,10 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
 
             await _db.SaveChangesAsync();
 
-            return dbRecord.ToDto();
+            return dbRecord;
         }
 
-        public async Task<MyMDbUserDto?> Delete(int id)
+        public async Task<MyMDbUser> Delete(int id)
         {
             var result = await _db.MyMDbUser.FindAsync(id);
 
@@ -82,7 +82,7 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             _db.Remove(result);
             await _db.SaveChangesAsync();
 
-            return result?.ToDto();
+            return result;
         }
     }
 }

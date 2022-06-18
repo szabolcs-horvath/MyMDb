@@ -4,11 +4,11 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
 {
     public interface IUserRepository
     {
-        Task<MyMDbUserDto?> Get(int id);
+        Task<MyMDbUser?> Get(int id);
         Task<MyMDbUser?> GetExtended(int id); 
-        Task<MyMDbUserDto?> Get(string username);
-        Task<MyMDbUserDto> Insert(MyMDbUserDto value);
-        Task<MyMDbUserDto?> Update(MyMDbUserDto value);
-        Task<MyMDbUserDto?> Delete(int id);
+        Task<MyMDbUser?> Get(string username);
+        Task<MyMDbUser?> Insert(MyMDbUserDto value);
+        Task<MyMDbUser?> Update(MyMDbUserDto value);
+        Task<MyMDbUser?> Delete(int id);
     }
 }

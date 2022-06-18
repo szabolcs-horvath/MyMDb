@@ -5,7 +5,8 @@ namespace MyMDb.Server.DAL.Services.AuthService
 {
     public interface IAuthService
     {
-        public string CreateToken(MyMDbUserDto myMDbUser, List<Claim> claims);
+        public string CreateToken(List<Claim> claims);
+        public List<Claim> CreateClaims(MyMDbUser user);
         public Task<HashDto> CreatePasswordHash(string password);
         public Task<bool> VerifyPasswordHash(string password, HashDto hash);
     }

@@ -17,7 +17,7 @@ namespace MyMDb.Server.DAL.Services.AuthService
             _configuration = configuration;
         }
 
-        public string CreateToken(MyMDbUserDto myMDbUser, List<Claim> claims)
+        public string CreateToken(List<Claim> claims)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration.GetSection("AppSettings:Token").Value));
@@ -33,6 +33,18 @@ namespace MyMDb.Server.DAL.Services.AuthService
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
+        }
+
+        public List<Claim> CreateClaims(MyMDbUser user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.MyMDbRole.Rolename)
+            };
+
+            return claims;
         }
 
         public async Task<HashDto> CreatePasswordHash(string password)

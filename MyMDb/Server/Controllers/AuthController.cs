@@ -40,14 +40,9 @@ namespace MyMDb.Server.Controllers
                 return BadRequest();
             }
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, "Admin"),
-            };
+            var claims = _authService.CreateClaims(user);
 
-            var token = _authService.CreateToken(user, claims);
+            var token = _authService.CreateToken(claims);
 
             return Ok(token);
         }
@@ -55,18 +50,14 @@ namespace MyMDb.Server.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<MyMDbUser>> Register(MyMDbUserRegisterDto request)
         {
-            if (request.Password != request.ConfirmPassword)
-            {
-                return BadRequest("Confirm password doesn't match");
-            }
-
             var hash = await _authService.CreatePasswordHash(request.Password);
 
             var user = new MyMDbUserDto
             {
                 Username = request.Username,
                 PasswordHash = hash.PasswordHash,
-                PasswordSalt = hash.PasswordSalt
+                PasswordSalt = hash.PasswordSalt,
+                MyMDbRoleId = request.MyMDbRoleId
             };
 
             await _repository.Insert(user);
