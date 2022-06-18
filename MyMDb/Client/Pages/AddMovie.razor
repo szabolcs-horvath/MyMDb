@@ -239,7 +239,7 @@
                 Title = this.Title,
                 URL = this.URL,
                 TitleType = this.TitleType,
-                IMDbRating = Decimal.ToDouble(this.IMDbRating),
+                IMDbRating = decimal.ToDouble(this.IMDbRating),
                 Runtimemins = this.Runtimemins,
                 Year = this.Year,
                 Genres = string.Join(", ", this.genres),
@@ -248,7 +248,7 @@
                 Cast = string.Join(", ", this.cast)
             };
 
-            var result = await Http.PostAsJsonAsync<CreateMovie>("api/movie", movie);
+            var result = await Http.PostAsJsonAsync("api/movie", movie);
 
             var testString = string.Join(", ", this.genres);
             Console.WriteLine(testString);
