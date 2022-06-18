@@ -1,4 +1,4 @@
-﻿namespace MyMDb.Shared.DTOs
+﻿namespace MyMDb.Shared.DTOs.Person
 {
     public class PersonUpdateDto
     {

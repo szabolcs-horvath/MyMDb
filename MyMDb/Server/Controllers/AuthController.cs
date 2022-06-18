@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyMDb.Server.DAL.Repositories.UserRepository;
 using MyMDb.Server.DAL.Services.AuthService;
 using MyMDb.Shared.DTOs;
+using MyMDb.Shared.DTOs.MyMDbUser;
 
 namespace MyMDb.Server.Controllers
 {

@@ -1,5 +1,5 @@
 ﻿using MyMDb.Server.DAL.Entities;
-using MyMDb.Shared.DTOs;
+using MyMDb.Shared.DTOs.Rating;
 
 namespace MyMDb.Server.DAL.Repositories.RatingRepository
 {
@@ -66,18 +66,18 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
             return result;
         }
 
-        public async Task<Rating?> Update(RatingUpdateDto value)
+        public async Task<Rating?> Update(int id, RatingUpdateDto value)
         {
-            var dbRecord = await _db.Rating.FindAsync(value.Id);
+            var dbRecord = await _db.Rating.FindAsync(id);
 
             if (dbRecord is null)
             {
                 return null;
             }
 
-            dbRecord.MovieId = value.MovieId;
-            dbRecord.MyMDbUserId = value.MyMDbUserId;
-            dbRecord.Score = value.Score;
+            dbRecord.MovieId = value.MovieId ?? dbRecord.MovieId;
+            dbRecord.MyMDbUserId = value.MyMDbUserId ?? dbRecord.MyMDbUserId;
+            dbRecord.Score = value.Score ?? dbRecord.Score;
 
             await _db.SaveChangesAsync();
 

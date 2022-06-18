@@ -1,5 +1,5 @@
 ﻿using MyMDb.Server.DAL.Entities;
-using MyMDb.Shared.DTOs;
+using MyMDb.Shared.DTOs.Review;
 
 namespace MyMDb.Server.DAL.Repositories.ReviewRepository
 {
@@ -67,20 +67,20 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
             return result;
         }
 
-        public async Task<Review?> Update(ReviewUpdateDto value)
+        public async Task<Review?> Update(int id, ReviewUpdateDto value)
         {
-            var dbRecord = await _db.Review.FindAsync(value.Id);
+            var dbRecord = await _db.Review.FindAsync(id);
 
             if (dbRecord is null)
             {
                 return null;
             }
 
-            dbRecord.MovieId = value.MovieId;
-            dbRecord.MyMDbUserId = value.MyMDbUserId;
-            dbRecord.Headline = value.Headline;
-            dbRecord.Description = value.Description;
-            dbRecord.Spoiler = value.Spoiler;
+            dbRecord.MovieId = value.MovieId ?? dbRecord.MovieId;
+            dbRecord.MyMDbUserId = value.MyMDbUserId ?? dbRecord.MyMDbUserId;
+            dbRecord.Headline = value.Headline ?? dbRecord.Headline;
+            dbRecord.Description = value.Description ?? dbRecord.Description;
+            dbRecord.Spoiler = value.Spoiler ?? dbRecord.Spoiler;
 
             await _db.SaveChangesAsync();
 

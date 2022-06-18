@@ -1,4 +1,4 @@
-﻿using MyMDb.Shared.DTOs;
+﻿using MyMDb.Shared.DTOs.MyMDbUser;
 
 namespace MyMDb.Server.DAL.Repositories.UserRepository
 {
@@ -8,7 +8,7 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
         Task<MyMDbUser?> GetExtended(int id); 
         Task<MyMDbUser?> Get(string username);
         Task<MyMDbUser?> Insert(MyMDbUserDto value);
-        Task<MyMDbUser?> Update(MyMDbUserDto value);
+        Task<MyMDbUser?> Update(int id, MyMDbUserUpdateDto value);
         Task<MyMDbUser?> Delete(int id);
     }
 }

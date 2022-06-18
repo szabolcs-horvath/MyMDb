@@ -1,6 +1,6 @@
 ﻿using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.CreateModel;
-using MyMDb.Shared.DTOs;
+using MyMDb.Shared.DTOs.Movie;
 using MyMDb.Shared.SearchModel;
 
 namespace MyMDb.Server.DAL.Repositories.MovieRepository

@@ -1,4 +1,4 @@
-﻿namespace MyMDb.Shared.DTOs
+﻿namespace MyMDb.Shared.ResponseModel.MyMDbUser
 {
     public class MyMDbUserBasicResponse
     {

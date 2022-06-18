@@ -1,5 +1,11 @@
 ﻿using MyMDb.Server.DAL.Entities;
-using MyMDb.Shared.DTOs;
+using MyMDb.Shared.DTOs.MyMDbUser;
+using MyMDb.Shared.ResponseModel.Movie;
+using MyMDb.Shared.ResponseModel.MyMDbRole;
+using MyMDb.Shared.ResponseModel.MyMDbUser;
+using MyMDb.Shared.ResponseModel.Person;
+using MyMDb.Shared.ResponseModel.Rating;
+using MyMDb.Shared.ResponseModel.Review;
 
 namespace MyMDb.Server
 {

@@ -1,4 +1,4 @@
-﻿using MyMDb.Shared.DTOs;
+﻿using MyMDb.Shared.DTOs.MyMDbUser;
 
 namespace MyMDb.Server.DAL.Repositories.UserRepository
 {
@@ -52,18 +52,19 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             return result;
         }
 
-        public async Task<MyMDbUser?> Update(MyMDbUserDto value)
+        public async Task<MyMDbUser?> Update(int id, MyMDbUserUpdateDto value)
         {
-            var dbRecord = await _db.MyMDbUser.FindAsync(value.Id);
+            var dbRecord = await _db.MyMDbUser.FindAsync(id);
 
             if (dbRecord is null)
             {
                 return null;
             }
 
-            dbRecord.Username = value.Username;
-            dbRecord.PasswordHash = value.PasswordHash;
-            dbRecord.PasswordSalt = value.PasswordSalt;
+            dbRecord.Username = value.Username ?? dbRecord.Username;
+            dbRecord.PasswordHash = value.PasswordHash ?? dbRecord.PasswordHash;
+            dbRecord.PasswordSalt = value.PasswordSalt ?? dbRecord.PasswordSalt;
+            dbRecord.MyMDbRoleId = value.MyMDbRoleId ?? dbRecord.MyMDbRoleId;
 
             await _db.SaveChangesAsync();
 

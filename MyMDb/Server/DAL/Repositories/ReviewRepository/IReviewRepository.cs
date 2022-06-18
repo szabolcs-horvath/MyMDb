@@ -1,5 +1,5 @@
 ﻿using MyMDb.Server.DAL.Entities;
-using MyMDb.Shared.DTOs;
+using MyMDb.Shared.DTOs.Review;
 
 namespace MyMDb.Server.DAL.Repositories.ReviewRepository
 {
@@ -10,7 +10,7 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
         Task<ICollection<Review>> GetAllForMovie(int movieId);
         Task<ICollection<Review>> GetAllForUser(int userId);
         Task<Review?> Insert(Review value);
-        Task<Review?> Update(ReviewUpdateDto value);
+        Task<Review?> Update(int id, ReviewUpdateDto value);
         Task<Review?> Delete(int id);
     }
 }

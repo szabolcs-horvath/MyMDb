@@ -1,4 +1,6 @@
-﻿namespace MyMDb.Shared.DTOs
+﻿using MyMDb.Shared.ResponseModel.Movie;
+
+namespace MyMDb.Shared.ResponseModel.Person
 {
     public class PersonResponse
     {

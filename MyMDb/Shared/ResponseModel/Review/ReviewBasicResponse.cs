@@ -1,6 +1,6 @@
-﻿namespace MyMDb.Shared.DTOs
+﻿namespace MyMDb.Shared.ResponseModel.Review
 {
-    public class ReviewUpdateDto
+    public class ReviewBasicResponse
     {
         public int Id { get; set; }
         public int MovieId { get; set; }

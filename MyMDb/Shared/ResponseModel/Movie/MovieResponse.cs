@@ -1,4 +1,8 @@
-﻿namespace MyMDb.Shared.DTOs
+﻿using MyMDb.Shared.ResponseModel.Person;
+using MyMDb.Shared.ResponseModel.Rating;
+using MyMDb.Shared.ResponseModel.Review;
+
+namespace MyMDb.Shared.ResponseModel.Movie
 {
     public class MovieResponse
     {

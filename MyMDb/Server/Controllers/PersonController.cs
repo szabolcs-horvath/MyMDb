@@ -2,7 +2,8 @@
 using MyMDb.Server.DAL.Entities;
 using MyMDb.Server.DAL.Repositories.PersonRepository;
 using MyMDb.Shared.CreateModel;
-using MyMDb.Shared.DTOs;
+using MyMDb.Shared.DTOs.Person;
+using MyMDb.Shared.ResponseModel.Person;
 using MyMDb.Shared.SearchModel;
 
 namespace MyMDb.Server.Controllers
