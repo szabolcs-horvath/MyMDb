@@ -20,7 +20,7 @@ namespace MyMDb.Server.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UserLoginDto request)
+        public async Task<ActionResult<string>> Login(MyMDbUserLoginDto request)
         {
             var user = await _repository.Get(request.Username);
 
@@ -53,7 +53,7 @@ namespace MyMDb.Server.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserRegisterDto request)
+        public async Task<ActionResult<MyMDbUser>> Register(MyMDbUserRegisterDto request)
         {
             if (request.Password != request.ConfirmPassword)
             {
@@ -62,7 +62,7 @@ namespace MyMDb.Server.Controllers
 
             var hash = await _authService.CreatePasswordHash(request.Password);
 
-            var user = new UserDto
+            var user = new MyMDbUserDto
             {
                 Username = request.Username,
                 PasswordHash = hash.PasswordHash,

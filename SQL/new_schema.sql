@@ -13,13 +13,13 @@ IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Person'
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Movie') AND type in (N'U'))
 	DROP TABLE [Movie]
 
-IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].User') AND type in (N'U'))
-	DROP TABLE [User]
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].MyMDbUser') AND type in (N'U'))
+	DROP TABLE [MyMDbUser]
 
-CREATE TABLE [User] (
+CREATE TABLE [MyMDbUser] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[Username] nvarchar(64) NOT NULL,
-	CONSTRAINT UQ_User_Username UNIQUE(Username),
+	CONSTRAINT UQ_MyMDbUser_Username UNIQUE(Username),
 	[PasswordHash] binary(64) NOT NULL,
 	[PasswordSalt] binary(128) NOT NULL
 )
@@ -57,8 +57,8 @@ CREATE TABLE [MoviePersonJoiningTable] (
 CREATE TABLE [Rating] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[MovieID] int FOREIGN KEY REFERENCES Movie(ID) NOT NULL,
-	[UserID] int FOREIGN KEY REFERENCES [User](ID) NOT NULL,
-	CONSTRAINT UQ_Rating_MovieIDUserID UNIQUE(MovieId, UserID),
+	[MyMDbUserID] int FOREIGN KEY REFERENCES [MyMDbUser](ID) NOT NULL,
+	CONSTRAINT UQ_Rating_MovieIDMyMDbUserID UNIQUE(MovieId, MyMDbUserID),
 	[Score] int NOT NULL,
 	CONSTRAINT CHK_Rating_Score CHECK (0 <= [Score] AND [Score] <= 10)
 )
@@ -66,8 +66,8 @@ CREATE TABLE [Rating] (
 CREATE TABLE [Review] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[MovieID] int FOREIGN KEY REFERENCES Movie(ID) NOT NULL,
-	[UserID] int FOREIGN KEY REFERENCES [User](ID) NOT NULL,
-	CONSTRAINT UQ_Review_MovieIDUserID UNIQUE(MovieId, UserID),
+	[MyMDbUserID] int FOREIGN KEY REFERENCES [MyMDbUser](ID) NOT NULL,
+	CONSTRAINT UQ_Review_MovieIDMyMDbUserID UNIQUE(MovieId, MyMDbUserID),
 	[Headline] nvarchar(MAX) NOT NULL,
 	[Description] nvarchar(MAX) NOT NULL,
 	[Spoiler] bit NOT NULL DEFAULT 0
@@ -172,6 +172,10 @@ begin
 end
 GO
 
+SET IDENTITY_INSERT [dbo].[MyMDbUser] ON 
+INSERT [dbo].[MyMDbUser] ([ID], [Username], [PasswordHash], [PasswordSalt]) VALUES (1, N'sabhee', 0xB7E6F6C86F7A93411ABD65510856092085C57F085617C402833050DE0B44FB70688D5D2BF7D7865CD190F231CFF0DFE82D111D4C1985645382D619E6E6D14D3E, 0x6E85AB1728EA9C3371D4A83CDF3D44BDFC8F03F8F159E83C8DA090DB12A02135F6C4201AD0E8B99F117AF593769723C51B0AC6FC3A2884CE53F00FDF994A5F2F3D8F2604C96471D78A217D35BB94B3A67C22DB5CE3FD85F9D5CD3ECFF3D0DFF071A21246D12795E271995E37CE1EEF0292A6269B1DCA95265FDADE2BE741AE1E)
+SET IDENTITY_INSERT [dbo].[MyMDbUser] OFF
+GO
 
 SET IDENTITY_INSERT [dbo].[Movie] ON 
 INSERT [dbo].[Movie] ([ID], [YourRating], [DateRated], [Title], [URL], [TitleType], [IMDbRating], [Runtimemins], [Year], [Genres], [ReleaseDate], [Directors], [Cast]) VALUES (1, 8, N'2021-07-04', N'Druk', N'https://www.imdb.com/title/tt10288566/', N'movie', 7.7, 117, 2020, N'Comedy, Drama', N'2020-09-12', N'Thomas Vinterberg', N'Mads Mikkelsen, Thomas Bo Larsen, Magnus Millang, Lars Ranthe')
@@ -502,4 +506,16 @@ INSERT [dbo].[Person] ([ID], [FullName], [Birthdate], [Birthplace]) VALUES (4038
 INSERT [dbo].[Person] ([ID], [FullName], [Birthdate], [Birthplace]) VALUES (4039, N'J.K. Simmons', N'1955-01-09', N'Grosse Pointe, Michigan, USA')
 INSERT [dbo].[Person] ([ID], [FullName], [Birthdate], [Birthplace]) VALUES (7035, N'Teszt Faszi', N'2022-06-06', N'Ózd, Hungary')
 SET IDENTITY_INSERT [dbo].[Person] OFF
+GO
+
+
+SET IDENTITY_INSERT [dbo].[Rating] ON 
+INSERT [dbo].[Rating] ([ID], [MovieID], [MyMDbUserID], [Score]) VALUES (1, 1, 1, 8)
+SET IDENTITY_INSERT [dbo].[Rating] OFF
+GO
+
+
+SET IDENTITY_INSERT [dbo].[Review] ON 
+INSERT [dbo].[Review] ([ID], [MovieID], [MyMDbUserID], [Headline], [Description], [Spoiler]) VALUES (1, 1, 1, N'Test Headline', N'Lorem ipsum dolor sit amet', 1)
+SET IDENTITY_INSERT [dbo].[Review] OFF
 GO

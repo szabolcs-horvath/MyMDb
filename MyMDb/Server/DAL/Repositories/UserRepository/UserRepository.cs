@@ -11,16 +11,16 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             _db = db;
         }
 
-        public async Task<UserDto?> Get(int id)
+        public async Task<MyMDbUserDto?> Get(int id)
         {
-            var result = await _db.User.FindAsync(id);
+            var result = await _db.MyMDbUser.FindAsync(id);
 
             return result?.ToDto();
         }
 
-        public async Task<User?> GetExtended(int id)
+        public async Task<MyMDbUser?> GetExtended(int id)
         {
-            var dbRecord = await _db.User
+            var dbRecord = await _db.MyMDbUser
                 .Include(u => u.Ratings)
                 .Include(u => u.Reviews)
                 .FirstOrDefaultAsync(u => u.Id == id);
@@ -28,32 +28,32 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             return dbRecord;
         }
 
-        public async Task<UserDto?> Get(string username)
+        public async Task<MyMDbUserDto?> Get(string username)
         {
-            var result = await _db.User.FirstOrDefaultAsync(u => u.Username == username);
+            var result = await _db.MyMDbUser.FirstOrDefaultAsync(u => u.Username == username);
 
             return result?.ToDto();
         }
 
-        public async Task<UserDto> Insert(UserDto value)
+        public async Task<MyMDbUserDto> Insert(MyMDbUserDto value)
         {
-            var toInsert = new User
+            var toInsert = new MyMDbUser
             {
                 Username = value.Username,
                 PasswordHash = value.PasswordHash,
                 PasswordSalt = value.PasswordSalt
             };
 
-            await _db.User.AddAsync(toInsert);
+            await _db.MyMDbUser.AddAsync(toInsert);
             await _db.SaveChangesAsync();
-            var result = await _db.User.FirstOrDefaultAsync(u => u.Username == toInsert.Username);
+            var result = await _db.MyMDbUser.FirstOrDefaultAsync(u => u.Username == toInsert.Username);
 
             return result?.ToDto() ?? toInsert.ToDto();
         }
 
-        public async Task<UserDto?> Update(UserDto value)
+        public async Task<MyMDbUserDto?> Update(MyMDbUserDto value)
         {
-            var dbRecord = await _db.User.FindAsync(value.Id);
+            var dbRecord = await _db.MyMDbUser.FindAsync(value.Id);
 
             if (dbRecord is null)
             {
@@ -69,9 +69,9 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             return dbRecord.ToDto();
         }
 
-        public async Task<UserDto?> Delete(int id)
+        public async Task<MyMDbUserDto?> Delete(int id)
         {
-            var result = await _db.User.FindAsync(id);
+            var result = await _db.MyMDbUser.FindAsync(id);
 
             if (result is null)
             {

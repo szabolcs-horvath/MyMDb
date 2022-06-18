@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public int MovieId { get; set; }
-        public int UserId { get; set; }
+        public int MyMDbUserId { get; set; }
         public int Score { get; set; }
 
         public MovieBasicResponse Movie { get; set; }

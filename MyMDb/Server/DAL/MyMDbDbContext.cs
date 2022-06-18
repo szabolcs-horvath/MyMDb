@@ -9,7 +9,7 @@ namespace MyMDb.Server.DAL
 
         public DbSet<Movie> Movie { get; set; }
         public DbSet<Person> Person { get; set; }
-        public DbSet<User> User { get; set; }
+        public DbSet<MyMDbUser> MyMDbUser { get; set; }
         public DbSet<Rating> Rating { get; set; }
         public DbSet<Review> Review { get; set; }
 
@@ -36,7 +36,7 @@ namespace MyMDb.Server.DAL
                 .WithMany(m => m.Ratings);
 
             modelBuilder.Entity<Rating>()
-                .HasOne(r => r.User)
+                .HasOne(r => r.MyMDbUser)
                 .WithMany(u => u.Ratings);
 
             modelBuilder.Entity<Review>()
@@ -44,7 +44,7 @@ namespace MyMDb.Server.DAL
                 .WithMany(m => m.Reviews);
 
             modelBuilder.Entity<Review>()
-                .HasOne(r => r.User)
+                .HasOne(r => r.MyMDbUser)
                 .WithMany(u => u.Reviews);
         }
     }

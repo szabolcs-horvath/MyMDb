@@ -1,6 +1,6 @@
 ﻿namespace MyMDb.Shared.DTOs
 {
-    public class UserDto
+    public class MyMDbUserDto
     {
         public int Id { get; init; }
         public string Username { get; init; } = string.Empty;

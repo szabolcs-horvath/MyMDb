@@ -2,7 +2,7 @@
 
 namespace MyMDb.Shared
 {
-    public class User
+    public class MyMDbUser
     {
         public int Id { get; set; }
         public string Username { get; set; } = string.Empty;

@@ -5,9 +5,9 @@ namespace MyMDb.Server
 {
     public static class MyExtensions
     {
-        public static UserDto ToDto(this User value)
+        public static MyMDbUserDto ToDto(this MyMDbUser value)
         {
-            return new UserDto
+            return new MyMDbUserDto
             {
                 Id = value.Id,
                 Username = value.Username,
@@ -57,7 +57,7 @@ namespace MyMDb.Server
             {
                 Id = value.Id,
                 MovieId = value.MovieId,
-                UserId = value.UserId,
+                MyMDbUserId = value.MyMDbUserId,
                 Score = value.Score,
                 Movie = value.Movie.ToBasicResponse()
             };
@@ -69,7 +69,7 @@ namespace MyMDb.Server
             {
                 Id = value.Id,
                 MovieId = value.MovieId,
-                UserId = value.UserId,
+                MyMDbUserId = value.MyMDbUserId,
                 Headline = value.Headline,
                 Description = value.Description,
                 Spoiler = value.Spoiler,
@@ -101,7 +101,7 @@ namespace MyMDb.Server
             {
                 Id = value.Id,
                 MovieId = value.MovieId,
-                UserId = value.UserId,
+                MyMDbUserId = value.MyMDbUserId,
                 Score = value.Score
             };
         }
@@ -112,7 +112,7 @@ namespace MyMDb.Server
             {
                 Id = value.Id,
                 MovieId = value.MovieId,
-                UserId = value.UserId,
+                MyMDbUserId = value.MyMDbUserId,
                 Headline = value.Headline,
                 Description = value.Description,
                 Spoiler = value.Spoiler

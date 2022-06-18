@@ -7,22 +7,22 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4" >Login</MudText>
 
-<MudForm Model="user" @bind-IsValid="_success" @bind-Errors="_errors" >
-    <MudTextField Label="Username" @bind-Value="user.Username" Margin="Margin.Dense" Variant="Variant.Outlined"
+<MudForm Model="_myMDbUser" @bind-IsValid="_success" @bind-Errors="_errors" >
+    <MudTextField Label="Username" @bind-Value="_myMDbUser.Username" Margin="Margin.Dense" Variant="Variant.Outlined"
                   Required="true" RequiredError="Username is required" />
-    <MudTextField Label="Password" @bind-Value="user.Password" Margin="Margin.Dense" Variant="Variant.Outlined"
+    <MudTextField Label="Password" @bind-Value="_myMDbUser.Password" Margin="Margin.Dense" Variant="Variant.Outlined"
                   Required="true" RequiredError="Password is required" InputType="InputType.Password" />
     <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="HandleLogin">Login</MudButton>
 </MudForm>
 
 @code {
-    UserLoginDto user = new UserLoginDto();
+    MyMDbUserLoginDto _myMDbUser = new MyMDbUserLoginDto();
     bool _success;
     string[] _errors = { };
 
     async Task HandleLogin()
     {
-        var response = await Http.PostAsJsonAsync("/api/auth/login", user);
+        var response = await Http.PostAsJsonAsync("/api/auth/login", _myMDbUser);
         if (response.IsSuccessStatusCode)
         {
             var token = await response.Content.ReadAsStringAsync();

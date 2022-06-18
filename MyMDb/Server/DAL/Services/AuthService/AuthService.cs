@@ -17,7 +17,7 @@ namespace MyMDb.Server.DAL.Services.AuthService
             _configuration = configuration;
         }
 
-        public string CreateToken(UserDto user, List<Claim> claims)
+        public string CreateToken(MyMDbUserDto myMDbUser, List<Claim> claims)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration.GetSection("AppSettings:Token").Value));

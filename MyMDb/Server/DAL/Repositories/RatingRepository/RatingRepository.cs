@@ -23,7 +23,7 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
         {
             var dbRecord = await _db.Rating
                 .Include(r => r.Movie)
-                .Include(r => r.User)
+                .Include(r => r.MyMDbUser)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             return dbRecord;
@@ -32,7 +32,7 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
         public async Task<ICollection<Rating>> GetAllForMovie(int movieId)
         {
             var result = await _db.Rating
-                .Include(r => r.User)
+                .Include(r => r.MyMDbUser)
                 .Where(r => r.MovieId == movieId)
                 .ToListAsync();
 
@@ -43,7 +43,7 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
         {
             var result = await _db.Rating
                 .Include(r => r.Movie)
-                .Where(r => r.UserId == userId)
+                .Where(r => r.MyMDbUserId == userId)
                 .ToListAsync();
 
             return result;
@@ -54,7 +54,7 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
             var toInsert = new Rating
             {
                 MovieId = value.MovieId,
-                UserId = value.UserId,
+                MyMDbUserId = value.MyMDbUserId,
                 Score = value.Score
             };
 
@@ -76,7 +76,7 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
             }
 
             dbRecord.MovieId = value.MovieId;
-            dbRecord.UserId = value.UserId;
+            dbRecord.MyMDbUserId = value.MyMDbUserId;
             dbRecord.Score = value.Score;
 
             await _db.SaveChangesAsync();

@@ -33,8 +33,8 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
         {
             var dbRecord = await _db.Movie
                 .Include(m => m.Person)
-                .Include(m => m.Ratings).ThenInclude(r => r.User)
-                .Include(m => m.Reviews).ThenInclude(r => r.User)
+                .Include(m => m.Ratings).ThenInclude(r => r.MyMDbUser)
+                .Include(m => m.Reviews).ThenInclude(r => r.MyMDbUser)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return dbRecord;

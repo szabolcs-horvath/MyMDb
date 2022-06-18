@@ -23,7 +23,7 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
         {
             var dbRecord = await _db.Review
                 .Include(r => r.Movie)
-                .Include(r => r.User)
+                .Include(r => r.MyMDbUser)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             return dbRecord;
@@ -32,7 +32,7 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
         public async Task<ICollection<Review>> GetAllForMovie(int movieId)
         {
             var result = await _db.Review
-                .Include(r => r.User)
+                .Include(r => r.MyMDbUser)
                 .Where(r => r.MovieId == movieId)
                 .ToListAsync();
 
@@ -43,7 +43,7 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
         {
             var result = await _db.Review
                 .Include(r => r.Movie)
-                .Where(r => r.UserId == userId)
+                .Where(r => r.MyMDbUserId == userId)
                 .ToListAsync();
 
             return result;
@@ -54,7 +54,7 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
             var toInsert = new Review
             {
                 MovieId = value.MovieId,
-                UserId = value.UserId,
+                MyMDbUserId = value.MyMDbUserId,
                 Headline = value.Headline,
                 Description = value.Description,
                 Spoiler = value.Spoiler
@@ -77,7 +77,7 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
             }
 
             dbRecord.MovieId = value.MovieId;
-            dbRecord.UserId = value.UserId;
+            dbRecord.MyMDbUserId = value.MyMDbUserId;
             dbRecord.Headline = value.Headline;
             dbRecord.Description = value.Description;
             dbRecord.Spoiler = value.Spoiler;
