@@ -12,7 +12,21 @@ namespace MyMDb.Server
                 Id = value.Id,
                 Username = value.Username,
                 PasswordHash = value.PasswordHash,
-                PasswordSalt = value.PasswordSalt
+                PasswordSalt = value.PasswordSalt,
+                MyMDbRoleId = value.MyMDbRoleId
+            };
+        }
+
+        public static MyMDbUserResponse ToResponse(this MyMDbUser value)
+        {
+            return new MyMDbUserResponse
+            {
+                Id = value.Id,
+                Username = value.Username,
+                MyMDbRoleId = value.MyMDbRoleId,
+                Ratings = value.Ratings.Select(r => r.ToBasicResponse()),
+                Reviews = value.Reviews.Select(r => r.ToBasicResponse()),
+                MyMDbRole = value.MyMDbRole.ToBasicResponse()
             };
         }
 
@@ -59,7 +73,8 @@ namespace MyMDb.Server
                 MovieId = value.MovieId,
                 MyMDbUserId = value.MyMDbUserId,
                 Score = value.Score,
-                Movie = value.Movie.ToBasicResponse()
+                Movie = value.Movie.ToBasicResponse(),
+                MyMDbUser = value.MyMDbUser.ToBasicResponse()
             };
         }
 
@@ -73,7 +88,27 @@ namespace MyMDb.Server
                 Headline = value.Headline,
                 Description = value.Description,
                 Spoiler = value.Spoiler,
-                Movie = value.Movie.ToBasicResponse()
+                Movie = value.Movie.ToBasicResponse(),
+                MyMDbUser = value.MyMDbUser.ToBasicResponse()
+            };
+        }
+
+
+        public static MyMDbUserBasicResponse ToBasicResponse(this MyMDbUser value)
+        {
+            return new MyMDbUserBasicResponse
+            {
+                Id = value.Id,
+                Username = value.Username
+            };
+        }
+
+        public static MyMDbRoleBasicResponse ToBasicResponse(this MyMDbRole value)
+        {
+            return new MyMDbRoleBasicResponse
+            {
+                Id = value.Id,
+                Rolename = value.Rolename
             };
         }
 

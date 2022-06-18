@@ -7,9 +7,10 @@ namespace MyMDb.Server.DAL
         public MyMDbDbContext(DbContextOptions<MyMDbDbContext> options)
             : base(options) {}
 
+        public DbSet<MyMDbUser> MyMDbUser { get; set; }
+        public DbSet<MyMDbRole> MyMDbRole { get; set; }
         public DbSet<Movie> Movie { get; set; }
         public DbSet<Person> Person { get; set; }
-        public DbSet<MyMDbUser> MyMDbUser { get; set; }
         public DbSet<Rating> Rating { get; set; }
         public DbSet<Review> Review { get; set; }
 
@@ -26,6 +27,10 @@ namespace MyMDb.Server.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<MyMDbUser>()
+                .HasOne(u => u.MyMDbRole)
+                .WithMany(r => r.Users);
+
             modelBuilder.Entity<Movie>()
                 .HasMany(m => m.Person)
                 .WithMany(p => p.Movie)

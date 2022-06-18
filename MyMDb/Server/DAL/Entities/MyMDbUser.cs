@@ -5,11 +5,13 @@ namespace MyMDb.Shared
     public class MyMDbUser
     {
         public int Id { get; set; }
-        public string Username { get; set; } = string.Empty;
-        public byte[] PasswordHash { get; set; } = new byte[64];
-        public byte[] PasswordSalt { get; set; } = new byte[128];
+        public string Username { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
+        public int MyMDbRoleId { get; set; }
 
         public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public MyMDbRole MyMDbRole { get; set; }
     }
 }

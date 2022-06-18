@@ -41,7 +41,8 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             {
                 Username = value.Username,
                 PasswordHash = value.PasswordHash,
-                PasswordSalt = value.PasswordSalt
+                PasswordSalt = value.PasswordSalt,
+                MyMDbRoleId = value.MyMDbRoleId
             };
 
             await _db.MyMDbUser.AddAsync(toInsert);
