@@ -94,7 +94,7 @@ namespace MyMDb.Server.Controllers
 
         [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IReadOnlyCollection<SearchPerson>>> SearchByName(string name)
+        public async Task<ActionResult<IReadOnlyCollection<PersonBasicResponse>>> SearchByName(string name)
         {
             var results = await _repository.SearchByName(name);
 

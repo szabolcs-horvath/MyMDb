@@ -1,7 +1,7 @@
 ﻿using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.DTOs.Person;
-using MyMDb.Shared.SearchModel;
+using MyMDb.Shared.ResponseModel.Person;
 
 namespace MyMDb.Server.DAL.Repositories.PersonRepository
 {
@@ -84,11 +84,11 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
             return dbRecord;
         }
 
-        public async Task<IReadOnlyCollection<SearchPerson>> SearchByName(string name)
+        public async Task<IReadOnlyCollection<PersonBasicResponse>> SearchByName(string name)
         {
             return await _db.Person
                 .Where(p => p.FullName.Contains(name))
-                .Select(p => new SearchPerson
+                .Select(p => new PersonBasicResponse
                 {
                     Id = p.Id,
                     FullName = p.FullName

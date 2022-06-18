@@ -95,7 +95,7 @@ namespace MyMDb.Server.Controllers
 
         [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IReadOnlyCollection<SearchMovie>>> SearchByTitle(string title)
+        public async Task<ActionResult<IReadOnlyCollection<MovieBasicResponse>>> SearchByTitle(string title)
         {
             var results = await _repository.SearchByTitle(title);
 

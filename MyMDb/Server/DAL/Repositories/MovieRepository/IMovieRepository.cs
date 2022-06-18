@@ -1,7 +1,7 @@
 ﻿using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.DTOs.Movie;
-using MyMDb.Shared.SearchModel;
+using MyMDb.Shared.ResponseModel.Movie;
 
 namespace MyMDb.Server.DAL.Repositories.MovieRepository
 {
@@ -14,6 +14,6 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
         Task<Movie?> Insert(CreateMovie value);
         Task<Movie?> Update(int id, MovieUpdateDto value);
         Task<Movie?> Delete(int id);
-        Task<IReadOnlyCollection<SearchMovie>> SearchByTitle(string title);
+        Task<IReadOnlyCollection<MovieBasicResponse>> SearchByTitle(string title);
     }
 }
