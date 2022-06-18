@@ -54,18 +54,18 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
             return result;
         }
 
-        public async Task<Person?> Update(PersonResponse value)
+        public async Task<Person?> Update(int id, PersonUpdateDto value)
         {
-            var dbRecord = await _db.Person.FindAsync(value.Id);
+            var dbRecord = await _db.Person.FindAsync(id);
 
             if (dbRecord == null)
             {
                 return null;
             }
 
-            dbRecord.FullName = value.FullName;
-            dbRecord.Birthdate = value.Birthdate;
-            dbRecord.Birthplace = value.Birthplace;
+            dbRecord.FullName = value.FullName ?? dbRecord.FullName;
+            dbRecord.Birthdate = value.Birthdate ?? dbRecord.Birthdate;
+            dbRecord.Birthplace = value.Birthplace ?? dbRecord.Birthplace;
 
             await _db.SaveChangesAsync();
 

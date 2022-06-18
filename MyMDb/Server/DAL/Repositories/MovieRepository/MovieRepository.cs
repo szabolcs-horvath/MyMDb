@@ -65,27 +65,36 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
             return result;
         }
 
-        public async Task<Movie?> Update(MovieResponse value)
+        public async Task<Movie?> Update(int id, MovieUpdateDto value)
         {
-            var dbRecord = await _db.Movie.FindAsync(value.Id);
+            var dbRecord = await _db.Movie.FindAsync(id);
 
             if (dbRecord == null)
             {
                 return null;
             }
 
-            dbRecord.YourRating = value.YourRating ?? 0;
-            dbRecord.DateRated = value.DateRated ?? "";
-            dbRecord.Title = value.Title;
-            dbRecord.URL = value.URL;
-            dbRecord.TitleType = value.TitleType;
-            dbRecord.IMDbRating = value.IMDbRating;
-            dbRecord.Runtimemins = value.Runtimemins;
-            dbRecord.Year = value.Year;
-            dbRecord.Genres = string.Join(", ", value.Genres);
-            dbRecord.ReleaseDate = value.ReleaseDate;
-            if (value.Directors != null) dbRecord.Directors = string.Join(", ", value.Directors);
-            if (value.Cast != null) dbRecord.Cast = string.Join(", ", value.Cast);
+            dbRecord.YourRating = value.YourRating ?? dbRecord.YourRating;
+            dbRecord.DateRated = value.DateRated ?? dbRecord.DateRated;
+            dbRecord.Title = value.Title ?? dbRecord.Title;
+            dbRecord.URL = value.URL ?? dbRecord.URL;
+            dbRecord.TitleType = value.TitleType ?? dbRecord.TitleType;
+            dbRecord.IMDbRating = value.IMDbRating ?? dbRecord.IMDbRating;
+            dbRecord.Runtimemins = value.Runtimemins ?? dbRecord.Runtimemins;
+            dbRecord.Year = value.Year ?? dbRecord.Year;
+            if (value.Genres is not null)
+            {
+                dbRecord.Genres = string.Join(", ", value.Genres);
+            }
+            dbRecord.ReleaseDate = value.ReleaseDate ?? dbRecord.ReleaseDate;
+            if (value.Directors is not null)
+            {
+                dbRecord.Directors = string.Join(", ", value.Directors);
+            }
+            if (value.Cast is not null)
+            {
+                dbRecord.Cast = string.Join(", ", value.Cast);
+            }
 
             await _db.SaveChangesAsync();
 

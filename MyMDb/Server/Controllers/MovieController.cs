@@ -56,13 +56,14 @@ namespace MyMDb.Server.Controllers
         public async Task<ActionResult<MovieResponse>> Post(CreateMovie movie)
         {
             var created = await _repository.Insert(movie);
+
             return CreatedAtAction(nameof(Get), new {id = created?.Id}, created);
         }
 
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<MovieResponse>> Update(int id, [FromBody] MovieResponse movie)
+        public async Task<ActionResult<MovieResponse>> Update(int id, [FromBody] MovieUpdateDto value)
         {
             var movieFromDb = await _repository.Get(id);
 
@@ -71,25 +72,9 @@ namespace MyMDb.Server.Controllers
                 return NotFound();
             }
 
-            var toUpdate = new MovieResponse 
-            {
-                Id = id, 
-                YourRating = movie.YourRating, 
-                DateRated = movie.DateRated, 
-                Title = movie.Title, 
-                URL = movie.URL,
-                TitleType = movie.TitleType, 
-                IMDbRating = movie.IMDbRating, 
-                Runtimemins = movie.Runtimemins, 
-                Year = movie.Year,
-                Genres = movie.Genres, 
-                ReleaseDate = movie.ReleaseDate,
-                Directors = movie.Directors ?? Array.Empty<string>(), 
-                Cast = movie.Cast ?? Array.Empty<string>(),
-            };
+            var result = await _repository.Update(id, value);
 
-            var result = await _repository.Update(toUpdate);
-            return Ok(result);
+            return Ok(result?.ToResponse());
         }
         
         [HttpDelete("{id}")]
@@ -104,7 +89,7 @@ namespace MyMDb.Server.Controllers
                 return NotFound();
             }
 
-            return Ok(movie);
+            return Ok(movie.ToResponse());
         }
 
         [HttpGet("search")]
@@ -112,6 +97,7 @@ namespace MyMDb.Server.Controllers
         public async Task<ActionResult<IReadOnlyCollection<SearchMovie>>> SearchByTitle(string title)
         {
             var results = await _repository.SearchByTitle(title);
+
             return Ok(results);
         }
     }

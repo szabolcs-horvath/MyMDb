@@ -12,7 +12,7 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
         Task<Person?> Get(int id);
         Task<Person?> GetExtended(int id);
         Task<Person?> Insert(CreatePerson value);
-        Task<Person?> Update(PersonResponse value);
+        Task<Person?> Update(int id, PersonUpdateDto value);
         Task<Person?> Delete(int id);
         Task<IReadOnlyCollection<SearchPerson>> SearchByName(string name);
     }

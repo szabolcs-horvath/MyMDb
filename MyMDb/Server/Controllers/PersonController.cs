@@ -22,7 +22,9 @@ namespace MyMDb.Server.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<List<PersonResponse>> GetAll()
         {
-            return Ok(_repository.GetAll());
+            var result = _repository.GetAll().Select(p => p.ToResponse());
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
@@ -53,13 +55,14 @@ namespace MyMDb.Server.Controllers
         public async Task<ActionResult> Post([FromBody] CreatePerson person)
         {
             var created = await _repository.Insert(person);
+
             return CreatedAtAction(nameof(Get), new { id = created?.Id }, created);
         }
 
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PersonResponse>> Update(int id, [FromBody] PersonResponse person)
+        public async Task<ActionResult<PersonResponse>> Update(int id, [FromBody] PersonUpdateDto value)
         {
             var personfromDb = await _repository.GetExtended(id);
 
@@ -68,16 +71,9 @@ namespace MyMDb.Server.Controllers
                 return NotFound();
             }
 
-            var toUpdate = new PersonResponse
-            {
-                Id = id,
-                FullName = person.FullName,
-                Birthdate = person.Birthdate,
-                Birthplace = person.Birthplace,
-            };
+            var result = await _repository.Update(id, value);
 
-            var result = await _repository.Update(toUpdate);
-            return Ok(result);
+            return Ok(result?.ToResponse());
         }
 
         [HttpDelete("{id}")]
@@ -92,7 +88,7 @@ namespace MyMDb.Server.Controllers
                 return NotFound();
             }
 
-            return Ok(person);
+            return Ok(person.ToResponse());
         }
 
         [HttpGet("search")]
@@ -100,6 +96,7 @@ namespace MyMDb.Server.Controllers
         public async Task<ActionResult<IReadOnlyCollection<SearchPerson>>> SearchByName(string name)
         {
             var results = await _repository.SearchByName(name);
+
             return Ok(results);
         }
     }
