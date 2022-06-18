@@ -4,7 +4,6 @@ using MyMDb.Server.DAL.Repositories.PersonRepository;
 using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.DTOs.Person;
 using MyMDb.Shared.ResponseModel.Person;
-using MyMDb.Shared.SearchModel;
 
 namespace MyMDb.Server.Controllers
 {
