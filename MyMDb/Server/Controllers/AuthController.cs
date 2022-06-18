@@ -23,7 +23,7 @@ namespace MyMDb.Server.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(MyMDbUserLoginDto request)
         {
-            var user = await _repository.Get(request.Username);
+            var user = await _repository.GetExtended(request.Username);
 
             if (user is null)
             {

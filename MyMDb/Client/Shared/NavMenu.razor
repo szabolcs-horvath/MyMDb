@@ -1,8 +1,10 @@
 ﻿<MudNavMenu Margin="Margin.Normal">
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
     <MudNavLink Href="/movies" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Movie">All Movies and Shows</MudNavLink>
-    <MudNavLink Href="/people" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Person">All People</MudNavLink>
-    <MudNavLink Href="/addmovie" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.LibraryAdd">New Movie or Show</MudNavLink>
+    <AuthorizeView Roles="Admin">
+        <MudNavLink Href="/people" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Person">All People</MudNavLink>
+        <MudNavLink Href="/addmovie" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.LibraryAdd">New Movie or Show</MudNavLink>
+    </AuthorizeView>
     <MudNavLink Href="/addperson" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.PersonAdd">New Person</MudNavLink>
     <MudNavLink Href="/statistics" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.StackedLineChart">Statistics</MudNavLink>
 </MudNavMenu>
