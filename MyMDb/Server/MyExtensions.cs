@@ -11,18 +11,6 @@ namespace MyMDb.Server
 {
     public static class MyExtensions
     {
-        public static MyMDbUserDto ToDto(this MyMDbUser value)
-        {
-            return new MyMDbUserDto
-            {
-                Id = value.Id,
-                Username = value.Username,
-                PasswordHash = value.PasswordHash,
-                PasswordSalt = value.PasswordSalt,
-                MyMDbRoleId = value.MyMDbRoleId
-            };
-        }
-
         public static MyMDbUserResponse ToResponse(this MyMDbUser value)
         {
             return new MyMDbUserResponse
