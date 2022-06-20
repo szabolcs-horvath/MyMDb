@@ -232,7 +232,7 @@
         await _form.Validate();
         if (_form.IsValid)
         {
-            var movie = new CreateMovie
+            var movie = new MovieCreateDto
             {
                 YourRating = this.YourRating,
                 DateRated = this.DateRated?.ToString("yyyy-MM-dd"),

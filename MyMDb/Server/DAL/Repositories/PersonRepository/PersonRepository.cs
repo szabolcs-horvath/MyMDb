@@ -1,5 +1,4 @@
 ﻿using MyMDb.Server.DAL.Entities;
-using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.DTOs.Person;
 using MyMDb.Shared.ResponseModel.Person;
 
@@ -38,7 +37,7 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
             return dbRecord;
         }
 
-        public async Task<Person?> Insert(CreatePerson value)
+        public async Task<Person?> Insert(PersonCreateDto value)
         {
             var toInsert = new Person()
             {

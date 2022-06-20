@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyMDb.Server.DAL.Entities;
 using MyMDb.Server.DAL.Repositories.MovieRepository;
-using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.DTOs.Movie;
 using MyMDb.Shared.ResponseModel.Movie;
 
@@ -53,7 +52,7 @@ namespace MyMDb.Server.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<MovieResponse>> Post(CreateMovie movie)
+        public async Task<ActionResult<MovieResponse>> Post(MovieCreateDto movie)
         {
             var created = await _repository.Insert(movie);
 

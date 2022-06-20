@@ -1,5 +1,4 @@
-﻿using MyMDb.Shared.CreateModel;
-using MyMDb.Server.DAL.Entities;
+﻿using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.DTOs.Movie;
 using MyMDb.Shared.ResponseModel.Movie;
 
@@ -40,7 +39,7 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
             return dbRecord;
         }
 
-        public async Task<Movie?> Insert(CreateMovie value)
+        public async Task<Movie?> Insert(MovieCreateDto value)
         {
             var toInsert = new Movie()
             {
@@ -54,8 +53,8 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
                 Year = value.Year,
                 Genres = value.Genres,
                 ReleaseDate = value.ReleaseDate,
-                Directors = value.Directors ?? "",
-                Cast = value.Cast ?? ""
+                Directors = value.Directors,
+                Cast = value.Cast
             };
 
             await _db.Movie.AddAsync(toInsert);

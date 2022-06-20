@@ -1,5 +1,4 @@
 ﻿using MyMDb.Server.DAL.Entities;
-using MyMDb.Shared.CreateModel;
 using MyMDb.Shared.DTOs.Person;
 using MyMDb.Shared.ResponseModel.Person;
 
@@ -11,7 +10,7 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
         IReadOnlyCollection<Person> GetAll();
         Task<Person?> Get(int id);
         Task<Person?> GetExtended(int id);
-        Task<Person?> Insert(CreatePerson value);
+        Task<Person?> Insert(PersonCreateDto value);
         Task<Person?> Update(int id, PersonUpdateDto value);
         Task<Person?> Delete(int id);
         Task<IReadOnlyCollection<PersonBasicResponse>> SearchByName(string name);
