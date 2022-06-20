@@ -1,4 +1,6 @@
-﻿namespace MyMDb.Server.DAL.Entities
+﻿using MyMDb.Shared.ResponseModel.Movie;
+
+namespace MyMDb.Server.DAL.Entities
 {
     public class Movie
     {
@@ -19,5 +21,37 @@
         public ICollection<Person> Person { get; set; } = new List<Person>();
         public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+        public MovieResponse ToResponse()
+        {
+            return new MovieResponse
+            {
+                Id = this.Id,
+                YourRating = this.YourRating,
+                DateRated = this.DateRated?.Trim(),
+                Title = this.Title,
+                URL = this.URL,
+                TitleType = this.TitleType,
+                IMDbRating = this.IMDbRating,
+                Runtimemins = this.Runtimemins,
+                Year = this.Year,
+                Genres = this.Genres.Split(",").Select(s => s.Trim()).ToList(),
+                ReleaseDate = this.ReleaseDate,
+                Directors = this.Directors?.Split(",").Select(s => s.Trim()).ToList(),
+                Cast = this.Cast?.Split(",").Select(s => s.Trim()).ToList(),
+                People = this.Person.Select(p => p.ToBasicResponse()),
+                Ratings = this.Ratings.Select(r => r.ToBasicResponse()),
+                Reviews = this.Reviews.Select(r => r.ToBasicResponse())
+            };
+        }
+
+        public MovieBasicResponse ToBasicResponse()
+        {
+            return new MovieBasicResponse
+            {
+                Id = this.Id,
+                Title = this.Title
+            };
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace MyMDb.Server.DAL.Entities
+﻿using MyMDb.Shared.ResponseModel.MyMDbRole;
+
+namespace MyMDb.Server.DAL.Entities
 {
     public class MyMDbRole
     {
@@ -6,5 +8,14 @@
         public string Rolename { get; set; }
 
         public ICollection<MyMDbUser> Users { get; set; } = new List<MyMDbUser>();
+
+        public MyMDbRoleBasicResponse ToBasicResponse()
+        {
+            return new MyMDbRoleBasicResponse
+            {
+                Id = this.Id,
+                Rolename = this.Rolename
+            };
+        }
     }
 }
