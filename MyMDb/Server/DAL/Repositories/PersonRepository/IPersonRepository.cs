@@ -1,6 +1,5 @@
 ﻿using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.DTOs.Person;
-using MyMDb.Shared.ResponseModel.Person;
 
 namespace MyMDb.Server.DAL.Repositories.PersonRepository
 {
@@ -13,6 +12,6 @@ namespace MyMDb.Server.DAL.Repositories.PersonRepository
         Task<Person?> Insert(PersonCreateDto value);
         Task<Person?> Update(int id, PersonUpdateDto value);
         Task<Person?> Delete(int id);
-        Task<IReadOnlyCollection<PersonBasicResponse>> SearchByName(string name);
+        Task<IReadOnlyCollection<Person>> SearchByName(string name);
     }
 }

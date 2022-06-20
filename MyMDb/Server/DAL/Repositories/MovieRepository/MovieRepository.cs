@@ -1,6 +1,5 @@
 ﻿using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.DTOs.Movie;
-using MyMDb.Shared.ResponseModel.Movie;
 
 namespace MyMDb.Server.DAL.Repositories.MovieRepository
 {
@@ -113,15 +112,10 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
             return dbRecord;
         }
 
-        public async Task<IReadOnlyCollection<MovieBasicResponse>> SearchByTitle(string title)
+        public async Task<IReadOnlyCollection<Movie>> SearchByTitle(string title)
         {
             return await _db.Movie
                 .Where(m => m.Title.Contains(title))
-                .Select(m => new MovieBasicResponse
-                {
-                    Id = m.Id,
-                    Title = m.Title
-                })
                 .ToListAsync();
         }
     }

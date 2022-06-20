@@ -100,7 +100,7 @@ namespace MyMDb.Server.Controllers
         {
             var results = await _repository.SearchByName(name);
 
-            return Ok(results);
+            return Ok(results.Select(p => p.ToBasicResponse()));
         }
     }
 }
