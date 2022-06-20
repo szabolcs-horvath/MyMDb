@@ -9,7 +9,7 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
         Task<Review?> GetExtended(int id);
         Task<ICollection<Review>> GetAllForMovie(int movieId);
         Task<ICollection<Review>> GetAllForUser(int userId);
-        Task<Review?> Insert(Review value);
+        Task<Review?> Insert(ReviewCreateDto value);
         Task<Review?> Update(int id, ReviewUpdateDto value);
         Task<Review?> Delete(int id);
     }

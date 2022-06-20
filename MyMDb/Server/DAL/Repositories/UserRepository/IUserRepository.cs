@@ -8,7 +8,7 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
         Task<MyMDbUser?> GetExtended(int id); 
         Task<MyMDbUser?> Get(string username);
         Task<MyMDbUser?> GetExtended(string username);
-        Task<MyMDbUser?> Insert(MyMDbUserDto value);
+        Task<MyMDbUser?> Insert(MyMDbUserCreateDto value);
         Task<MyMDbUser?> Update(int id, MyMDbUserUpdateDto value);
         Task<MyMDbUser?> Delete(int id);
     }

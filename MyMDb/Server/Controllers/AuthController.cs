@@ -53,7 +53,7 @@ namespace MyMDb.Server.Controllers
         {
             var hash = await _authService.CreatePasswordHash(request.Password);
 
-            var user = new MyMDbUserDto
+            var user = new MyMDbUserCreateDto
             {
                 Username = request.Username,
                 PasswordHash = hash.PasswordHash,

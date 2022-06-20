@@ -47,7 +47,7 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             return result;
         }
 
-        public async Task<MyMDbUser?> Insert(MyMDbUserDto value)
+        public async Task<MyMDbUser?> Insert(MyMDbUserCreateDto value)
         {
             var toInsert = new MyMDbUser
             {

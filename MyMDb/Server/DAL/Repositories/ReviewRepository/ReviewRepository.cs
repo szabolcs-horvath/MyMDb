@@ -49,7 +49,7 @@ namespace MyMDb.Server.DAL.Repositories.ReviewRepository
             return result;
         }
 
-        public async Task<Review?> Insert(Review value)
+        public async Task<Review?> Insert(ReviewCreateDto value)
         {
             var toInsert = new Review
             {

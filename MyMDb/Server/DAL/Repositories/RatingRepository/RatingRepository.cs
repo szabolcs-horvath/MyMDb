@@ -49,7 +49,7 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
             return result;
         }
 
-        public async Task<Rating?> Insert(Rating value)
+        public async Task<Rating?> Insert(RatingCreateDto value)
         {
             var toInsert = new Rating
             {

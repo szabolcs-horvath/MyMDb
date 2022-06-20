@@ -9,7 +9,7 @@ namespace MyMDb.Server.DAL.Repositories.RatingRepository
         Task<Rating?> GetExtended(int id);
         Task<ICollection<Rating>> GetAllForMovie(int movieId);
         Task<ICollection<Rating>> GetAllForUser(int userId);
-        Task<Rating?> Insert(Rating value);
+        Task<Rating?> Insert(RatingCreateDto value);
         Task<Rating?> Update(int id, RatingUpdateDto value);
         Task<Rating?> Delete(int id);
     }
