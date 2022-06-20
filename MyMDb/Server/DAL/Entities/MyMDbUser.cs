@@ -1,8 +1,6 @@
-﻿using MyMDb.Server;
-using MyMDb.Server.DAL.Entities;
-using MyMDb.Shared.ResponseModel.MyMDbUser;
+﻿using MyMDb.Shared.ResponseModel.MyMDbUser;
 
-namespace MyMDb.Shared
+namespace MyMDb.Server.DAL.Entities
 {
     public class MyMDbUser
     {
@@ -14,7 +12,7 @@ namespace MyMDb.Shared
 
         public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
-        public MyMDbRole MyMDbRole { get; set; }
+        public MyMDbRole MyMDbRole { get; set; } = new MyMDbRole();
 
         public MyMDbUserResponse ToResponse()
         {

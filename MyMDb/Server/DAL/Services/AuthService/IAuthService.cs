@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.DTOs;
 
 namespace MyMDb.Server.DAL.Services.AuthService

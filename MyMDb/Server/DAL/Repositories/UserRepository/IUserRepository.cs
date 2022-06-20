@@ -1,4 +1,5 @@
-﻿using MyMDb.Shared.DTOs.MyMDbUser;
+﻿using MyMDb.Server.DAL.Entities;
+using MyMDb.Shared.DTOs.MyMDbUser;
 
 namespace MyMDb.Server.DAL.Repositories.UserRepository
 {
