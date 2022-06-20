@@ -1,5 +1,4 @@
 global using Microsoft.EntityFrameworkCore;
-global using MyMDb.Shared;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
