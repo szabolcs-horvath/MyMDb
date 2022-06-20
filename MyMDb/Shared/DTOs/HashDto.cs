@@ -2,7 +2,7 @@
 {
     public class HashDto
     {
-        public byte[] PasswordHash { get; set; } = new byte[64];
-        public byte[] PasswordSalt { get; set; } = new byte[128];
+        public byte[] PasswordHash { get; init; }
+        public byte[] PasswordSalt { get; init; }
     }
 }
