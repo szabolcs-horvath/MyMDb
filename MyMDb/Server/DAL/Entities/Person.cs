@@ -30,7 +30,9 @@ namespace MyMDb.Server.DAL.Entities
             return new PersonBasicResponse
             {
                 Id = this.Id,
-                FullName = this.FullName
+                FullName = this.FullName,
+                Birthdate = this.Birthdate,
+                Birthplace = this.Birthplace
             };
         }
     }

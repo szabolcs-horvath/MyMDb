@@ -50,7 +50,18 @@ namespace MyMDb.Server.DAL.Entities
             return new MovieBasicResponse
             {
                 Id = this.Id,
-                Title = this.Title
+                YourRating = this.YourRating,
+                DateRated = this.DateRated?.Trim(),
+                Title = this.Title,
+                URL = this.URL,
+                TitleType = this.TitleType,
+                IMDbRating = this.IMDbRating,
+                Runtimemins = this.Runtimemins,
+                Year = this.Year,
+                Genres = this.Genres.Split(",").Select(s => s.Trim()).ToList(),
+                ReleaseDate = this.ReleaseDate,
+                Directors = this.Directors?.Split(",").Select(s => s.Trim()).ToList(),
+                Cast = this.Cast?.Split(",").Select(s => s.Trim()).ToList()
             };
         }
     }
