@@ -1,9 +1,9 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyMDb.Server.DAL.Repositories.UserRepository;
 using MyMDb.Server.DAL.Services.AuthService;
 using MyMDb.Shared.DTOs;
 using MyMDb.Shared.DTOs.MyMDbUser;
+using MyMDb.Shared.ResponseModel.MyMDbUser;
 
 namespace MyMDb.Server.Controllers
 {
@@ -21,7 +21,9 @@ namespace MyMDb.Server.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(MyMDbUserLoginDto request)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<string>> Login(MyMDbUserRegisterLoginDto request)
         {
             var user = await _repository.GetExtended(request.Username);
 
@@ -49,7 +51,8 @@ namespace MyMDb.Server.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<MyMDbUser>> Register(MyMDbUserRegisterDto request)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<MyMDbUserBasicResponse>> Register(MyMDbUserRegisterLoginDto request)
         {
             var hash = await _authService.CreatePasswordHash(request.Password);
 
@@ -58,12 +61,12 @@ namespace MyMDb.Server.Controllers
                 Username = request.Username,
                 PasswordHash = hash.PasswordHash,
                 PasswordSalt = hash.PasswordSalt,
-                MyMDbRoleId = request.MyMDbRoleId
+                MyMDbRoleId = 1 // Role = "None"
             };
 
-            await _repository.Insert(user);
+            var result = await _repository.Insert(user);
 
-            return Ok("Successful registration!");
+            return Ok(result?.ToBasicResponse());
         }
     }
 }
