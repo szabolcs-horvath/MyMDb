@@ -9,6 +9,8 @@ using MyMDb.Server.DAL;
 using MyMDb.Server.DAL.Repositories.UserRepository;
 using MyMDb.Server.DAL.Repositories.MovieRepository;
 using MyMDb.Server.DAL.Repositories.PersonRepository;
+using MyMDb.Server.DAL.Repositories.RatingRepository;
+using MyMDb.Server.DAL.Repositories.ReviewRepository;
 using MyMDb.Server.DAL.Services.AuthService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,9 +52,12 @@ builder.Services.AddDbContext<MyMDbDbContext>(options =>
         o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 });
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // This setting causes circular references to be null instead, as soon as they are detected
