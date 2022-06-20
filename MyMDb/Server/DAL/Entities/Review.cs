@@ -11,8 +11,8 @@ namespace MyMDb.Server.DAL.Entities
         public string Description { get; set; }
         public bool Spoiler { get; set; }
 
-        public Movie Movie { get; set; } = new Movie();
-        public MyMDbUser MyMDbUser { get; set; } = new MyMDbUser();
+        public Movie? Movie { get; set; }
+        public MyMDbUser? MyMDbUser { get; set; }
 
         public ReviewResponse ToResponse()
         {
@@ -24,8 +24,8 @@ namespace MyMDb.Server.DAL.Entities
                 Headline = this.Headline,
                 Description = this.Description,
                 Spoiler = this.Spoiler,
-                Movie = this.Movie.ToBasicResponse(),
-                MyMDbUser = this.MyMDbUser.ToBasicResponse()
+                Movie = this.Movie?.ToBasicResponse(),
+                MyMDbUser = this.MyMDbUser?.ToBasicResponse()
             };
         }
 

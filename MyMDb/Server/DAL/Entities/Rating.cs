@@ -9,8 +9,8 @@ namespace MyMDb.Server.DAL.Entities
         public int MyMDbUserId { get; set; }
         public int Score { get; set; }
 
-        public Movie Movie { get; set; } = new Movie();
-        public MyMDbUser MyMDbUser { get; set; } = new MyMDbUser();
+        public Movie? Movie { get; set; }
+        public MyMDbUser? MyMDbUser { get; set; }
 
         public RatingResponse ToResponse()
         {
@@ -20,8 +20,8 @@ namespace MyMDb.Server.DAL.Entities
                 MovieId = this.MovieId,
                 MyMDbUserId = this.MyMDbUserId,
                 Score = this.Score,
-                Movie = this.Movie.ToBasicResponse(),
-                MyMDbUser = this.MyMDbUser.ToBasicResponse()
+                Movie = this.Movie?.ToBasicResponse(),
+                MyMDbUser = this.MyMDbUser?.ToBasicResponse()
             };
         }
 
