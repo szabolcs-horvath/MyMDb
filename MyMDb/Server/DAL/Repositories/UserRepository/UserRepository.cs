@@ -84,7 +84,7 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             return dbRecord;
         }
 
-        public async Task<MyMDbUser> Delete(int id)
+        public async Task<MyMDbUser?> Delete(int id)
         {
             var result = await _db.MyMDbUser.FindAsync(id);
 
