@@ -27,7 +27,7 @@ namespace MyMDb.Server.DAL.Services.AuthService
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddHours(1),
                 signingCredentials: creds
             );
 
@@ -42,7 +42,7 @@ namespace MyMDb.Server.DAL.Services.AuthService
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.MyMDbRole.Rolename)
+                new Claim(ClaimTypes.Role, user.MyMDbRole?.Rolename ?? "Undefined")
             };
 
             return claims;
