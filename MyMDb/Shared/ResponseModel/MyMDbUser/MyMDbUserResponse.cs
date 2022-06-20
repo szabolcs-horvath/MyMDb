@@ -10,8 +10,8 @@ namespace MyMDb.Shared.ResponseModel.MyMDbUser
         public string Username { get; set; }
         public int MyMDbRoleId { get; set; }
 
-        public IEnumerable<RatingBasicResponse> Ratings { get; set; }
-        public IEnumerable<ReviewBasicResponse> Reviews { get; set; }
-        public MyMDbRoleBasicResponse MyMDbRole { get; set; }
+        public IEnumerable<RatingBasicResponse>? Ratings { get; set; }
+        public IEnumerable<ReviewBasicResponse>? Reviews { get; set; }
+        public MyMDbRoleBasicResponse? MyMDbRole { get; set; }
     }
 }

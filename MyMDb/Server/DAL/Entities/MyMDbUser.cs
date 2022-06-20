@@ -10,9 +10,9 @@ namespace MyMDb.Server.DAL.Entities
         public byte[] PasswordSalt { get; set; }
         public int MyMDbRoleId { get; set; }
 
-        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
-        public ICollection<Review> Reviews { get; set; } = new List<Review>();
-        public MyMDbRole MyMDbRole { get; set; } = new MyMDbRole();
+        public ICollection<Rating>? Ratings { get; set; }
+        public ICollection<Review>? Reviews { get; set; }
+        public MyMDbRole? MyMDbRole { get; set; }
 
         public MyMDbUserResponse ToResponse()
         {
@@ -21,9 +21,9 @@ namespace MyMDb.Server.DAL.Entities
                 Id = this.Id,
                 Username = this.Username,
                 MyMDbRoleId = this.MyMDbRoleId,
-                Ratings = this.Ratings.Select(r => r.ToBasicResponse()),
-                Reviews = this.Reviews.Select(r => r.ToBasicResponse()),
-                MyMDbRole = this.MyMDbRole.ToBasicResponse()
+                Ratings = this.Ratings?.Select(r => r.ToBasicResponse()),
+                Reviews = this.Reviews?.Select(r => r.ToBasicResponse()),
+                MyMDbRole = this.MyMDbRole?.ToBasicResponse()
             };
         }
 
@@ -32,7 +32,8 @@ namespace MyMDb.Server.DAL.Entities
             return new MyMDbUserBasicResponse
             {
                 Id = this.Id,
-                Username = this.Username
+                Username = this.Username,
+                MyMDbRoleId = this.MyMDbRoleId
             };
         }
     }

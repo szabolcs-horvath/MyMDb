@@ -18,9 +18,9 @@ namespace MyMDb.Server.DAL.Entities
         public string? Directors { get; set; }
         public string? Cast { get; set; }
 
-        public ICollection<Person> Person { get; set; } = new List<Person>();
-        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
-        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public ICollection<Person>? Person { get; set; }
+        public ICollection<Rating>? Ratings { get; set; }
+        public ICollection<Review>? Reviews { get; set; }
 
         public MovieResponse ToResponse()
         {
@@ -39,9 +39,9 @@ namespace MyMDb.Server.DAL.Entities
                 ReleaseDate = this.ReleaseDate,
                 Directors = this.Directors?.Split(",").Select(s => s.Trim()).ToList(),
                 Cast = this.Cast?.Split(",").Select(s => s.Trim()).ToList(),
-                People = this.Person.Select(p => p.ToBasicResponse()),
-                Ratings = this.Ratings.Select(r => r.ToBasicResponse()),
-                Reviews = this.Reviews.Select(r => r.ToBasicResponse())
+                People = this.Person?.Select(p => p.ToBasicResponse()),
+                Ratings = this.Ratings?.Select(r => r.ToBasicResponse()),
+                Reviews = this.Reviews?.Select(r => r.ToBasicResponse())
             };
         }
 

@@ -11,7 +11,7 @@ namespace MyMDb.Server.DAL.Entities
 
         // This annotation is only necessary if we want to prevent circular references when we request movies
         // [System.Text.Json.Serialization.JsonIgnore]
-        public ICollection<Movie> Movie { get; set; } = new List<Movie>();
+        public ICollection<Movie>? Movie { get; set; }
 
         public PersonResponse ToResponse()
         {
@@ -21,7 +21,7 @@ namespace MyMDb.Server.DAL.Entities
                 FullName = this.FullName,
                 Birthdate = this.Birthdate,
                 Birthplace = this.Birthplace,
-                Movies = this.Movie.Select(m => m.ToBasicResponse())
+                Movies = this.Movie?.Select(m => m.ToBasicResponse())
             };
         }
 
