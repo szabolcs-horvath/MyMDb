@@ -51,11 +51,17 @@ namespace MyMDb.Server.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult> Post([FromBody] PersonCreateDto person)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PersonResponse>> Insert([FromBody] PersonCreateDto person)
         {
             var created = await _repository.Insert(person);
 
-            return CreatedAtAction(nameof(Get), new { id = created?.Id }, created);
+            if (created is null)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created.ToResponse());
         }
 
         [HttpPatch("{id}")]
@@ -63,16 +69,14 @@ namespace MyMDb.Server.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PersonResponse>> Update(int id, [FromBody] PersonUpdateDto value)
         {
-            var personfromDb = await _repository.GetExtended(id);
+            var result = await _repository.Update(id, value);
 
-            if (personfromDb == null) 
+            if (result is null) 
             {
                 return NotFound();
             }
 
-            var result = await _repository.Update(id, value);
-
-            return Ok(result?.ToResponse());
+            return Ok(result.ToResponse());
         }
 
         [HttpDelete("{id}")]
