@@ -34,17 +34,16 @@
 
                     <MudItem xs="12">
                         <MudDatePicker @ref="_releaseDateDatePicker" Label="Release date" @bind-Date="ReleaseDate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
-                            Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined"
-                            Required="true" RequiredError="Release date is required" />
+                            Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" />
                     </MudItem>
                         
-                    <MudItem xs="2">
+                    <MudItem xs="3">
                         <MudNumericField Label="IMDb rating" T="decimal" @bind-Value="IMDbRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true"
                             Min="0.0M" Max="10.0M" Step=".1M" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning"
                             Required="true" RequiredError="IMDb rating is required" Validation="@(new Func<decimal, string>(RatingCheck))" />
                     </MudItem>
 
-                    <MudItem xs="10">
+                    <MudItem xs="9">
                         <MudTextField Label="IMDb URL" @bind-Value="URL" Margin="Margin.Dense" Variant="Variant.Outlined"
                         Required="true" RequiredError="IMDb URL is required" Validation="@(new Func<string, string>(URLFormatCheck))" />
                     </MudItem>
@@ -55,15 +54,6 @@
                         Required="true" RequiredError="Runtime is required" Validation="@(new Func<int, string>(RuntimeCheck))" />
                     </MudItem>
 
-                    <MudItem xs="2">
-                        <MudNumericField Label="Your rating" T="int" @bind-Value="YourRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true" 
-                            Min="0" Max="10" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning" />
-                    </MudItem>
-
-                    <MudItem xs="10">
-                        <MudDatePicker @ref="_dateRatedDatePicker" Label="Date rated" @bind-Date="DateRated" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
-                            Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" />
-                    </MudItem>
                 </MudGrid>
             </MudItem>
 
@@ -74,7 +64,8 @@
                     </MudItem>
 
                     <MudItem xs="10" >
-                        <MudTextField Label="Add new genre" @bind-Value="NewGenre" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        <MudTextField Label="Add new genre" @bind-Value="NewGenre" Margin="Margin.Dense" Variant="Variant.Outlined" 
+                            Validation="@(new Func<string>(GenresCheck))"/>
                     </MudItem>
 
                     <MudItem xs="12" >
@@ -150,20 +141,18 @@
     List<string> directors = new List<string>();
     List<string> cast = new List<string>();
 
-    public string Title { get; set; } = string.Empty;
-    public DateTime? ReleaseDate { get; set; }
-    public int Year { get; set; }
-    public string TitleType { get; set; } = string.Empty;
-    public decimal IMDbRating { get; set; }
-    public string URL { get; set; } = string.Empty;
-    public int Runtimemins { get; set; }
-    public int YourRating { get; set; }
-    public DateTime? DateRated { get; set; }
-    public string NewGenre { get; set; } = string.Empty;
-    public string NewDirector { get; set; } = string.Empty;
-    public string NewCast { get; set; } = string.Empty;
+    string Title { get; set; } = string.Empty;
+    DateTime? ReleaseDate { get; set; }
+    int Year { get; set; }
+    string TitleType { get; set; } = string.Empty;
+    decimal IMDbRating { get; set; }
+    string URL { get; set; } = string.Empty;
+    int Runtimemins { get; set; }
+    string NewGenre { get; set; } = string.Empty;
+    string NewDirector { get; set; } = string.Empty;
+    string NewCast { get; set; } = string.Empty;
 
-    public void AddGenreChip()
+    void AddGenreChip()
     {
         if (!string.IsNullOrEmpty(NewGenre))
         {
@@ -172,9 +161,9 @@
         }
     }
 
-    public void CloseGenreChip(MudChip chip) => genres.Remove(chip.Text);
+    void CloseGenreChip(MudChip chip) => genres.Remove(chip.Text);
 
-    public void AddDirectorChip()
+    void AddDirectorChip()
     {
         if (!string.IsNullOrEmpty(NewDirector))
         {
@@ -183,9 +172,9 @@
         }
     }
 
-    public void CloseDirectorChip(MudChip chip) => directors.Remove(chip.Text);
+    void CloseDirectorChip(MudChip chip) => directors.Remove(chip.Text);
 
-    public void AddCastChip()
+    void AddCastChip()
     {
         if (!string.IsNullOrEmpty(NewCast))
         {
@@ -194,54 +183,54 @@
         }
     }
 
-    public void CloseCastChip(MudChip chip) => cast.Remove(chip.Text);
+    void CloseCastChip(MudChip chip) => cast.Remove(chip.Text);
 
-    public string YearCheck(int arg)
+    string YearCheck(int arg)
     {
-        return arg > 1800 ? null : "There were no movies made before the 1800s";
+        return arg > 1800 ? null : "Year must be at least 1800";
     }
 
-    public string URLFormatCheck(string arg)
+    string URLFormatCheck(string arg)
     {
         var doesMatch = urlRegex.IsMatch(arg);
-        return doesMatch ? null : "The specified URL's format is incorrect (eg https://www.imdb.com/title/tt2582802/)";
+        return doesMatch ? null : "The specified URL's format is incorrect";
     }
 
-    public string RatingCheck(decimal arg)
+    string RatingCheck(decimal arg)
     {
         return arg != 0M ? null : "IMDB rating cannot be 0";
     }
 
-    public string RuntimeCheck(int arg)
+    string RuntimeCheck(int arg)
     {
         return arg > 0 ? null : "Runtime must be larger than 0";
     }
 
-    public string GenresCheck(List<string> args) {
-        return args.Count != 0 ? null : "You must add at least 1 Genre";
+    string GenresCheck() {
+        return genres.Count != 0 ? null : "You must add at least 1 Genre";
     }
 
-    public async void Submit()
+    async void Submit()
     {
-        var genresCheckResult = GenresCheck(genres);
-        if (genresCheckResult is not null)
-        {
-            return;
-        }
+        //var genresCheckResult = GenresCheck(genres);
+        //if (genresCheckResult is not null)
+        //{
+        //    return;
+        //}
 
         await _form.Validate();
         if (_form.IsValid)
         {
             var movie = new MovieCreateDto
             {
-                Title = this.Title,
-                URL = this.URL,
-                TitleType = this.TitleType,
+                Title = Title,
+                URL = URL,
+                TitleType = TitleType,
                 IMDbRating = decimal.ToDouble(this.IMDbRating),
-                Runtimemins = this.Runtimemins,
-                Year = this.Year,
+                Runtimemins = Runtimemins,
+                Year = Year,
                 Genres = string.Join(", ", this.genres),
-                ReleaseDate = this.ReleaseDate?.ToString("yyyy-MM-dd"),
+                ReleaseDate = ReleaseDate?.ToString("yyyy-MM-dd"),
                 Directors = string.Join(", ", this.directors),
                 Cast = string.Join(", ", this.cast)
             };
