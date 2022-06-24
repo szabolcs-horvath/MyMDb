@@ -60,8 +60,8 @@ namespace MyMDb.Server.Controllers
             {
                 Username = request.Username,
                 PasswordHash = hash.PasswordHash,
-                PasswordSalt = hash.PasswordSalt,
-                MyMDbRoleId = 1 // Role = "None"
+                PasswordSalt = hash.PasswordSalt
+                //MyMDbRoleId =  //
             };
 
             var result = await _repository.Insert(user);
