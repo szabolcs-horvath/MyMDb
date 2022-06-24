@@ -11,7 +11,7 @@ using MyMDb.Server.DAL.Repositories.MovieRepository;
 using MyMDb.Server.DAL.Repositories.PersonRepository;
 using MyMDb.Server.DAL.Repositories.RatingRepository;
 using MyMDb.Server.DAL.Repositories.ReviewRepository;
-using MyMDb.Server.DAL.Services.AuthService;
+using MyMDb.Server.Services.AuthService;
 
 var builder = WebApplication.CreateBuilder(args);
 

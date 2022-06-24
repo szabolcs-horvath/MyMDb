@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyMDb.Server.DAL.Entities;
 using MyMDb.Shared.DTOs;
 
-namespace MyMDb.Server.DAL.Services.AuthService
+namespace MyMDb.Server.Services.AuthService
 {
     public class AuthService : IAuthService
     {
