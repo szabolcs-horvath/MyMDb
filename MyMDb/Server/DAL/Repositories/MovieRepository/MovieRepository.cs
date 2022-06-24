@@ -42,8 +42,6 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
         {
             var toInsert = new Movie()
             {
-                YourRating = value.YourRating,
-                DateRated = value.DateRated,
                 Title = value.Title,
                 URL = value.URL,
                 TitleType = value.TitleType,
@@ -72,8 +70,6 @@ namespace MyMDb.Server.DAL.Repositories.MovieRepository
                 return null;
             }
 
-            dbRecord.YourRating = value.YourRating ?? dbRecord.YourRating;
-            dbRecord.DateRated = value.DateRated ?? dbRecord.DateRated;
             dbRecord.Title = value.Title ?? dbRecord.Title;
             dbRecord.URL = value.URL ?? dbRecord.URL;
             dbRecord.TitleType = value.TitleType ?? dbRecord.TitleType;
