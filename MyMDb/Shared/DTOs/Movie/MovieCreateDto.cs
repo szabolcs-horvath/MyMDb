@@ -2,8 +2,6 @@
 {
     public class MovieCreateDto
     {
-        public int? YourRating { get; init; }
-        public string? DateRated { get; init; }
         public string Title { get; init; }
         public string URL { get; init; }
         public string TitleType { get; init; }

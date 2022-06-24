@@ -5,8 +5,6 @@ namespace MyMDb.Server.DAL.Entities
     public class Movie
     {
         public int Id { get; set; }
-        public int? YourRating { get; set; }
-        public string? DateRated { get; set; }
         public string Title { get; set; }
         public string URL { get; set; }
         public string TitleType { get; set; }
@@ -27,8 +25,6 @@ namespace MyMDb.Server.DAL.Entities
             return new MovieResponse
             {
                 Id = this.Id,
-                YourRating = this.YourRating,
-                DateRated = this.DateRated?.Trim(),
                 Title = this.Title,
                 URL = this.URL,
                 TitleType = this.TitleType,
@@ -50,8 +46,6 @@ namespace MyMDb.Server.DAL.Entities
             return new MovieBasicResponse
             {
                 Id = this.Id,
-                YourRating = this.YourRating,
-                DateRated = this.DateRated?.Trim(),
                 Title = this.Title,
                 URL = this.URL,
                 TitleType = this.TitleType,

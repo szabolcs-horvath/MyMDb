@@ -2,8 +2,6 @@
 {
     public class MovieUpdateDto
     {
-        public int? YourRating { get; set; }
-        public string? DateRated { get; set; }
         public string? Title { get; set; }
         public string? URL { get; set; }
         public string? TitleType { get; set; }
