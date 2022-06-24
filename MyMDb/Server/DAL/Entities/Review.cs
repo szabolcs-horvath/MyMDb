@@ -11,21 +11,21 @@ namespace MyMDb.Server.DAL.Entities
         public string Description { get; set; }
         public bool Spoiler { get; set; }
 
-        public Movie? Movie { get; set; }
-        public MyMDbUser? MyMDbUser { get; set; }
+        public Movie Movie { get; set; }
+        public MyMDbUser MyMDbUser { get; set; }
 
         public ReviewResponse ToResponse()
         {
             return new ReviewResponse
             {
-                Id = this.Id,
-                MovieId = this.MovieId,
-                MyMDbUserId = this.MyMDbUserId,
-                Headline = this.Headline,
-                Description = this.Description,
-                Spoiler = this.Spoiler,
-                Movie = this.Movie?.ToBasicResponse(),
-                MyMDbUser = this.MyMDbUser?.ToBasicResponse()
+                Id = Id,
+                MovieId = MovieId,
+                MyMDbUserId = MyMDbUserId,
+                Headline = Headline,
+                Description = Description,
+                Spoiler = Spoiler,
+                Movie = Movie?.ToBasicResponse(),
+                MyMDbUser = MyMDbUser?.ToBasicResponse()
             };
         }
 
@@ -33,12 +33,12 @@ namespace MyMDb.Server.DAL.Entities
         {
             return new ReviewBasicResponse
             {
-                Id = this.Id,
-                MovieId = this.MovieId,
-                MyMDbUserId = this.MyMDbUserId,
-                Headline = this.Headline,
-                Description = this.Description,
-                Spoiler = this.Spoiler
+                Id = Id,
+                MovieId = MovieId,
+                MyMDbUserId = MyMDbUserId,
+                Headline = Headline,
+                Description = Description,
+                Spoiler = Spoiler
             };
         }
     }

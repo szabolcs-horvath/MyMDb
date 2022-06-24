@@ -9,19 +9,19 @@ namespace MyMDb.Server.DAL.Entities
         public int MyMDbUserId { get; set; }
         public int Score { get; set; }
 
-        public Movie? Movie { get; set; }
-        public MyMDbUser? MyMDbUser { get; set; }
+        public Movie Movie { get; set; }
+        public MyMDbUser MyMDbUser { get; set; }
 
         public RatingResponse ToResponse()
         {
             return new RatingResponse
             {
-                Id = this.Id,
-                MovieId = this.MovieId,
-                MyMDbUserId = this.MyMDbUserId,
-                Score = this.Score,
-                Movie = this.Movie?.ToBasicResponse(),
-                MyMDbUser = this.MyMDbUser?.ToBasicResponse()
+                Id = Id,
+                MovieId = MovieId,
+                MyMDbUserId = MyMDbUserId,
+                Score = Score,
+                Movie = Movie?.ToBasicResponse(),
+                MyMDbUser = MyMDbUser?.ToBasicResponse()
             };
         }
 
@@ -29,10 +29,10 @@ namespace MyMDb.Server.DAL.Entities
         {
             return new RatingBasicResponse
             {
-                Id = this.Id,
-                MovieId = this.MovieId,
-                MyMDbUserId = this.MyMDbUserId,
-                Score = this.Score
+                Id = Id,
+                MovieId = MovieId,
+                MyMDbUserId = MyMDbUserId,
+                Score = Score
             };
         }
     }

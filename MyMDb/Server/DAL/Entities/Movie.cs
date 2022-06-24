@@ -16,28 +16,28 @@ namespace MyMDb.Server.DAL.Entities
         public string? Directors { get; set; }
         public string? Cast { get; set; }
 
-        public ICollection<Person>? Person { get; set; }
-        public ICollection<Rating>? Ratings { get; set; }
-        public ICollection<Review>? Reviews { get; set; }
+        public ICollection<Person> Person { get; set; }
+        public ICollection<Rating> Ratings { get; set; }
+        public ICollection<Review> Reviews { get; set; }
 
         public MovieResponse ToResponse()
         {
             return new MovieResponse
             {
-                Id = this.Id,
-                Title = this.Title,
-                URL = this.URL,
-                TitleType = this.TitleType,
-                IMDbRating = this.IMDbRating,
-                Runtimemins = this.Runtimemins,
-                Year = this.Year,
-                Genres = this.Genres.Split(",").Select(s => s.Trim()).ToList(),
-                ReleaseDate = this.ReleaseDate,
-                Directors = this.Directors?.Split(",").Select(s => s.Trim()).ToList(),
-                Cast = this.Cast?.Split(",").Select(s => s.Trim()).ToList(),
-                People = this.Person?.Select(p => p.ToBasicResponse()),
-                Ratings = this.Ratings?.Select(r => r.ToBasicResponse()),
-                Reviews = this.Reviews?.Select(r => r.ToBasicResponse())
+                Id = Id,
+                Title = Title,
+                URL = URL,
+                TitleType = TitleType,
+                IMDbRating = IMDbRating,
+                Runtimemins = Runtimemins,
+                Year = Year,
+                Genres = Genres.Split(",").Select(s => s.Trim()).ToList(),
+                ReleaseDate = ReleaseDate,
+                Directors = Directors?.Split(",").Select(s => s.Trim()).ToList(),
+                Cast = Cast?.Split(",").Select(s => s.Trim()).ToList(),
+                People = Person?.Select(p => p.ToBasicResponse()),
+                Ratings = Ratings?.Select(r => r.ToBasicResponse()),
+                Reviews = Reviews?.Select(r => r.ToBasicResponse())
             };
         }
 
@@ -45,17 +45,17 @@ namespace MyMDb.Server.DAL.Entities
         {
             return new MovieBasicResponse
             {
-                Id = this.Id,
-                Title = this.Title,
-                URL = this.URL,
-                TitleType = this.TitleType,
-                IMDbRating = this.IMDbRating,
-                Runtimemins = this.Runtimemins,
-                Year = this.Year,
-                Genres = this.Genres.Split(",").Select(s => s.Trim()).ToList(),
-                ReleaseDate = this.ReleaseDate,
-                Directors = this.Directors?.Split(",").Select(s => s.Trim()).ToList(),
-                Cast = this.Cast?.Split(",").Select(s => s.Trim()).ToList()
+                Id = Id,
+                Title = Title,
+                URL = URL,
+                TitleType = TitleType,
+                IMDbRating = IMDbRating,
+                Runtimemins = Runtimemins,
+                Year = Year,
+                Genres = Genres.Split(",").Select(s => s.Trim()).ToList(),
+                ReleaseDate = ReleaseDate,
+                Directors = Directors?.Split(",").Select(s => s.Trim()).ToList(),
+                Cast = Cast?.Split(",").Select(s => s.Trim()).ToList()
             };
         }
     }
