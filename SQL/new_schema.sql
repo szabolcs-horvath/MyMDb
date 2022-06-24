@@ -1,19 +1,40 @@
-﻿IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Rating') AND type in (N'U'))
-	DROP TABLE [Rating]
-
-IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Review') AND type in (N'U'))
+﻿IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Review') AND type in (N'U'))
 	DROP TABLE [Review]
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Rating') AND type in (N'U'))
+	DROP TABLE [Rating]
 
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].MoviePersonJoiningTable') AND type in (N'U'))
 	DROP TABLE [MoviePersonJoiningTable]
 
-IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Movie') AND type in (N'U'))
-	DROP TABLE [Movie]
-
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Person') AND type in (N'U'))
 	DROP TABLE [Person]
 
-CREATE TABLE Movie (
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].Movie') AND type in (N'U'))
+	DROP TABLE [Movie]
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].MyMDbUser') AND type in (N'U'))
+	DROP TABLE [MyMDbUser]
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].MyMDbRole') AND type in (N'U'))
+	DROP TABLE [MyMDbRole]
+
+CREATE TABLE [MyMDbRole] (
+	[ID] int IDENTITY PRIMARY KEY,
+	[Rolename] nvarchar(64) NOT NULL,
+	CONSTRAINT UQ_MyMDbRole_RoleName UNIQUE(Rolename)
+)
+
+CREATE TABLE [MyMDbUser] (
+	[ID] int IDENTITY PRIMARY KEY,
+	[Username] nvarchar(64) NOT NULL,
+	CONSTRAINT UQ_MyMDbUser_Username UNIQUE(Username),
+	[PasswordHash] binary(64) NOT NULL,
+	[PasswordSalt] binary(128) NOT NULL,
+	[MyMDbRoleID] int FOREIGN KEY REFERENCES MyMDbRole(ID) NOT NULL
+)
+
+CREATE TABLE [Movie] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[YourRating] int,
 	[DateRated] nvarchar(10),
@@ -29,32 +50,36 @@ CREATE TABLE Movie (
 	[Cast] nvarchar(MAX)
 )
 
-CREATE TABLE Person (
+CREATE TABLE [Person] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[FullName] nvarchar(MAX) NOT NULL,
 	[Birthdate] nvarchar(10) NOT NULL,
 	[Birthplace] nvarchar(MAX) NOT NULL
 )
 
-CREATE TABLE MoviePersonJoiningTable (
+CREATE TABLE [MoviePersonJoiningTable] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[MovieID] int FOREIGN KEY REFERENCES Movie(ID) NOT NULL,
-	[PersonID] int FOREIGN KEY REFERENCES Person(ID) NOT NULL
+	[PersonID] int FOREIGN KEY REFERENCES Person(ID) NOT NULL,
+	CONSTRAINT UQ_MoviePersonJoiningTable_MovieIDPersonID UNIQUE(MovieID, PersonID)
 )
 
-CREATE TABLE Rating (
+CREATE TABLE [Rating] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[MovieID] int FOREIGN KEY REFERENCES Movie(ID) NOT NULL,
-	[UserID] nvarchar(450) FOREIGN KEY REFERENCES AspNetUsers(Id) NOT NULL,
-	[Rating] int NOT NULL CONSTRAINT CHK_Rating_RatingValidValue CHECK (0 <= [Rating] AND [Rating] <= 10)
+	[MyMDbUserID] int FOREIGN KEY REFERENCES [MyMDbUser](ID) NOT NULL,
+	CONSTRAINT UQ_Rating_MovieIDMyMDbUserID UNIQUE(MovieId, MyMDbUserID),
+	[Score] int NOT NULL,
+	CONSTRAINT CHK_Rating_Score CHECK (0 <= [Score] AND [Score] <= 10)
 )
 
-CREATE TABLE Review (
+CREATE TABLE [Review] (
 	[ID] int IDENTITY PRIMARY KEY,
 	[MovieID] int FOREIGN KEY REFERENCES Movie(ID) NOT NULL,
-	[UserID] nvarchar(450) FOREIGN KEY REFERENCES AspNetUsers(Id) NOT NULL,
+	[MyMDbUserID] int FOREIGN KEY REFERENCES [MyMDbUser](ID) NOT NULL,
+	CONSTRAINT UQ_Review_MovieIDMyMDbUserID UNIQUE(MovieId, MyMDbUserID),
 	[Headline] nvarchar(MAX) NOT NULL,
-	[Review] nvarchar(MAX) NOT NULL,
+	[Description] nvarchar(MAX) NOT NULL,
 	[Spoiler] bit NOT NULL DEFAULT 0
 )
 GO
@@ -155,6 +180,18 @@ begin
 	delete from [MoviePersonJoiningTable] where [PersonID] in (select d.[ID] from deleted d)
 	delete from [Person] where [ID] in (select d.[ID] from deleted d)
 end
+GO
+
+
+SET IDENTITY_INSERT [dbo].[MyMDbRole] ON
+INSERT [dbo].[MyMDbRole] ([ID], [Rolename]) VALUES (1, N'Admin')
+SET IDENTITY_INSERT [dbo].[MyMDbRole] OFF
+GO
+
+
+SET IDENTITY_INSERT [dbo].[MyMDbUser] ON
+INSERT [dbo].[MyMDbUser] ([ID], [Username], [PasswordHash], [PasswordSalt], [MyMDbRoleID]) VALUES (1, N'sabhee', 0x6ADDDCF53BC8D82439140DF18585AE62E5DA0E6A6FAC869C6000B2CC240C51DFB40DB0D502ED8E1FE4ABE4ADCA744C06DAD29672E4C332A10021CE36D6F2EF86, 0xB5E921A77B30BB3D29FD208EA831B93139B6DCCFF89B932FC652F86CB00558AE57E2F23B155C7C2F3652B9B13743986175BCCD75C3BAA4FBD1CF8163DE13861DAB80A6B06376748109D434858D709F50D647A647A2CCA7A5239B461FDAB5A7C2CE2D6C3534F7E9E8ECD9A800F7E45F84394BA39A1E209DB57D76D8972F3A3E9D, 1)
+SET IDENTITY_INSERT [dbo].[MyMDbUser] OFF
 GO
 
 
@@ -485,6 +522,5 @@ INSERT [dbo].[Person] ([ID], [FullName], [Birthdate], [Birthplace]) VALUES (4036
 INSERT [dbo].[Person] ([ID], [FullName], [Birthdate], [Birthplace]) VALUES (4037, N'Miles Teller', N'1987-02-20', N'Downingtown, Pennsylvania, USA')
 INSERT [dbo].[Person] ([ID], [FullName], [Birthdate], [Birthplace]) VALUES (4038, N'Melissa Benoist', N'1988-10-04', N'Littleton, Colorado, USA')
 INSERT [dbo].[Person] ([ID], [FullName], [Birthdate], [Birthplace]) VALUES (4039, N'J.K. Simmons', N'1955-01-09', N'Grosse Pointe, Michigan, USA')
-INSERT [dbo].[Person] ([ID], [FullName], [Birthdate], [Birthplace]) VALUES (7035, N'Teszt Faszi', N'2022-06-06', N'Ózd, Hungary')
 SET IDENTITY_INSERT [dbo].[Person] OFF
 GO

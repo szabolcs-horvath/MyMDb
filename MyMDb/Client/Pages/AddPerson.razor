@@ -1,5 +1,4 @@
 ﻿@page "/addperson"
-@using MyMDb.Shared.CreateModel
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 
@@ -53,14 +52,14 @@
         await _form.Validate();
         if (_form.IsValid)
         {
-            var person = new CreatePerson
+            var person = new PersonCreateDto
             {
                 FullName = this.FullName,
                 Birthdate = this.Birthdate?.ToString("yyyy-MM-dd"),
                 Birthplace = this.Birthplace
             };
 
-            var result = await Http.PostAsJsonAsync<CreatePerson>("api/person", person);
+            var result = await Http.PostAsJsonAsync("api/person", person);
 
             if (result.IsSuccessStatusCode)
             {

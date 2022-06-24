@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyMDb.Server.DAL;
-using MyMDb.Shared.CreateModel;
-using MyMDb.Shared.SearchModel;
+using MyMDb.Server.DAL.Entities;
+using MyMDb.Server.DAL.Repositories.PersonRepository;
+using MyMDb.Shared.DTOs.Person;
+using MyMDb.Shared.ResponseModel.Person;
 
 namespace MyMDb.Server.Controllers
 {
@@ -18,72 +19,70 @@ namespace MyMDb.Server.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<List<Person>> GetPersons()
+        public ActionResult<List<PersonBasicResponse>> GetAll()
         {
-            return Ok(_repository.GetAll());
+            var result = _repository.GetAll().Select(p => p.ToBasicResponse());
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Person>> GetPerson(int id)
+        public async Task<ActionResult<PersonResponse>> Get(int id, [FromQuery] string? extended)
         {
-            var result = await _repository.Get(id);
+            Person? result;
+
+            if (string.Compare(extended, "full", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                result = await _repository.GetExtended(id);
+            }
+            else
+            {
+                result = await _repository.Get(id);
+            }
 
             if (result == null)
             {
                 return NotFound();
             }
-            else
-            {
-                return Ok(result);
-            }
-        }
 
-        [HttpGet("search")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IReadOnlyCollection<SearchPerson>>> SearchByName(string name)
-        {
-            var results = await _repository.SearchByName(name);
-            return Ok(results);
+            return Ok(result.ToResponse());
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult> PostPerson([FromBody] CreatePerson person)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PersonBasicResponse>> Insert([FromBody] PersonCreateDto person)
         {
             var created = await _repository.Insert(person);
-            return CreatedAtAction(nameof(GetPerson), new { id = created.Id }, created);
+
+            if (created is null)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created.ToBasicResponse());
         }
 
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Person>> ModifyPerson(int id, [FromBody] Person person)
+        public async Task<ActionResult<PersonBasicResponse>> Update(int id, [FromBody] PersonUpdateDto value)
         {
-            var personfromDb = await _repository.Get(id);
+            var result = await _repository.Update(id, value);
 
-            if (personfromDb == null) 
+            if (result is null) 
             {
                 return NotFound();
             }
 
-            var toUpdate = new Person
-            {
-                Id = id,
-                FullName = person.FullName,
-                Birthdate = person.Birthdate,
-                Birthplace = person.Birthplace,
-                Movies = personfromDb.Movies ?? Array.Empty<string>()
-            };
-
-            var result = await _repository.Update(toUpdate);
-            return Ok(result);
+            return Ok(result.ToBasicResponse());
         }
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Person>> DeletePerson(int id)
+        public async Task<ActionResult<PersonBasicResponse>> Delete(int id)
         {
             var person = await _repository.Delete(id);
 
@@ -92,7 +91,16 @@ namespace MyMDb.Server.Controllers
                 return NotFound();
             }
 
-            return Ok(person);
+            return Ok(person.ToBasicResponse());
+        }
+
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyCollection<PersonBasicResponse>>> SearchByName(string name)
+        {
+            var results = await _repository.SearchByName(name);
+
+            return Ok(results.Select(p => p.ToBasicResponse()));
         }
     }
 }

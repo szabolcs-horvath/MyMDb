@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyMDb.Server.DAL;
-using MyMDb.Shared.CreateModel;
-using MyMDb.Shared.SearchModel;
+using MyMDb.Server.DAL.Entities;
+using MyMDb.Server.DAL.Repositories.MovieRepository;
+using MyMDb.Shared.DTOs.Movie;
+using MyMDb.Shared.ResponseModel.Movie;
 
 namespace MyMDb.Server.Controllers
 {
@@ -18,81 +19,71 @@ namespace MyMDb.Server.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IReadOnlyCollection<Movie>> GetMovies()
+        public ActionResult<IReadOnlyCollection<MovieBasicResponse>> GetAll()
         {
-            return Ok(_repository.GetAll());
+            var result = _repository.GetAll().Select(m => m.ToBasicResponse());
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Movie>> GetMovie(int id)
+        public async Task<ActionResult<MovieResponse>> Get(int id, [FromQuery] string? extended)
         {
-            var result = await _repository.Get(id);
+            Movie? result;
+
+            if (string.Compare(extended, "full", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                result = await _repository.GetExtended(id);
+            }
+            else
+            {
+                result = await _repository.Get(id);
+            }
 
             if (result == null)
             {
                 return NotFound();
-            } else
-            {
-                return Ok(result);
             }
-        }
 
-        [HttpGet("search")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IReadOnlyCollection<SearchMovie>>> SearchByTitle(string title)
-        {
-            var results = await _repository.SearchByTitle(title);
-            return Ok(results);
+            return Ok(result.ToResponse());
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Movie>> PostMovie(CreateMovie movie)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<MovieBasicResponse>> Insert(MovieCreateDto movie)
         {
             var created = await _repository.Insert(movie);
-            return CreatedAtAction(nameof(GetMovie), new {id = created.Id}, created);
+
+            if (created is null)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(Get), new {id = created.Id}, created.ToBasicResponse());
         }
 
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Movie>> ModifyMovie(int id, [FromBody] Movie movie)
+        public async Task<ActionResult<MovieBasicResponse>> Update(int id, [FromBody] MovieUpdateDto value)
         {
-            var movieFromDb = await _repository.Get(id);
+            var result = await _repository.Update(id, value);
 
-            if (movieFromDb == null)
+            if (result is null)
             {
                 return NotFound();
             }
 
-            var toUpdate = new Movie 
-            {
-                Id = id, 
-                YourRating = movie.YourRating, 
-                DateRated = movie.DateRated, 
-                Title = movie.Title, 
-                URL = movie.URL,
-                TitleType = movie.TitleType, 
-                IMDbRating = movie.IMDbRating, 
-                Runtimemins = movie.Runtimemins, 
-                Year = movie.Year,
-                Genres = movie.Genres, 
-                ReleaseDate = movie.ReleaseDate,
-                Directors = movie.Directors ?? Array.Empty<string>(), 
-                Cast = movie.Cast ?? Array.Empty<string>(),
-                People = movie.People ?? Array.Empty<string>()
-            };
-
-            var result = await _repository.Update(toUpdate);
-            return Ok(result);
+            return Ok(result.ToBasicResponse());
         }
         
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Movie>> DeleteMovie(int id)
+        public async Task<ActionResult<MovieBasicResponse>> Delete(int id)
         {
             var movie = await _repository.Delete(id);
 
@@ -101,7 +92,16 @@ namespace MyMDb.Server.Controllers
                 return NotFound();
             }
 
-            return Ok(movie);
+            return Ok(movie.ToBasicResponse());
+        }
+
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyCollection<MovieBasicResponse>>> SearchByTitle(string title)
+        {
+            var results = await _repository.SearchByTitle(title);
+
+            return Ok(results.Select(m => m.ToBasicResponse()));
         }
     }
 }

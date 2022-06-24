@@ -73,7 +73,7 @@ else
 
     private class DisplayMovie
     {
-        public DisplayMovie(Movie value)
+        public DisplayMovie(MovieResponse value)
         {
             ID = value.Id;
             Title = value.Title;
@@ -95,11 +95,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await Http.GetFromJsonAsync<Movie[]>("api/movie");
+        var result = await Http.GetFromJsonAsync<MovieResponse[]>("api/movie");
         if (result != null)
         {
             List<DisplayMovie> temp = new List<DisplayMovie>(result.Length);
-            foreach (Movie m in result) {
+            foreach (MovieResponse m in result) {
                 temp.Add(new DisplayMovie(m));
             }
             _movies = temp;

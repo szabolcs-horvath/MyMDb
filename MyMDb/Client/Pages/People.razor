@@ -14,7 +14,7 @@ else
 {
     <MudPaper Class="pa-4" Elevation="10">
         <MudTable Items="_people" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true 
-            Virtualize="true" Filter="new Func<Person, bool>(FilterCheck)" T="Person" OnRowClick="@RowClicked">
+            Virtualize="true" Filter="new Func<PersonResponse, bool>(FilterCheck)" T="PersonResponse" OnRowClick="@RowClicked">
             <ColGroup>
                 <col />
                 <col style="width: 20%" />
@@ -27,9 +27,9 @@ else
                     Margin="Margin.Dense" Dense="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
             </ToolBarContent>
             <HeaderContent>
-                <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.FullName)">Full Name</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.Birthdate)">Birthdate</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.Birthplace)">Birthplace</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<PersonResponse, object>(x=>x.FullName)">Full Name</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<PersonResponse, object>(x=>x.Birthdate)">Birthdate</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<PersonResponse, object>(x=>x.Birthplace)">Birthplace</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Full Name">@context.FullName</MudTd>
@@ -45,10 +45,10 @@ else
 
 
 @code {
-    private IEnumerable<Person>? _people;
+    private IEnumerable<PersonResponse>? _people;
     private string? _searchTerm = string.Empty;
 
-    private bool FilterCheck(Person person)
+    private bool FilterCheck(PersonResponse person)
     {
         return person.FullName.Contains(_searchTerm ?? "") || person.Birthplace.Contains(_searchTerm ?? "");
     }
@@ -58,14 +58,14 @@ else
         return Task.FromResult(_people.Select(p => p.FullName).Where(p => p.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase)));
     }
 
-    private void RowClicked(TableRowClickEventArgs<Person> args)
+    private void RowClicked(TableRowClickEventArgs<PersonResponse> args)
     {
         NavigationManager.NavigateTo($"/people/{args.Item.Id}", false);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await Http.GetFromJsonAsync<Person[]>("api/person");
+        var result = await Http.GetFromJsonAsync<PersonResponse[]>("api/person");
         if (result != null)
         {
             _people = result;

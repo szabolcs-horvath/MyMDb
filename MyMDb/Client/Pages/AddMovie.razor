@@ -1,6 +1,4 @@
 ﻿@page "/addmovie"
-@using MyMDb.Shared.CreateModel
-@using System.Text.RegularExpressions
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 
@@ -234,14 +232,12 @@
         await _form.Validate();
         if (_form.IsValid)
         {
-            var movie = new CreateMovie
+            var movie = new MovieCreateDto
             {
-                YourRating = this.YourRating,
-                DateRated = this.DateRated?.ToString("yyyy-MM-dd"),
                 Title = this.Title,
                 URL = this.URL,
                 TitleType = this.TitleType,
-                IMDbRating = Decimal.ToDouble(this.IMDbRating),
+                IMDbRating = decimal.ToDouble(this.IMDbRating),
                 Runtimemins = this.Runtimemins,
                 Year = this.Year,
                 Genres = string.Join(", ", this.genres),
@@ -250,7 +246,7 @@
                 Cast = string.Join(", ", this.cast)
             };
 
-            var result = await Http.PostAsJsonAsync<CreateMovie>("api/movie", movie);
+            var result = await Http.PostAsJsonAsync("api/movie", movie);
 
             var testString = string.Join(", ", this.genres);
             Console.WriteLine(testString);

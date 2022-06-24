@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyMDb.Server.DAL.Entities;
+﻿using MyMDb.Server.DAL.Entities;
 
 namespace MyMDb.Server.DAL
 {
@@ -8,8 +7,12 @@ namespace MyMDb.Server.DAL
         public MyMDbDbContext(DbContextOptions<MyMDbDbContext> options)
             : base(options) {}
 
-        public DbSet<DbMovie> Movie { get; set; }
-        public DbSet<DbPerson> Person { get; set; }
+        public DbSet<MyMDbUser> MyMDbUser { get; set; }
+        public DbSet<MyMDbRole> MyMDbRole { get; set; }
+        public DbSet<Movie> Movie { get; set; }
+        public DbSet<Person> Person { get; set; }
+        public DbSet<Rating> Rating { get; set; }
+        public DbSet<Review> Review { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -24,10 +27,30 @@ namespace MyMDb.Server.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DbMovie>()
+            modelBuilder.Entity<MyMDbUser>()
+                .HasOne(u => u.MyMDbRole)
+                .WithMany(r => r.Users);
+
+            modelBuilder.Entity<Movie>()
                 .HasMany(m => m.Person)
                 .WithMany(p => p.Movie)
                 .UsingEntity(j => j.ToTable("MoviePersonJoiningTable"));
+
+            modelBuilder.Entity<Rating>()
+                .HasOne(r => r.Movie)
+                .WithMany(m => m.Ratings);
+
+            modelBuilder.Entity<Rating>()
+                .HasOne(r => r.MyMDbUser)
+                .WithMany(u => u.Ratings);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Movie)
+                .WithMany(m => m.Reviews);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.MyMDbUser)
+                .WithMany(u => u.Reviews);
         }
     }
 }
