@@ -183,6 +183,18 @@ end
 GO
 
 
+SET IDENTITY_INSERT [dbo].[MyMDbRole] ON
+INSERT [dbo].[MyMDbRole] ([ID], [Rolename]) VALUES (1, N'Admin')
+SET IDENTITY_INSERT [dbo].[MyMDbRole] OFF
+GO
+
+
+SET IDENTITY_INSERT [dbo].[MyMDbUser] ON
+INSERT [dbo].[MyMDbUser] ([ID], [Username], [PasswordHash], [PasswordSalt], [MyMDbRoleID]) VALUES (1, N'sabhee', 0x6ADDDCF53BC8D82439140DF18585AE62E5DA0E6A6FAC869C6000B2CC240C51DFB40DB0D502ED8E1FE4ABE4ADCA744C06DAD29672E4C332A10021CE36D6F2EF86, 0xB5E921A77B30BB3D29FD208EA831B93139B6DCCFF89B932FC652F86CB00558AE57E2F23B155C7C2F3652B9B13743986175BCCD75C3BAA4FBD1CF8163DE13861DAB80A6B06376748109D434858D709F50D647A647A2CCA7A5239B461FDAB5A7C2CE2D6C3534F7E9E8ECD9A800F7E45F84394BA39A1E209DB57D76D8972F3A3E9D, 1)
+SET IDENTITY_INSERT [dbo].[MyMDbUser] OFF
+GO
+
+
 SET IDENTITY_INSERT [dbo].[Movie] ON 
 INSERT [dbo].[Movie] ([ID], [YourRating], [DateRated], [Title], [URL], [TitleType], [IMDbRating], [Runtimemins], [Year], [Genres], [ReleaseDate], [Directors], [Cast]) VALUES (1, 8, N'2021-07-04', N'Druk', N'https://www.imdb.com/title/tt10288566/', N'movie', 7.7, 117, 2020, N'Comedy, Drama', N'2020-09-12', N'Thomas Vinterberg', N'Mads Mikkelsen, Thomas Bo Larsen, Magnus Millang, Lars Ranthe')
 INSERT [dbo].[Movie] ([ID], [YourRating], [DateRated], [Title], [URL], [TitleType], [IMDbRating], [Runtimemins], [Year], [Genres], [ReleaseDate], [Directors], [Cast]) VALUES (2, 10, N'2021-08-01', N'The Silence of the Lambs', N'https://www.imdb.com/title/tt0102926/', N'movie', 8.6, 118, 1991, N'Crime, Drama, Thriller', N'1991-01-30', N'Jonathan Demme', N'Jodie Foster, Anthony Hopkins')
