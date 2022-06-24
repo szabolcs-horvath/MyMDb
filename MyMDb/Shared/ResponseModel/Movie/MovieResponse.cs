@@ -7,8 +7,6 @@ namespace MyMDb.Shared.ResponseModel.Movie
     public class MovieResponse
     {
         public int Id { get; set; }
-        public int? YourRating { get; set; }
-        public string? DateRated { get; set; }
         public string Title { get; set; }
         public string URL { get; set; }
         public string TitleType { get; set; }
