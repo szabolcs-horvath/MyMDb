@@ -1,24 +1,39 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="_themeManager.Theme" @bind-IsDarkMode="@_isDarkMode" />
+<MudThemeProvider Theme="_themeManager.Theme"
+                  @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
     <MudAppBar Elevation="_themeManager.AppBarElevation" >
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => DrawerToggle())" />
-        <MudText Typo="Typo.h4" Class="fw-bolder">MyMDb</MudText>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Inherit" Edge="Edge.Start"
+                       OnClick="@(() => DrawerToggle())" />
+        <MudText Typo="Typo.h4"
+                 Class="fw-bolder">
+            MyMDb
+        </MudText>
         <MudSpacer />
         <LoginLogoutButton />
         <MudTooltip Text="Switch Dark mode">
-            <MudIconButton Icon="@Icons.Outlined.ModeNight" Color="Color.Inherit" OnClick="SwitchDarkMode" />
+            <MudIconButton Icon="@Icons.Outlined.ModeNight"
+                           Color="Color.Inherit"
+                           OnClick="SwitchDarkMode" />
         </MudTooltip>
         <MudTooltip Text="MyMDb GitHub repository">
-            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Edge="Edge.End" Link="https://github.com/szabolcs-horvath/MyMDb" Target="_blank" />
+            <MudIconButton Icon="@Icons.Custom.Brands.GitHub"
+                           Color="Color.Inherit"
+                           Edge="Edge.End"
+                           Link="https://github.com/szabolcs-horvath/MyMDb"
+                           Target="_blank" />
         </MudTooltip>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="_themeManager.DrawerClipMode" Elevation="_themeManager.DrawerElevation"
-        Variant="DrawerVariant.Mini" DisableOverlay="true" >
+    <MudDrawer @bind-Open="_drawerOpen"
+               ClipMode="_themeManager.DrawerClipMode"
+               Elevation="_themeManager.DrawerElevation"
+               Variant="DrawerVariant.Mini"
+               DisableOverlay="true" >
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
@@ -27,25 +42,28 @@
         </MudContainer>
     </MudMainContent>
 
-    <MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
-    <MudThemeManager Open="ThemeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />
+    <MudThemeManagerButton OnClick="@(_ => OpenThemeManager(true))" />
+    <MudThemeManager Open="_themeManagerOpen" 
+                     OpenChanged="OpenThemeManager"
+                     Theme="_themeManager"
+                     ThemeChanged="UpdateTheme" />
 </MudLayout>
 
 @code {
     bool _drawerOpen = true;
-    private bool _isDarkMode;
+    bool _isDarkMode;
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
 
-    private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
-    public bool ThemeManagerOpen;
+    ThemeManagerTheme _themeManager = new ThemeManagerTheme();
+    bool _themeManagerOpen;
 
     void OpenThemeManager(bool value)
     {
-        ThemeManagerOpen = value;
+        _themeManagerOpen = value;
     }
 
     void UpdateTheme(ThemeManagerTheme value)

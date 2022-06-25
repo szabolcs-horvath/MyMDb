@@ -4,11 +4,26 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudText Class="mr-4">Welcome back, @context.User.Identity.Name!</MudText>
-        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Logout">Logout</MudButton>
+        <MudText Class="mr-4">
+            Welcome back,
+            @if (context.User.Identity != null)
+            {
+                @context.User.Identity.Name
+            }
+            !
+        </MudText>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Error"
+                   OnClick="Logout">
+            Logout
+        </MudButton>
     </Authorized>
     <NotAuthorized>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Login">Login</MudButton>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   OnClick="Login">
+            Login
+        </MudButton>
     </NotAuthorized>
 </AuthorizeView>
 

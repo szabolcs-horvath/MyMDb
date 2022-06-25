@@ -1,34 +1,50 @@
 ﻿@inject HttpClient Http
 
-<MudTextField @bind-Value="@SearchTerm" Placeholder="Search for a Movie, Show or Person" OnAdornmentClick="GetResults" OnKeyPress="Submit"
-    Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" />
+<MudTextField @bind-Value="@SearchTerm" 
+              Placeholder="Search for a Movie, Show or Person"
+              OnAdornmentClick="GetResults"
+              OnKeyPress="Submit"
+              Adornment="Adornment.Start" 
+              AdornmentIcon="@Icons.Material.Filled.Search"
+              IconSize="Size.Medium" />
 
 @if (_searching)
 {
-    <MudProgressLinear @ref="_progress" Color="Color.Primary" Indeterminate="true" />
+    <MudProgressLinear @ref="_progress"
+                       Color="Color.Primary"
+                       Indeterminate="true" />
 }
 else
 {
-    <MudList Clickable="true" Dense="true" >
+    <MudList Clickable="true"
+             Dense="true" >
         @foreach (MovieBasicResponse movie in _movieResults)
         {
-            <MudListItem Href=@($"/movies/{movie.Id}") Text="@movie.Title" Icon="@Icons.TwoTone.Movie" IconColor="@Color.Primary" IconSize="Size.Large" />
+            <MudListItem Href=@($"/movies/{movie.Id}") 
+                         Text="@movie.Title" 
+                         Icon="@Icons.TwoTone.Movie"
+                         IconColor="@Color.Primary"
+                         IconSize="Size.Large" />
         }
 
         @foreach (PersonBasicResponse person in _personResults)
         {
-            <MudListItem Href=@($"/people/{person.Id}") Text="@person.FullName" Icon="@Icons.TwoTone.Person" IconColor="@Color.Primary" IconSize="Size.Large" />
+            <MudListItem Href=@($"/people/{person.Id}")
+                         Text="@person.FullName"
+                         Icon="@Icons.TwoTone.Person"
+                         IconColor="@Color.Primary"
+                         IconSize="Size.Large" />
         }
     </MudList>
 }
 
 @code {
-    private bool _searching = false;
-    private MudProgressLinear? _progress;
+    bool _searching = false;
+    MudProgressLinear? _progress;
 
     [Parameter] public string? SearchTerm { get; set; } = string.Empty;
-    private List<MovieBasicResponse> _movieResults = new List<MovieBasicResponse>();
-    private List<PersonBasicResponse> _personResults = new List<PersonBasicResponse>();
+    List<MovieBasicResponse> _movieResults = new();
+    List<PersonBasicResponse> _personResults = new();
 
     private async Task GetResults()
     {
