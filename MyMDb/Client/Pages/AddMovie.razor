@@ -70,6 +70,7 @@
                                          Adornment="Adornment.Start"
                                          AdornmentIcon="@Icons.Filled.StarRate"
                                          AdornmentColor="Color.Warning"
+                                         Required="true"
                                          Validation="@(new Func<decimal, string?>(RatingCheck))" />
                     </MudItem>
 
@@ -78,6 +79,7 @@
                                       @bind-Value="Url"
                                       Margin="Margin.Dense"
                                       Variant="Variant.Outlined"
+                                      Required="true"
                                       Validation="@(new Func<string, string?>(UrlFormatCheck))" />
                     </MudItem>
 
@@ -92,6 +94,7 @@
                                          HideSpinButtons="true"
                                          Adornment="Adornment.End"
                                          AdornmentText="minutes"
+                                         Required="true"
                                          Validation="@(new Func<int, string?>(RuntimeCheck))" />
                     </MudItem>
                     
