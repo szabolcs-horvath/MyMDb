@@ -4,22 +4,40 @@
 
 <PageTitle>Add a Movie or Show</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4" >Add a new movie or show to the database</MudText>
+<MudText Typo="Typo.h3"
+         GutterBottom="true"
+         Color="Color.Secondary"
+         Class="mt-4">
+    Add a new movie or show to the database
+</MudText>
 
-<MudPaper Class="pa-4" Elevation="10">
-    <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" >
+<MudPaper Class="pa-4"
+          Elevation="10">
+    <MudForm @ref="_form"
+             @bind-IsValid="@_success" 
+             @bind-Errors="@_errors" >
         <MudGrid Spacing="1" >
-            <MudItem xs="12" sm="7">
+            <MudItem xs="12"
+                     sm="7">
                 <MudGrid Spacing="1">
                     <MudItem xs="12">
-                        <MudTextField Label="Title" @bind-Value="Title" Margin="Margin.Dense" Variant="Variant.Outlined"
-                            Required="true" RequiredError="Title is required" />
+                        <MudTextField Label="Title"
+                                      @bind-Value="Title"
+                                      Margin="Margin.Dense"
+                                      Variant="Variant.Outlined"
+                                      Required="true"
+                                      RequiredError="Title is required" />
                     </MudItem>
 
                     <MudItem xs="8">
-                        <MudSelect Label="Title type" @bind-Value="TitleType" Margin="Margin.Dense"
-                        Variant="Variant.Outlined" Dense="true" AnchorOrigin="Origin.BottomCenter"
-                        Required="true" RequiredError="Title type is required" >
+                        <MudSelect Label="Title Type"
+                                   @bind-Value="TitleType"
+                                   Margin="Margin.Dense"
+                                   Variant="Variant.Outlined"
+                                   Dense="true" 
+                                   AnchorOrigin="Origin.BottomCenter"
+                                   Required="true"
+                                   RequiredError="Title Type is required" >
                             <MudSelectItem Value="@("Movie")" />
                             <MudSelectItem Value="@("TV Series")" />
                             <MudSelectItem Value="@("TV Mini Series")" />
@@ -27,85 +45,141 @@
                     </MudItem>
 
                     <MudItem xs="4">
-                        <MudNumericField Label="Year" T="int" @bind-Value="Year" Margin="Margin.Dense"
-                        Variant="Variant.Outlined" Immediate="true" Step="1"
-                        Required="true" RequiredError="Year is required" Validation="@(new Func<int, string>(YearCheck))" />
+                        <MudNumericField Label="Year" 
+                                         T="int"
+                                         @bind-Value="Year"
+                                         Margin="Margin.Dense"
+                                         Variant="Variant.Outlined"
+                                         Immediate="true" 
+                                         Step="1"
+                                         Required="true"
+                                         RequiredError="Year is required"
+                                         Validation="@(new Func<int, string?>(YearCheck))" />
                     </MudItem>
 
-                    <MudItem xs="12">
-                        <MudDatePicker @ref="_releaseDateDatePicker" Label="Release date" @bind-Date="ReleaseDate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
-                            Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined" />
-                    </MudItem>
-                        
                     <MudItem xs="3">
-                        <MudNumericField Label="IMDb rating" T="decimal" @bind-Value="IMDbRating" Margin="Margin.Dense" Variant="Variant.Outlined" Immediate="true"
-                            Min="0.0M" Max="10.0M" Step=".1M" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.StarRate" AdornmentColor="Color.Warning"
-                            Required="true" RequiredError="IMDb rating is required" Validation="@(new Func<decimal, string>(RatingCheck))" />
+                        <MudNumericField Label="IMDb Rating"
+                                         T="decimal"
+                                         @bind-Value="ImDbRating"
+                                         Margin="Margin.Dense"
+                                         Variant="Variant.Outlined"
+                                         Immediate="true"
+                                         Min="1.0M"
+                                         Max="10.0M"
+                                         Step=".1M"
+                                         Adornment="Adornment.Start"
+                                         AdornmentIcon="@Icons.Filled.StarRate"
+                                         AdornmentColor="Color.Warning"
+                                         Validation="@(new Func<decimal, string?>(RatingCheck))" />
                     </MudItem>
 
                     <MudItem xs="9">
-                        <MudTextField Label="IMDb URL" @bind-Value="URL" Margin="Margin.Dense" Variant="Variant.Outlined"
-                        Required="true" RequiredError="IMDb URL is required" Validation="@(new Func<string, string>(URLFormatCheck))" />
+                        <MudTextField Label="IMDb URL"
+                                      @bind-Value="Url"
+                                      Margin="Margin.Dense"
+                                      Variant="Variant.Outlined"
+                                      Validation="@(new Func<string, string?>(UrlFormatCheck))" />
                     </MudItem>
 
                     <MudItem xs="12">
-                        <MudNumericField Label="Runtime" T="int" @bind-Value="Runtimemins" Margin="Margin.Dense" 
-                        Variant="Variant.Outlined" HideSpinButtons="true" Adornment="Adornment.End" AdornmentText="minutes"
-                        Required="true" RequiredError="Runtime is required" Validation="@(new Func<int, string>(RuntimeCheck))" />
+                        <MudNumericField Label="Runtime"
+                                         T="int"
+                                         @bind-Value="Runtimemins"
+                                         Margin="Margin.Dense"
+                                         Immediate="true"
+                                         Step="1"
+                                         Variant="Variant.Outlined"
+                                         HideSpinButtons="true"
+                                         Adornment="Adornment.End"
+                                         AdornmentText="minutes"
+                                         Validation="@(new Func<int, string?>(RuntimeCheck))" />
+                    </MudItem>
+                    
+                    <MudItem xs="12">
+                        <MudDatePicker @ref="_releaseDateDatePicker"
+                                       Label="Release Date"
+                                       @bind-Date="ReleaseDate"
+                                       PickerVariant="PickerVariant.Dialog"
+                                       Editable="true"
+                                       AutoClose="true"
+                                       Mask=@(new DateMask("yyyy-MM-dd"))
+                                       DateFormat="yyyy-MM-dd"
+                                       Margin="Margin.Dense"
+                                       Variant="Variant.Outlined" />
                     </MudItem>
 
                 </MudGrid>
             </MudItem>
 
-            <MudItem xs="12" sm="5" >
+            <MudItem xs="12"
+                     sm="5" >
                 <MudGrid Spacing="1" >
                     <MudItem xs="2" >
-                        <MudIconButton xs="2" Icon="@Icons.Material.Filled.Add" OnClick="AddGenreChip" />
+                        <MudIconButton xs="2"
+                                       Icon="@Icons.Material.Filled.Add" 
+                                       OnClick="AddGenreChip" />
                     </MudItem>
 
                     <MudItem xs="10" >
-                        <MudTextField Label="Add new genre" @bind-Value="NewGenre" Margin="Margin.Dense" Variant="Variant.Outlined" 
-                            Validation="@(new Func<string>(GenresCheck))"/>
+                        <MudTextField Label="Add a Genre"
+                                      @bind-Value="NewGenre" 
+                                      Margin="Margin.Dense"
+                                      Variant="Variant.Outlined"
+                                      Validation="@(new Func<string, string?>(GenresCheck))" />
                     </MudItem>
 
                     <MudItem xs="12" >
-                        <MudChipSet AllClosable="true" OnClose="CloseGenreChip" >
-                            @foreach (var chip in genres) 
+                        <MudChipSet AllClosable="true" 
+                                    OnClose="CloseGenreChip" >
+                            @foreach (var chip in _genres) 
+                            {
+                                <MudChip Text="@chip" />
+                            }
+                        </MudChipSet>
+                    </MudItem>
+                    
+
+                    <MudItem xs="2" >
+                        <MudIconButton xs="2"
+                                       Icon="@Icons.Material.Filled.Add"
+                                       OnClick="AddDirectorChip" />
+                    </MudItem>
+
+                    <MudItem xs="10" >
+                        <MudTextField xs="10"
+                                      Label="Add a Director" 
+                                      @bind-Value="NewDirector" 
+                                      Margin="Margin.Dense" 
+                                      Variant="Variant.Outlined" />
+                    </MudItem>
+
+                    <MudItem xs="12" >
+                        <MudChipSet AllClosable="true" 
+                                    OnClose="CloseDirectorChip" >
+                            @foreach (var chip in _directors) 
                             {
                                 <MudChip Text="@chip" />
                             }
                         </MudChipSet>
                     </MudItem>
 
-
                     <MudItem xs="2" >
-                        <MudIconButton xs="2" Icon="@Icons.Material.Filled.Add" OnClick="AddDirectorChip" />
+                        <MudIconButton xs="2" 
+                                       Icon="@Icons.Material.Filled.Add" 
+                                       OnClick="AddCastChip" />
                     </MudItem>
 
                     <MudItem xs="10" >
-                        <MudTextField Label="Add a director" @bind-Value="NewDirector" Margin="Margin.Dense" Variant="Variant.Outlined" />
+                        <MudTextField Label="Add an Actor/Actress"
+                                      @bind-Value="NewCast" 
+                                      Margin="Margin.Dense" 
+                                      Variant="Variant.Outlined" />
                     </MudItem>
 
                     <MudItem xs="12" >
-                        <MudChipSet AllClosable="true" OnClose="CloseDirectorChip" >
-                            @foreach (var chip in directors) 
-                            {
-                                <MudChip Text="@chip" />
-                            }
-                        </MudChipSet>
-                    </MudItem>
-
-                    <MudItem xs="2" >
-                        <MudIconButton xs="2" Icon="@Icons.Material.Filled.Add" OnClick="AddCastChip" />
-                    </MudItem>
-
-                    <MudItem xs="10" >
-                        <MudTextField Label="Add an actor/actress" @bind-Value="NewCast" Margin="Margin.Dense" Variant="Variant.Outlined" />
-                    </MudItem>
-
-                    <MudItem xs="12" >
-                        <MudChipSet AllClosable="true" OnClose="CloseCastChip" >
-                            @foreach (var chip in cast) 
+                        <MudChipSet AllClosable="true"
+                                    OnClose="CloseCastChip" >
+                            @foreach (var chip in _cast) 
                             {
                                 <MudChip Text="@chip" />
                             }
@@ -123,7 +197,11 @@
             </MudItem>
 
             <MudItem xs="12" >
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">Submit</MudButton>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           OnClick="Submit">
+                    Submit
+                </MudButton>
             </MudItem>
         </MudGrid>
     </MudForm>
@@ -134,125 +212,123 @@
     string[] _errors = { };
     MudForm? _form;
     MudDatePicker? _releaseDateDatePicker;
-    MudDatePicker? _dateRatedDatePicker;
 
-    Regex urlRegex = new Regex(@"https://www\.imdb\.com/title/tt[0-9]*/.*");
-    List<string> genres = new List<string>();
-    List<string> directors = new List<string>();
-    List<string> cast = new List<string>();
+    static readonly Regex UrlRegex = new(@"https://www\.imdb\.com/title/tt[0-9]*/.*");
+    readonly List<string> _genres = new();
+    readonly List<string> _directors = new();
+    readonly List<string> _cast = new();
 
     string Title { get; set; } = string.Empty;
     DateTime? ReleaseDate { get; set; }
     int Year { get; set; }
     string TitleType { get; set; } = string.Empty;
-    decimal IMDbRating { get; set; }
-    string URL { get; set; } = string.Empty;
+    decimal ImDbRating { get; set; }
+    string Url { get; set; } = string.Empty;
     int Runtimemins { get; set; }
     string NewGenre { get; set; } = string.Empty;
     string NewDirector { get; set; } = string.Empty;
     string NewCast { get; set; } = string.Empty;
 
-    void AddGenreChip()
+    async void AddGenreChip()
     {
-        if (!string.IsNullOrEmpty(NewGenre))
-        {
-            genres.Add(NewGenre);
-            NewGenre = string.Empty;
-        }
+        if (string.IsNullOrEmpty(NewGenre)) return;
+        _genres.Add(NewGenre);
+        NewGenre = string.Empty;
+        if (_form != null) await _form.Validate();
     }
 
-    void CloseGenreChip(MudChip chip) => genres.Remove(chip.Text);
+    async void CloseGenreChip(MudChip chip)
+    {
+        _genres.Remove(chip.Text);
+        if (_form != null) await _form.Validate();
+    }
 
     void AddDirectorChip()
     {
-        if (!string.IsNullOrEmpty(NewDirector))
-        {
-            directors.Add(NewDirector);
-            NewDirector = string.Empty;
-        }
+        if (string.IsNullOrEmpty(NewDirector)) return;
+        _directors.Add(NewDirector);
+        NewDirector = string.Empty;
     }
 
-    void CloseDirectorChip(MudChip chip) => directors.Remove(chip.Text);
+    void CloseDirectorChip(MudChip chip) => _directors.Remove(chip.Text);
 
     void AddCastChip()
     {
-        if (!string.IsNullOrEmpty(NewCast))
-        {
-            cast.Add(NewCast);
-            NewCast = string.Empty;
-        }
+        if (string.IsNullOrEmpty(NewCast)) return;
+        _cast.Add(NewCast);
+        NewCast = string.Empty;
     }
 
-    void CloseCastChip(MudChip chip) => cast.Remove(chip.Text);
+    void CloseCastChip(MudChip chip) => _cast.Remove(chip.Text);
 
-    string YearCheck(int arg)
+    static string? YearCheck(int arg)
     {
         return arg > 1800 ? null : "Year must be at least 1800";
     }
 
-    string URLFormatCheck(string arg)
+    static string? UrlFormatCheck(string arg)
     {
-        var doesMatch = urlRegex.IsMatch(arg);
+        var doesMatch = UrlRegex.IsMatch(arg);
         return doesMatch ? null : "The specified URL's format is incorrect";
     }
 
-    string RatingCheck(decimal arg)
+    static string? RatingCheck(decimal arg)
     {
-        return arg != 0M ? null : "IMDB rating cannot be 0";
+        return arg >= 1.0M ? null : "IMDb Rating must be at least 1.0";
     }
 
-    string RuntimeCheck(int arg)
+    static string? RuntimeCheck(int arg)
     {
         return arg > 0 ? null : "Runtime must be larger than 0";
     }
 
-    string GenresCheck() {
-        return genres.Count != 0 ? null : "You must add at least 1 Genre";
+    string? GenresCheck(string _) {
+        return _genres.Count != 0 ? null : "You must add at least 1 Genre";
     }
 
     async void Submit()
     {
-        //var genresCheckResult = GenresCheck(genres);
+    //var genresCheckResult = GenresCheck(genres);
         //if (genresCheckResult is not null)
         //{
         //    return;
         //}
 
+        if (_form == null) return;
+
         await _form.Validate();
-        if (_form.IsValid)
+
+        if (!_form.IsValid) return;
+
+        var movie = new MovieCreateDto
         {
-            var movie = new MovieCreateDto
-            {
-                Title = Title,
-                URL = URL,
-                TitleType = TitleType,
-                IMDbRating = decimal.ToDouble(this.IMDbRating),
-                Runtimemins = Runtimemins,
-                Year = Year,
-                Genres = string.Join(", ", this.genres),
-                ReleaseDate = ReleaseDate?.ToString("yyyy-MM-dd"),
-                Directors = string.Join(", ", this.directors),
-                Cast = string.Join(", ", this.cast)
-            };
+            Title = Title,
+            URL = Url,
+            TitleType = TitleType,
+            IMDbRating = decimal.ToDouble(ImDbRating),
+            Runtimemins = Runtimemins,
+            Year = Year,
+            Genres = string.Join(", ", _genres),
+            ReleaseDate = ReleaseDate?.ToString("yyyy-MM-dd"),
+            Directors = string.Join(", ", _directors),
+            Cast = string.Join(", ", _cast)
+        };
 
-            var result = await Http.PostAsJsonAsync("api/movie", movie);
+        var result = await Http.PostAsJsonAsync("api/movie", movie);
 
-            var testString = string.Join(", ", this.genres);
-            Console.WriteLine(testString);
+        var testString = string.Join(", ", this._genres);
+        Console.WriteLine(testString);
 
-            if (result.IsSuccessStatusCode)
-            {
-                _releaseDateDatePicker.Date = null;
-                _dateRatedDatePicker.Date = null;
-                _form.Reset();
+        if (!result.IsSuccessStatusCode) return;
 
-                genres.RemoveAll(_ => true);
-                directors.RemoveAll(_ => true);
-                cast.RemoveAll(_ => true);
+        if (_releaseDateDatePicker != null) _releaseDateDatePicker.Date = null;
+        _form.Reset();
 
-                StateHasChanged();
-                Snackbar.Add("Title successfully added", Severity.Success);
-            }
-        }
+        _genres.RemoveAll(_ => true);
+        _directors.RemoveAll(_ => true);
+        _cast.RemoveAll(_ => true);
+
+        StateHasChanged();
+        Snackbar.Add("Title successfully added", Severity.Success);
     }
 }
