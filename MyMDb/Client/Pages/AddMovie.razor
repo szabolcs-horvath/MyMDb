@@ -141,6 +141,9 @@
                         </MudChipSet>
                     </MudItem>
                     
+                    <MudItem xs="12" >
+                        <MudDivider DividerType="DividerType.Middle" Class="mb-2"/>
+                    </MudItem>
 
                     <MudItem xs="2" >
                         <MudIconButton xs="2"
@@ -291,12 +294,6 @@
 
     async void Submit()
     {
-    //var genresCheckResult = GenresCheck(genres);
-        //if (genresCheckResult is not null)
-        //{
-        //    return;
-        //}
-
         if (_form == null) return;
 
         await _form.Validate();
