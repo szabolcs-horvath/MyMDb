@@ -3,9 +3,9 @@
 <MudTextField @bind-Value="@SearchTerm" 
               Placeholder="Search for a Movie, Show or Person"
               OnAdornmentClick="GetResults"
-              OnKeyPress="Submit"
-              Adornment="Adornment.Start" 
+              Adornment="Adornment.End"
               AdornmentIcon="@Icons.Material.Filled.Search"
+              AdornmentColor="Color.Primary"
               IconSize="Size.Medium" />
 
 @if (_searching)
@@ -18,7 +18,7 @@ else
 {
     <MudList Clickable="true"
              Dense="true" >
-        @foreach (MovieBasicResponse movie in _movieResults)
+        @foreach (var movie in _movieResults)
         {
             <MudListItem Href=@($"/movies/{movie.Id}") 
                          Text="@movie.Title" 
@@ -27,7 +27,7 @@ else
                          IconSize="Size.Large" />
         }
 
-        @foreach (PersonBasicResponse person in _personResults)
+        @foreach (var person in _personResults)
         {
             <MudListItem Href=@($"/people/{person.Id}")
                          Text="@person.FullName"
@@ -73,15 +73,6 @@ else
             } 
 
             _searching = false;
-            StateHasChanged();
-        }
-    }
-
-    private async Task Submit(KeyboardEventArgs args) {
-        if (args.Code == "Enter")
-        {
-            _searching = true;
-            await GetResults();
             StateHasChanged();
         }
     }
