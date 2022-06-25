@@ -1,8 +1,8 @@
 ﻿@page "/movies/{movieId:int}"
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
-@inject NavigationManager NavigationManager
 
 @if (_movie is null)
 {
@@ -47,7 +47,7 @@ else
                      Class="mt-5 ml-4">
                 IMDb Rating:
             </MudText>
-            <MudIcon Icon="@Icons.Filled.StarRate"
+            <MudIcon Icon="@Icons.Filled.Stars"
                      Color="Color.Warning"
                      Size="Size.Large"
                      Class="mt-4"/>
@@ -64,6 +64,30 @@ else
                                Class="mt-1" />
             </MudTooltip>
         </MudStack>
+        
+        <AuthorizeView>
+            <MudStack Row="true">
+                <MudIcon Icon="@Icons.Filled.StarHalf"
+                         Color="Color.Warning"
+                         Size="Size.Large"
+                         Class="mt-4" />
+                <MudText Typo="Typo.h5"
+                         Class="mt-5">
+                    Your Rating:
+                </MudText>
+                <MudRating @ref="_mudRating"
+                           HoveredValueChanged="HandleHoveredValueChanged"
+                           SelectedValueChanged="HandleSelectedValueChanged"
+                           MaxValue="10"
+                           Size="Size.Large"
+                           Class="mt-4" />
+                <MudText Typo="Typo.h5"
+                         Color="Color.Warning"
+                         Class="mt-5">
+                    @_ratingText
+                </MudText> 
+            </MudStack>
+        </AuthorizeView>
 
         <MudGrid Class="mt-2">
             <MudItem xs="12"
@@ -116,15 +140,129 @@ else
 
 @code {
     [Parameter] public int MovieId { get; set; }
+    [CascadingParameter]
+    Task<AuthenticationState>? AuthenticationStateTask { get; set; }
     MovieResponse? _movie;
+    RatingResponse? _rating;
+    ClaimsPrincipal? _user;
+    MudRating? _mudRating;
+    int? _userId;
+    bool _isAuthenticated;
     bool _notFound;
+    int? _activeVal;
+    string _ratingText = string.Empty;
+
+    void HandleHoveredValueChanged(int? val)
+    {
+        _activeVal = val;
+        SetRatingText();
+    }
+
+    async void HandleSelectedValueChanged(int val)
+    {
+        _mudRating!.SelectedValue = val;
+        SetRatingText();
+
+        if (_rating is not null)
+        {
+            switch (val)
+            {
+                case 0:
+                    await Http.DeleteAsync($"api/rating/{_rating.Id}");
+                    Snackbar.Add("Rating successfully deleted!", Severity.Success);
+                    break;
+                default:
+                    var dto = new RatingUpdateDto
+                    {
+                        Score = val
+                    };
+                    var serializedContent = JsonSerializer.Serialize(dto);
+                    var httpContent = new StringContent(serializedContent, Encoding.UTF8, "application/json");
+                    await Http.PatchAsync($"api/rating/{_rating.Id}", httpContent);
+
+                    if (_rating.Score != val) //Rekurzió protection
+                    {
+                        _rating = await Http.GetFromJsonAsync<RatingResponse>($"api/Rating/{_rating.Id}");
+                        _mudRating!.SelectedValue = _rating.Score;
+                        SetRatingText();
+                    }
+
+                    Snackbar.Add("Rating successfully updated!", Severity.Success);
+                    break;
+            }
+        }
+        else
+        {
+            if (_movie is null || _user is null || !_isAuthenticated || _userId is null) return;
+
+            var dto = new RatingCreateDto
+            {
+                MovieId = _movie.Id,
+                MyMDbUserId = (int)_userId,
+                Score = val
+            };
+            await Http.PostAsJsonAsync("api/rating", dto);
+            Snackbar.Add("Rating successfully added!", Severity.Success);
+        }
+    }
+
+    void SetRatingText()
+    {
+        if (_activeVal is > 0)
+        {
+            _ratingText = $"{_activeVal.ToString()}/10";
+        }
+        else if (_rating?.Score is > 0)
+        {
+            _ratingText = $"{_rating.Score.ToString()}/10";
+        }
+        else
+        {
+            _ratingText = string.Empty;
+        }
+    }
+
 
     protected override async Task OnParametersSetAsync()
     {
-        _movie = await Http.GetFromJsonAsync<MovieResponse>($"api/movie/{MovieId}");
+        if (AuthenticationStateTask is not null)
+        {
+            var authState = await AuthenticationStateTask;
+            _user = authState.User;
+        }
+
+        if (_user?.Identity is not null)
+        {
+            _isAuthenticated = _user.Identity.IsAuthenticated;
+            var userIdString = _user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userIdString is not null)
+            {
+                _userId = int.Parse(userIdString);
+            }
+        }
+
+        _movie = await Http.GetFromJsonAsync<MovieResponse>($"api/movie/{MovieId}?extended=full");
+
         if (_movie is null)
         {
             _notFound = true;
+        }
+        else
+        {
+            var usersRating = _movie.Ratings?.FirstOrDefault(r => r.MyMDbUserId == _userId);
+            if (usersRating is not null)
+            {
+                _rating = await Http.GetFromJsonAsync<RatingResponse>($"api/Rating/{usersRating.Id}");
+            }
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_rating is not null)
+        {
+            _mudRating!.SelectedValue = _rating.Score;
+            SetRatingText();
         }
     }
 
@@ -141,6 +279,5 @@ else
                 NavigationManager.NavigateTo("/movies");
             }
         }
-    }
     }
 }
