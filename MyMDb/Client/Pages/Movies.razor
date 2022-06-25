@@ -4,17 +4,32 @@
 
 <PageTitle>Movies and Shows</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4">Movies and Shows</MudText>
+<MudText Typo="Typo.h3"
+         GutterBottom="true"
+         Color="Color.Secondary"
+         Class="mt-4">
+    Movies and Shows
+</MudText>
 
 @if (_movies == null)
 {
-    <MudProgressLinear Color="Color.Secondary" Indeterminate="true" />
+    <MudProgressLinear Color="Color.Secondary" 
+                       Indeterminate="true" />
 }
 else
 {
-    <MudPaper Class="pa-4" Elevation="10">
-        <MudTable Items="_movies" Height="400px" Hover="true" Striped="true" SortLabel="Sort By" FixedHeader=true
-            Virtualize="true" Filter="new Func<DisplayMovie, bool>(FilterCheck)" T="DisplayMovie" OnRowClick="@RowClicked">
+    <MudPaper Class="pa-4" 
+              Elevation="10">
+        <MudTable Items="_movies" 
+                  Height="400px"
+                  Hover="true" 
+                  Striped="true"
+                  SortLabel="Sort By"
+                  FixedHeader=true
+                  Virtualize="true"
+                  Filter="new Func<DisplayMovie, bool>(FilterCheck)" 
+                  T="DisplayMovie"
+                  OnRowClick="@RowClicked">
             <ColGroup>
                 <col />
                 <col style="width: 12%" />
@@ -24,26 +39,73 @@ else
                 <col style="width: 12%" />
             </ColGroup>
             <ToolBarContent>
-                <MudText Typo="Typo.h6">Movies</MudText>
+                <MudText Typo="Typo.h6">
+                    Movies
+                </MudText>
                 <MudSpacer />
-                <MudAutocomplete @bind-Value="@_searchTerm" Placeholder="Search by title" ResetValueOnEmptyText="true" SearchFunc="@AutocompletePopulate" CoerceValue="true"
-                    Margin="Margin.Dense" Dense="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" />
+                <MudAutocomplete @bind-Value="@_searchTerm"
+                                 Placeholder="Search by title"
+                                 ResetValueOnEmptyText="true"
+                                 SearchFunc="@AutocompletePopulate"
+                                 CoerceValue="true"
+                                 Margin="Margin.Dense" 
+                                 Dense="true"
+                                 Adornment="Adornment.Start"
+                                 AdornmentIcon="@Icons.Material.Filled.Search" 
+                                 IconSize="Size.Medium"
+                                 Class="mt-0" />
             </ToolBarContent>
             <HeaderContent>
-                <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.Title)">Title</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.IMDbRating)">IMDb Rating</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.Runtimemins)">Runtime</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.Year)">Year</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.Directors)">Director(s)</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x=>x.ReleaseDate)">Release Date</MudTableSortLabel></MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x => x.Title)">
+                        Title
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x => x.ImDbRating)">
+                        IMDb Rating
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x => x.Runtimemins)">
+                        Runtime
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x => x.Year)">
+                        Year
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<DisplayMovie, object>(x => x.Directors)">
+                        Director(s)
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="@(new Func<DisplayMovie, object>(x => x.ReleaseDate ?? "-"))">
+                        Release Date
+                    </MudTableSortLabel>
+                </MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Title">@context.Title</MudTd>
-                <MudTd DataLabel="IMDb Rating">@context.IMDbRating</MudTd>
-                <MudTd DataLabel="Runtime">@context.Runtimemins</MudTd>
-                <MudTd DataLabel="Year">@context.Year</MudTd>
-                <MudTd DataLabel="Director(s)">@context.Directors</MudTd>
-                <MudTd DataLabel="Release Date">@context.ReleaseDate</MudTd>
+                <MudTd DataLabel="Title">
+                    @context.Title
+                </MudTd>
+                <MudTd DataLabel="IMDb Rating">
+                    @context.ImDbRating
+                </MudTd>
+                <MudTd DataLabel="Runtime">
+                    @context.Runtimemins
+                </MudTd>
+                <MudTd DataLabel="Year">
+                    @context.Year
+                </MudTd>
+                <MudTd DataLabel="Director(s)">
+                    @context.Directors
+                </MudTd>
+                <MudTd DataLabel="Release Date">
+                    @context.ReleaseDate
+                </MudTd>
             </RowTemplate>
             <PagerContent>
                 <MudTablePager PageSizeOptions="new[]{10, 20, 50, 100}" />
@@ -53,8 +115,8 @@ else
 }
 
 @code {
-    private IEnumerable<DisplayMovie>? _movies;
-    private string? _searchTerm = string.Empty;
+    IEnumerable<DisplayMovie>? _movies;
+    string? _searchTerm = string.Empty;
 
     private bool FilterCheck(DisplayMovie movie)
     {
@@ -63,33 +125,37 @@ else
 
     private Task<IEnumerable<string>> AutocompletePopulate(string? value)
     {
+        if (_movies is null)
+        {
+            return Task.FromResult(Enumerable.Empty<string>());
+        }
         return Task.FromResult(_movies.Select(m => m.Title).Where(m => m.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase)));
     }
 
     private void RowClicked(TableRowClickEventArgs<DisplayMovie> args)
     {
-        NavigationManager.NavigateTo($"/movies/{args.Item.ID}", false);
+        NavigationManager.NavigateTo($"/movies/{args.Item.Id}", false);
     }
 
     private class DisplayMovie
     {
         public DisplayMovie(MovieResponse value)
         {
-            ID = value.Id;
+            Id = value.Id;
             Title = value.Title;
-            IMDbRating = value.IMDbRating;
+            ImDbRating = value.IMDbRating;
             Runtimemins = value.Runtimemins;
             Year = value.Year;
             Directors = value.Directors == null ? "" : string.Join(", ", value.Directors);
             ReleaseDate = value.ReleaseDate;
         }
-        public int ID { get; }
+        public int Id { get; }
         public string Title { get; }
-        public double IMDbRating { get; }
+        public double ImDbRating { get; }
         public int Runtimemins { get; }
         public int Year { get; }
         public string Directors { get; }
-        public string ReleaseDate { get; }
+        public string? ReleaseDate { get; }
 
     }
 

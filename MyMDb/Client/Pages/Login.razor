@@ -7,16 +7,31 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4" >Login</MudText>
 
-<MudForm Model="_myMDbUser" @bind-IsValid="_success" @bind-Errors="_errors" >
-    <MudTextField Label="Username" @bind-Value="_myMDbUser.Username" Margin="Margin.Dense" Variant="Variant.Outlined"
-                  Required="true" RequiredError="Username is required" />
-    <MudTextField Label="Password" @bind-Value="_myMDbUser.Password" Margin="Margin.Dense" Variant="Variant.Outlined"
-                  Required="true" RequiredError="Password is required" InputType="InputType.Password" />
-    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="HandleLogin">Login</MudButton>
+<MudForm Model="_myMDbUser"
+         @bind-IsValid="_success" 
+         @bind-Errors="_errors" >
+    <MudTextField Label="Username"
+                  @bind-Value="_myMDbUser.Username"
+                  Margin="Margin.Dense"
+                  Variant="Variant.Outlined"
+                  Required="true" 
+                  RequiredError="Username is required" />
+    <MudTextField Label="Password"
+                  @bind-Value="_myMDbUser.Password"
+                  Margin="Margin.Dense"
+                  Variant="Variant.Outlined"
+                  Required="true"
+                  RequiredError="Password is required"
+                  InputType="InputType.Password" />
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Secondary"
+               OnClick="HandleLogin">
+        Login
+    </MudButton>
 </MudForm>
 
 @code {
-    MyMDbUserRegisterLoginDto _myMDbUser = new MyMDbUserRegisterLoginDto();
+    readonly MyMDbUserRegisterLoginDto _myMDbUser = new();
     bool _success;
     string[] _errors = { };
 

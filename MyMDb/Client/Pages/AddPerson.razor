@@ -4,21 +4,46 @@
 
 <PageTitle>Add a Person</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true" Color="Color.Secondary" Class="mt-4">Add a new person to the database</MudText>
+<MudText Typo="Typo.h3"
+         GutterBottom="true"
+         Color="Color.Secondary"
+         Class="mt-4">
+    Add a new person to the database
+</MudText>
 
-<MudPaper Class="pa-4" Elevation="10">
-    <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" >
+<MudPaper Class="pa-4"
+          Elevation="10">
+    <MudForm @ref="_form"
+             @bind-IsValid="@_success"
+             @bind-Errors="@_errors" >
         <MudGrid Spacing="1">
             <MudItem xs="7" >
-                <MudTextField Label="Full Name" @bind-Value="FullName" Margin="Margin.Dense" Variant="Variant.Outlined"
-                    Required="true" RequiredError="Full Name is required" />
+                <MudTextField Label="Full Name"
+                              @bind-Value="FullName"
+                              Margin="Margin.Dense" 
+                              Variant="Variant.Outlined"
+                              Required="true"
+                              RequiredError="Full Name is required" />
 
-                <MudDatePicker @ref="_datePicker" Label="Birthdate" @bind-Date="Birthdate" PickerVariant="PickerVariant.Dialog" Editable="true" AutoClose="true"
-                    Mask=@(new DateMask("yyyy-MM-dd")) DateFormat="yyyy-MM-dd" Margin="Margin.Dense" Variant="Variant.Outlined"
-                    Required="true" RequiredError="Birthdate is required" />
+                <MudDatePicker @ref="_datePicker"
+                               Label="Birthdate"
+                               @bind-Date="Birthdate" 
+                               PickerVariant="PickerVariant.Dialog"
+                               Editable="true"
+                               AutoClose="true"
+                               Mask=@(new DateMask("yyyy-MM-dd"))
+                               DateFormat="yyyy-MM-dd"
+                               Margin="Margin.Dense" 
+                               Variant="Variant.Outlined"
+                               Required="true" 
+                               RequiredError="Birthdate is required" />
 
-                <MudTextField Label="Birthplace" @bind-Value="Birthplace" Margin="Margin.Dense" Variant="Variant.Outlined"
-                    Required="true" RequiredError="Birthplace is required" />
+                <MudTextField Label="Birthplace"
+                              @bind-Value="Birthplace"
+                              Margin="Margin.Dense" 
+                              Variant="Variant.Outlined"
+                              Required="true"
+                              RequiredError="Birthplace is required" />
 
             </MudItem>
 
@@ -30,7 +55,11 @@
             </MudItem>
 
             <MudItem xs="12" >
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">Submit</MudButton>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           OnClick="Submit">
+                    Submit
+                </MudButton>
             </MudItem>
 
         </MudGrid>
@@ -43,32 +72,33 @@
     MudForm? _form;
     MudDatePicker? _datePicker;
 
-    public string FullName { get; set; }
-    public DateTime? Birthdate { get; set; }
-    public string Birthplace { get; set; }
+    string FullName { get; set; } = string.Empty;
+    DateTime? Birthdate { get; set; }
+    string Birthplace { get; set; } = string.Empty;
 
-    public async void Submit()
+    async void Submit()
     {
+        if (_form == null) return;
+
         await _form.Validate();
-        if (_form.IsValid)
+
+        if (!_form.IsValid) return;
+
+        var person = new PersonCreateDto
         {
-            var person = new PersonCreateDto
-            {
-                FullName = this.FullName,
-                Birthdate = this.Birthdate?.ToString("yyyy-MM-dd"),
-                Birthplace = this.Birthplace
-            };
+            FullName = FullName,
+            Birthdate = Birthdate?.ToString("yyyy-MM-dd")!,
+            Birthplace = Birthplace
+        };
 
-            var result = await Http.PostAsJsonAsync("api/person", person);
+        var result = await Http.PostAsJsonAsync("api/person", person);
 
-            if (result.IsSuccessStatusCode)
-            {
-                _datePicker.Date = null;
-                _form.Reset();
+        if (!result.IsSuccessStatusCode) return;
 
-                StateHasChanged();
-                Snackbar.Add("Person successfully added", Severity.Success);
-            }
-        }
+        if (_datePicker != null) _datePicker.Date = null;
+        _form.Reset();
+
+        StateHasChanged();
+        Snackbar.Add("Person successfully added", Severity.Success);
     }
 }
