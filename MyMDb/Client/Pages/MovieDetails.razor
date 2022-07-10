@@ -43,51 +43,84 @@ else
                     <MudChip Text="@genre" />
                 }
             </MudChipSet>
-            <MudText Typo="Typo.h6"
-                     Class="mt-5 ml-4">
-                IMDb Rating:
-            </MudText>
-            <MudIcon Icon="@Icons.Filled.Stars"
-                     Color="Color.Warning"
-                     Size="Size.Large"
-                     Class="mt-4"/>
-            <MudText Typo="Typo.h5"
-                     Color="Color.Warning"
-                     Class="mt-5">
-                @_movie.IMDbRating
-            </MudText>
             <MudTooltip Text="Delete title from database">
                 <MudIconButton Icon="@Icons.Filled.DeleteForever"
                                Color="Color.Error" 
                                Size="Size.Large"
-                               OnClick="DeleteTitleAsync"
+                               OnClick="DeleteMovieAsync"
                                Class="mt-1" />
             </MudTooltip>
         </MudStack>
         
-        <AuthorizeView>
-            <MudStack Row="true">
-                <MudIcon Icon="@Icons.Filled.StarHalf"
-                         Color="Color.Warning"
-                         Size="Size.Large"
-                         Class="mt-4" />
-                <MudText Typo="Typo.h5"
-                         Class="mt-5">
-                    Your Rating:
-                </MudText>
-                <MudRating @ref="_mudRating"
-                           HoveredValueChanged="HandleHoveredValueChanged"
-                           SelectedValueChanged="HandleSelectedValueChanged"
-                           MaxValue="10"
-                           Size="Size.Large"
-                           Class="mt-4" />
-                <MudText Typo="Typo.h5"
-                         Color="Color.Warning"
-                         Class="mt-5">
-                    @_ratingText
-                </MudText> 
-            </MudStack>
-        </AuthorizeView>
+        @*<MudText Typo="Typo.h6"
+                 Class="mt-2">
+            IMDb Rating: @_movie.IMDbRating
+        </MudText>*@
+        
+        @if (_rating is not null)
+        {
+            <AuthorizeView>
+                <Authorized>
+                    <MudStack Row="true">
+                        <MudFab Icon="@Icons.Filled.StarRate"
+                                Variant="Variant.Outlined"
+                                Color="Color.Warning"
+                                Size="Size.Small"
+                                OnClick="OpenRatingDialog"
+                                Class="mt-1"/>
+                        <MudText Typo="Typo.h5"
+                                 Class="mt-3">
+                            Your Rating:
+                        </MudText>
+                        <MudRating @bind-SelectedValue="_selectedValue"
+                                   Disabled="true"
+                                   Color="Color.Warning"
+                                   MaxValue="10"
+                                   Size="Size.Large"
+                                   Class="mt-2"/>
+                        <MudText Typo="Typo.h5"
+                                 Color="Color.Warning"
+                                 Class="mt-3">
+                            @_ratingText
+                        </MudText>
+                    </MudStack>
+                </Authorized>
+                <NotAuthorized>
+                    <MudText Typo="Typo.h6"
+                             Color="Color.Warning"
+                             Class="mt-3">
+                        Log in to rate this title!
+                    </MudText>
+                </NotAuthorized>
+            </AuthorizeView>
+        }
+        else
+        {
+            <AuthorizeView>
+                <Authorized>
+                    <MudStack Row="true">
+                        <MudFab Icon="@Icons.Filled.StarRate"
+                                Variant="Variant.Filled"
+                                Color="Color.Warning"
+                                Size="Size.Small"
+                                Class="mt-1"
+                                OnClick="OpenRatingDialog"/>
+                        <MudText Typo="Typo.h6"
+                                 Color="Color.Warning"
+                                 Class="mt-3">
+                            Rate this title!
+                        </MudText>
+                    </MudStack>
+                </Authorized>
+                <NotAuthorized>
+                    <MudText Typo="Typo.h6"
+                             Color="Color.Warning"
+                             Class="mt-3">
+                        Log in to rate this title!
+                    </MudText>
+                </NotAuthorized>
+            </AuthorizeView>
+        }
 
         <MudGrid Class="mt-2">
             <MudItem xs="12"
@@ -96,16 +129,16 @@ else
                     Cast:
                 </MudText>
                 
-                @if (_movie.Cast is not null)
+                @if (_cast.Any())
                 {
                     <MudList>
-                        @foreach (var person in _movie.Cast)
+                        @foreach (var person in _cast)
                         {
                             <MudListItem Icon="@Icons.TwoTone.Person"
                                          IconColor="@Color.Primary"
                                          IconSize="Size.Medium"
-                                         Href="@($"/?searchTerm={person}")">
-                                @person
+                                         Href="@($"/people/{person.Id}")">
+                                @person.FullName
                             </MudListItem>
                         }
                     </MudList>
@@ -118,16 +151,16 @@ else
                     Director(s):
                 </MudText>
                 
-                @if (_movie.Directors is not null)
+                @if (_directors.Any())
                 {
                     <MudList>
-                        @foreach (var person in _movie.Directors)
+                        @foreach (var person in _directors)
                         {
                             <MudListItem Icon="@Icons.TwoTone.Person"
                                          IconColor="@Color.Primary"
                                          IconSize="Size.Medium"
-                                         Href="@($"/?searchTerm={person}")">
-                                @person
+                                         Href="@($"/people/{person.Id}")">
+                                @person.FullName
                             </MudListItem>
                         }
                     </MudList>
@@ -135,82 +168,163 @@ else
             </MudItem>
         </MudGrid>
     </MudPaper>
+
+    <MudDialog @bind-IsVisible="_dialogVisible" 
+               Options="_dialogOptions">
+        <TitleContent>
+            <MudText Typo="Typo.h6"
+                     Class="mt-5">
+                Rate @_movie.Title
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudPaper MinWidth="440px"
+                      Elevation="0">
+                <MudStack Row="true"
+                          Class="m-2">
+                    <MudRating @bind-SelectedValue="_dialogSelectedValue"
+                               HoveredValueChanged="HandleDialogHoveredValueChanged"
+                               MaxValue="10"
+                               Size="Size.Large"
+                               Class="mt-4"/>
+                    <MudText Typo="Typo.h5"
+                             Color="Color.Warning"
+                             Class="mt-5">
+                        @_dialogRatingText
+                    </MudText>
+                </MudStack>
+            </MudPaper>
+        </DialogContent>
+        <DialogActions>
+            <MudStack Row="true"
+                      Spacing="10"
+                      Justify="Justify.SpaceAround"
+                      AlignItems="AlignItems.Center">
+                <MudButton Color="Color.Error"
+                           Variant="Variant.Filled"
+                           OnClick="HandleRatingCancel"
+                           Class="ml-4">
+                    Cancel
+                </MudButton>
+                <MudButton Color="Color.Error"
+                           Variant="Variant.Outlined"
+                           OnClick="HandleRatingDelete"
+                           Disabled="@(_rating is null)"
+                           Class="mx-2">
+                    Delete Your Rating
+                </MudButton>
+                <MudButton Color="Color.Success"
+                           Variant="Variant.Filled"
+                           Disabled="@(_dialogSelectedValue == 0)"
+                           OnClick="HandleRatingConfirm"
+                           Class="mr-4">
+                    Confirm
+                </MudButton>
+            </MudStack>
+        </DialogActions>
+    </MudDialog>
 }
 
 
 @code {
     [Parameter] public int MovieId { get; set; }
-    [CascadingParameter]
-    Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+    [CascadingParameter] Task<AuthenticationState>? AuthenticationStateTask { get; set; }
     MovieResponse? _movie;
-    RatingResponse? _rating;
+    List<PersonBasicResponse> _cast = new();
+    List<PersonBasicResponse> _directors = new();
+
+    RatingBasicResponse? _rating;
+
     ClaimsPrincipal? _user;
-    MudRating? _mudRating;
     int? _userId;
     bool _isAuthenticated;
     bool _notFound;
-    int? _activeVal;
+
+    int? _activeValue;
+    int _selectedValue;
     string _ratingText = string.Empty;
 
-    void HandleHoveredValueChanged(int? val)
+    int? _dialogActiveValue;
+    int _dialogSelectedValue;
+    string _dialogRatingText = "?/10";
+    bool _dialogVisible;
+    DialogOptions _dialogOptions = new()
     {
-        _activeVal = val;
-        SetRatingText();
+        CloseOnEscapeKey = true,
+        MaxWidth=MaxWidth.Large
+    };
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await InitUser();
+        await InitMovieAndRating();
+        UpdateRatingSelectedValue();
     }
 
-    async void HandleSelectedValueChanged(int val)
+    async Task InitUser()
     {
-        _mudRating!.SelectedValue = val;
-        SetRatingText();
-
-        if (_rating is not null)
+        if (AuthenticationStateTask is not null)
         {
-            switch (val)
+            var authState = await AuthenticationStateTask;
+            _user = authState.User;
+
+            if (_user?.Identity is not null)
             {
-                case 0:
-                    await Http.DeleteAsync($"api/rating/{_rating.Id}");
-                    Snackbar.Add("Rating successfully deleted!", Severity.Success);
-                    break;
-                default:
-                    var dto = new RatingUpdateDto
-                    {
-                        Score = val
-                    };
-                    var serializedContent = JsonSerializer.Serialize(dto);
-                    var httpContent = new StringContent(serializedContent, Encoding.UTF8, "application/json");
-                    await Http.PatchAsync($"api/rating/{_rating.Id}", httpContent);
+                _isAuthenticated = _user.Identity.IsAuthenticated;
+                var userIdString = _user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
-                    if (_rating.Score != val) //Rekurzió protection
-                    {
-                        _rating = await Http.GetFromJsonAsync<RatingResponse>($"api/Rating/{_rating.Id}");
-                        _mudRating!.SelectedValue = _rating.Score;
-                        SetRatingText();
-                    }
-
-                    Snackbar.Add("Rating successfully updated!", Severity.Success);
-                    break;
+                if (userIdString is not null)
+                {
+                    _userId = int.Parse(userIdString);
+                }
             }
+        }
+    }
+
+    async Task InitMovieAndRating()
+    {
+        _movie = await Http.GetFromJsonAsync<MovieResponse>($"api/movie/{MovieId}?extended=full");
+
+        if (_movie is null)
+        {
+            _notFound = true;
         }
         else
         {
-            if (_movie is null || _user is null || !_isAuthenticated || _userId is null) return;
-
-            var dto = new RatingCreateDto
+            if (_movie.People is not null)
             {
-                MovieId = _movie.Id,
-                MyMDbUserId = (int)_userId,
-                Score = val
-            };
-            await Http.PostAsJsonAsync("api/rating", dto);
-            Snackbar.Add("Rating successfully added!", Severity.Success);
+                if (_movie.Cast is not null)
+                {
+                    _cast = _movie.People.Where(p => _movie.Cast.Contains(p.FullName)).ToList();
+                }
+                if (_movie.Directors is not null)
+                {
+                    _directors = _movie.People.Where(p => _movie.Directors.Contains(p.FullName)).ToList();
+                }
+            }
+
+            var usersRating = _movie.Ratings?.FirstOrDefault(r => r.MyMDbUserId == _userId);
+
+            if (usersRating is not null)
+            {
+                _rating = usersRating;
+                _dialogSelectedValue = _rating.Score;
+                UpdateDialogRatingText();
+            }
         }
     }
 
-    void SetRatingText()
+    void UpdateRatingSelectedValue()
     {
-        if (_activeVal is > 0)
+        _selectedValue = _rating?.Score ?? 0;
+        UpdateRatingText();
+    }
+
+    void UpdateRatingText()
+    {
+        if (_activeValue is > 0)
         {
-            _ratingText = $"{_activeVal.ToString()}/10";
+            _ratingText = $"{_activeValue.ToString()}/10";
         }
         else if (_rating?.Score is > 0)
         {
@@ -222,62 +336,168 @@ else
         }
     }
 
-
-    protected override async Task OnParametersSetAsync()
+    void OpenRatingDialog()
     {
-        if (AuthenticationStateTask is not null)
+        _dialogVisible = true;
+    }
+
+    void HandleDialogHoveredValueChanged(int? val)
+    {
+        _dialogActiveValue = val;
+        UpdateDialogRatingText();
+    }
+
+    void UpdateDialogRatingText()
+    {
+        if (_dialogActiveValue is > 0)
         {
-            var authState = await AuthenticationStateTask;
-            _user = authState.User;
+            _dialogRatingText = $"{_dialogActiveValue.ToString()}/10";
         }
-
-        if (_user?.Identity is not null)
+        else if (_dialogSelectedValue > 0)
         {
-            _isAuthenticated = _user.Identity.IsAuthenticated;
-            var userIdString = _user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (userIdString is not null)
-            {
-                _userId = int.Parse(userIdString);
-            }
-        }
-
-        _movie = await Http.GetFromJsonAsync<MovieResponse>($"api/movie/{MovieId}?extended=full");
-
-        if (_movie is null)
-        {
-            _notFound = true;
+            _dialogRatingText = $"{_dialogSelectedValue.ToString()}/10";
         }
         else
         {
-            var usersRating = _movie.Ratings?.FirstOrDefault(r => r.MyMDbUserId == _userId);
-            if (usersRating is not null)
+            _dialogRatingText = "?/10";
+        }
+    }
+
+    void HandleRatingCancel()
+    {
+        _dialogVisible = false;
+        _dialogSelectedValue = _rating?.Score ?? 0;
+        UpdateDialogRatingText();
+    }
+
+    async Task HandleRatingConfirm()
+    {
+        _dialogVisible = false;
+        if (_dialogSelectedValue > 0)
+        {
+            if (_rating is null)
             {
-                _rating = await Http.GetFromJsonAsync<RatingResponse>($"api/Rating/{usersRating.Id}");
+                await AddRatingAsync(_dialogSelectedValue);
+            }
+            else
+            {
+                await UpdateRatingAsync(_dialogSelectedValue);
             }
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    async Task HandleRatingDelete()
     {
-        if (_rating is not null)
+        _dialogVisible = false;
+        await DeleteRatingAsync();
+    }
+
+    async Task AddRatingAsync(int rating)
+    {
+        if (_isAuthenticated && _userId is not null && _movie is not null)
         {
-            _mudRating!.SelectedValue = _rating.Score;
-            SetRatingText();
+            var dto = new RatingCreateDto
+            {
+                MovieId = _movie.Id,
+                MyMDbUserId = (int)_userId,
+                Score = rating
+            };
+
+            var response = await Http.PostAsJsonAsync("api/rating", dto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _rating = await response.Content.ReadFromJsonAsync<RatingBasicResponse>();
+                UpdateRatingSelectedValue();
+                Snackbar.Add("Rating successfully added!", Severity.Success);
+            }
+            else
+            {
+                _selectedValue = 0;
+                UpdateRatingText();
+                Snackbar.Add("Couldn't add rating!", Severity.Error);
+            }
         }
     }
 
-    private async Task DeleteTitleAsync()
+    async Task UpdateRatingAsync(int rating)
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true };
+        if (_rating is not null && rating != _selectedValue)
+        {
+            var dto = new RatingUpdateDto
+            {
+                Score = rating
+            };
+            var serializedContent = JsonSerializer.Serialize(dto);
+            var httpContent = new StringContent(serializedContent, Encoding.UTF8, "application/json");
+            var response = await Http.PatchAsync($"api/rating/{_rating.Id}", httpContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var updatedRating = await response.Content.ReadFromJsonAsync<RatingBasicResponse>();
+
+                if (updatedRating is not null)
+                {
+                    _rating = updatedRating;
+                    UpdateRatingSelectedValue();
+                    Snackbar.Add("Rating successfully updated!", Severity.Success);
+                }
+            }
+            else
+            {
+                UpdateRatingSelectedValue();
+                Snackbar.Add("Couldn't update rating!", Severity.Error);
+            }
+        }
+        else
+        {
+            Snackbar.Add("The submitted rating is the same as the current one.", Severity.Info);
+        }
+    }
+
+    async Task DeleteRatingAsync()
+    {
+        if (_rating is not null)
+        {
+            var response = await Http.DeleteAsync($"api/Rating/{_rating.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                _rating = null;
+                UpdateRatingSelectedValue();
+                _dialogSelectedValue = 0;
+                UpdateDialogRatingText();
+                Snackbar.Add("Rating successfully deleted!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Couldn't delete rating!", Severity.Error);
+            }
+        }
+    }
+
+    async Task DeleteMovieAsync()
+    {
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true
+        };
+
         var dialog = DialogService.Show<DeleteTitleDialog>(_movie?.Title, options);
+
         if (!(await dialog.Result).Cancelled)
         {
             if (_movie != null)
             {
-                await Http.DeleteAsync($"api/movie/{_movie.Id}");
-                Snackbar.Add($"Title '{_movie.Title}' deleted", Severity.Success);
-                NavigationManager.NavigateTo("/movies");
+                var response = await Http.DeleteAsync($"api/movie/{_movie.Id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Snackbar.Add($"Title '{_movie.Title}' deleted", Severity.Success);
+                    NavigationManager.NavigateTo("/movies");
+                }
             }
         }
     }
+
 }
