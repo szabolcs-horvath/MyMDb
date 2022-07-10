@@ -29,7 +29,7 @@ else
             @($"{_movie.Title} ({_movie.Year})")
         </MudText>
         <MudText Typo="Typo.subtitle2">
-            @($"{_movie.Runtimemins} minutes | {_movie.ReleaseDate} | {_movie.TitleType}")
+            @($"{_movie.Runtimemins} minutes | {_movie.ReleaseDate}")
         </MudText>
 
         <MudStack Row="true">
@@ -251,7 +251,8 @@ else
     DialogOptions _dialogOptions = new()
     {
         CloseOnEscapeKey = true,
-        MaxWidth=MaxWidth.Large
+        MaxWidth = MaxWidth.Large,
+        CloseButton = true
     };
 
     protected override async Task OnParametersSetAsync()
@@ -365,14 +366,13 @@ else
 
     void HandleRatingCancel()
     {
-        _dialogVisible = false;
         _dialogSelectedValue = _rating?.Score ?? 0;
         UpdateDialogRatingText();
+        _dialogVisible = false;
     }
 
     async Task HandleRatingConfirm()
     {
-        _dialogVisible = false;
         if (_dialogSelectedValue > 0)
         {
             if (_rating is null)
@@ -384,12 +384,13 @@ else
                 await UpdateRatingAsync(_dialogSelectedValue);
             }
         }
+        _dialogVisible = false;
     }
 
     async Task HandleRatingDelete()
     {
-        _dialogVisible = false;
         await DeleteRatingAsync();
+        _dialogVisible = false;
     }
 
     async Task AddRatingAsync(int rating)
