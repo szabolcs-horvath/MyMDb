@@ -28,6 +28,7 @@ else
                  Class="mt-4">
             @($"{_movie.Title} ({_movie.Year})")
         </MudText>
+
         <MudText Typo="Typo.subtitle2">
             @($"{_movie.Runtimemins} minutes | {_movie.ReleaseDate}")
         </MudText>
@@ -37,19 +38,23 @@ else
                      Class="mt-5">
                 Genres:
             </MudText>
+
             <MudChipSet Class="mt-4" >
                 @foreach (var genre in _movie.Genres)
                 {
                     <MudChip Text="@genre" />
                 }
             </MudChipSet>
-            <MudTooltip Text="Delete title from database">
-                <MudIconButton Icon="@Icons.Filled.DeleteForever"
-                               Color="Color.Error" 
-                               Size="Size.Large"
-                               OnClick="DeleteMovieAsync"
-                               Class="mt-1" />
-            </MudTooltip>
+
+            <AuthorizeView Roles="Admin">
+                <MudTooltip Text="Delete title from database">
+                    <MudIconButton Icon="@Icons.Filled.DeleteForever"
+                                   Color="Color.Error" 
+                                   Size="Size.Large"
+                                   OnClick="DeleteMovieAsync"
+                                   Class="mt-1" />
+                </MudTooltip>
+            </AuthorizeView>
         </MudStack>
         
         @*<MudText Typo="Typo.h6"
@@ -57,47 +62,34 @@ else
             IMDb Rating: @_movie.IMDbRating
         </MudText>*@
         
-        @if (_rating is not null)
-        {
-            <AuthorizeView>
-                <Authorized>
+        <AuthorizeView>
+            <Authorized>
+                @if (_rating is not null) {
                     <MudStack Row="true">
                         <MudFab Icon="@Icons.Filled.StarRate"
+                                IconColor="Color.Warning"
                                 Variant="Variant.Outlined"
-                                Color="Color.Warning"
                                 Size="Size.Small"
                                 OnClick="OpenRatingDialog"
                                 Class="mt-1"/>
                         <MudText Typo="Typo.h5"
-                                 Class="mt-3">
+                                    Class="mt-3">
                             Your Rating:
                         </MudText>
                         <MudRating @bind-SelectedValue="_selectedValue"
-                                   Disabled="true"
-                                   Color="Color.Warning"
-                                   MaxValue="10"
-                                   Size="Size.Large"
-                                   Class="mt-2"/>
+                                    Disabled="true"
+                                    Color="Color.Warning"
+                                    MaxValue="10"
+                                    Size="Size.Large"
+                                    Class="mt-2"/>
                         <MudText Typo="Typo.h5"
-                                 Color="Color.Warning"
-                                 Class="mt-3">
+                                    Color="Color.Warning"
+                                    Class="mt-3">
                             @_ratingText
                         </MudText>
                     </MudStack>
-                </Authorized>
-                <NotAuthorized>
-                    <MudText Typo="Typo.h6"
-                             Color="Color.Warning"
-                             Class="mt-3">
-                        Log in to rate this title!
-                    </MudText>
-                </NotAuthorized>
-            </AuthorizeView>
-        }
-        else
-        {
-            <AuthorizeView>
-                <Authorized>
+                } else
+                {
                     <MudStack Row="true">
                         <MudFab Icon="@Icons.Filled.StarRate"
                                 Variant="Variant.Filled"
@@ -106,21 +98,22 @@ else
                                 Class="mt-1"
                                 OnClick="OpenRatingDialog"/>
                         <MudText Typo="Typo.h6"
-                                 Color="Color.Warning"
-                                 Class="mt-3">
+                                    Color="Color.Warning"
+                                    Class="mt-3">
                             Rate this title!
                         </MudText>
                     </MudStack>
-                </Authorized>
-                <NotAuthorized>
-                    <MudText Typo="Typo.h6"
-                             Color="Color.Warning"
-                             Class="mt-3">
-                        Log in to rate this title!
-                    </MudText>
-                </NotAuthorized>
-            </AuthorizeView>
-        }
+                }
+            </Authorized>
+            <NotAuthorized>
+                <MudText Typo="Typo.h6"
+                            Color="Color.Warning"
+                            Class="mt-3">
+                    Log in to rate this title!
+                </MudText>
+            </NotAuthorized>
+        </AuthorizeView>
+        
 
         <MudGrid Class="mt-2">
             <MudItem xs="12"
@@ -166,10 +159,66 @@ else
                     </MudList>
                 }
             </MudItem>
+
+            @if(_reviews.Count() > 0) {
+                <MudItem xs="12">
+                    <MudStack Row="true">
+                         <MudFab Icon="@Icons.Filled.RateReview"
+                                 Style="@($"color:{Colors.LightBlue.Default}")"
+                                 Variant="Variant.Outlined"
+                                 Size="Size.Small"
+                                 OnClick="OpenReviewDialog"
+                                 Class="mt-1"/>
+
+                        <MudText Typo="Typo.h6"
+                                 Class="mt-2">
+                            Reviews:
+                        </MudText>
+                    </MudStack>
+
+                    <MudList>
+                        @foreach (var review in _reviews)
+                        {
+                            //TODO if spoiler, hide by default
+                            <MudListItem Style=@($"border: solid; border-radius: 20px; border-color: {Colors.LightBlue.Default}")
+                                         Class="mb-1" >
+                                <MudStack Row="true">
+                                    <MudText Typo="Typo.h6"
+                                             Style="@($"color:{Colors.Blue.Default}")">
+                                        @review.User.Username:
+                                    </MudText>
+
+                                    <MudText Typo="Typo.h6">
+                                        @review.Review.Headline
+                                    </MudText>
+
+                                    @if(review.Rating is not null) {
+                                        <MudSpacer />
+
+                                        <MudIcon Icon="@Icons.Filled.StarRate"
+                                                 Style="@($"color:{Colors.Amber.Default}")"
+                                                 Size="Size.Medium"
+                                                 Class="mt-1"/>
+
+                                        <MudText Typo="Typo.h6"
+                                                 Style="@($"color:{Colors.Amber.Default}")">
+                                            @review.Rating.Score/10
+                                        </MudText>
+                                    }
+                                </MudStack>
+
+                                <MudText>
+                                    @review.Review.Description
+                                </MudText>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudItem>
+            }
         </MudGrid>
     </MudPaper>
 
-    <MudDialog @bind-IsVisible="_dialogVisible" 
+    <MudDialog @bind-IsVisible="_ratingDialogVisible" 
                Options="_dialogOptions">
         <TitleContent>
             <MudText Typo="Typo.h6"
@@ -185,11 +234,10 @@ else
                     <MudRating @bind-SelectedValue="_dialogSelectedValue"
                                HoveredValueChanged="HandleDialogHoveredValueChanged"
                                MaxValue="10"
-                               Size="Size.Large"
-                               Class="mt-4"/>
+                               Size="Size.Large"/>
                     <MudText Typo="Typo.h5"
                              Color="Color.Warning"
-                             Class="mt-5">
+                             Class="mt-1">
                         @_dialogRatingText
                     </MudText>
                 </MudStack>
@@ -223,6 +271,22 @@ else
             </MudStack>
         </DialogActions>
     </MudDialog>
+
+    <MudDialog @bind-IsVisible="_reviewDialogVisible"
+               Options="_dialogOptions" >
+        <TitleContent>
+
+        </TitleContent>
+        <DialogContent>
+            <MudPaper MinWidth="440px"
+                      Elevation="0" >
+
+            </MudPaper>
+        </DialogContent>
+        <DialogActions>
+
+        </DialogActions>
+    </MudDialog>
 }
 
 
@@ -234,6 +298,8 @@ else
     List<PersonBasicResponse> _directors = new();
 
     RatingBasicResponse? _rating;
+
+    List<ReviewData> _reviews = new();
 
     ClaimsPrincipal? _user;
     int? _userId;
@@ -247,7 +313,10 @@ else
     int? _dialogActiveValue;
     int _dialogSelectedValue;
     string _dialogRatingText = "?/10";
-    bool _dialogVisible;
+    bool _ratingDialogVisible;
+
+    bool _reviewDialogVisible;
+
     DialogOptions _dialogOptions = new()
     {
         CloseOnEscapeKey = true,
@@ -258,7 +327,9 @@ else
     protected override async Task OnParametersSetAsync()
     {
         await InitUser();
-        await InitMovieAndRating();
+        await InitMovie();
+        await InitRatings();
+        await InitReviews();
         UpdateRatingSelectedValue();
     }
 
@@ -282,7 +353,7 @@ else
         }
     }
 
-    async Task InitMovieAndRating()
+    async Task InitMovie()
     {
         _movie = await Http.GetFromJsonAsync<MovieResponse>($"api/movie/{MovieId}?extended=full");
 
@@ -303,7 +374,12 @@ else
                     _directors = _movie.People.Where(p => _movie.Directors.Contains(p.FullName)).ToList();
                 }
             }
+        }
+    }
 
+    async Task InitRatings()
+    {
+        if (_movie is not null) {
             var usersRating = _movie.Ratings?.FirstOrDefault(r => r.MyMDbUserId == _userId);
 
             if (usersRating is not null)
@@ -311,6 +387,44 @@ else
                 _rating = usersRating;
                 _dialogSelectedValue = _rating.Score;
                 UpdateDialogRatingText();
+            }
+        }
+    }
+
+    async Task InitReviews()
+    {
+        if (_movie is not null)
+        {
+            List<ReviewBasicResponse>? moviesReviews = (List<ReviewBasicResponse>?)_movie?.Reviews;
+
+            if (moviesReviews is not null)
+            {
+                foreach (var review in moviesReviews)
+                {
+                    MyMDbUserResponse? userForReview = await Http.GetFromJsonAsync<MyMDbUserResponse>($"api/user/{review.MyMDbUserId}");
+                    RatingBasicResponse? ratingForUser;
+
+                    if (userForReview is not null && _movie?.Ratings is not null)
+                    {
+                        ratingForUser = _movie.Ratings.FirstOrDefault(r => r.MyMDbUserId == userForReview.Id);
+
+                        _reviews.Add(new ReviewData
+                        {
+                            Review = review,
+                            User = userForReview,
+                            Rating = ratingForUser
+                        });
+                    }
+                }
+
+                if (_rating is not null) {
+                    var loggedInReview = _reviews.FirstOrDefault(r => r.Rating.Id == _rating.Id);
+
+                    if (loggedInReview is not null)
+                    {
+                        loggedInReview.Rating = _rating;
+                    }
+                }
             }
         }
     }
@@ -339,7 +453,12 @@ else
 
     void OpenRatingDialog()
     {
-        _dialogVisible = true;
+        _ratingDialogVisible = true;
+    }
+
+    void OpenReviewDialog()
+    {
+        _reviewDialogVisible = true;
     }
 
     void HandleDialogHoveredValueChanged(int? val)
@@ -368,7 +487,7 @@ else
     {
         _dialogSelectedValue = _rating?.Score ?? 0;
         UpdateDialogRatingText();
-        _dialogVisible = false;
+        _ratingDialogVisible = false;
     }
 
     async Task HandleRatingConfirm()
@@ -384,13 +503,13 @@ else
                 await UpdateRatingAsync(_dialogSelectedValue);
             }
         }
-        _dialogVisible = false;
+        _ratingDialogVisible = false;
     }
 
     async Task HandleRatingDelete()
     {
         await DeleteRatingAsync();
-        _dialogVisible = false;
+        _ratingDialogVisible = false;
     }
 
     async Task AddRatingAsync(int rating)
@@ -410,6 +529,14 @@ else
             {
                 _rating = await response.Content.ReadFromJsonAsync<RatingBasicResponse>();
                 UpdateRatingSelectedValue();
+
+                var loggedInReview = _reviews.FirstOrDefault(r => r.Rating.Id == _rating.Id);
+
+                if (loggedInReview is not null)
+                {
+                    loggedInReview.Rating = _rating;
+                }
+
                 Snackbar.Add("Rating successfully added!", Severity.Success);
             }
             else
@@ -499,6 +626,13 @@ else
                 }
             }
         }
+    }
+
+    class ReviewData
+    {
+        public ReviewBasicResponse Review { get; set; }
+        public MyMDbUserResponse User { get; set; }
+        public RatingBasicResponse Rating { get; set; }
     }
 
 }
