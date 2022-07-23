@@ -12,6 +12,14 @@ namespace MyMDb.Server.DAL.Repositories.UserRepository
             _db = db;
         }
 
+        public IReadOnlyCollection<MyMDbUser> GetAll()
+        {
+            var result = _db.MyMDbUser
+                .ToList();
+
+            return result;
+        }
+
         public async Task<MyMDbUser?> Get(int id)
         {
             var result = await _db.MyMDbUser.FindAsync(id);
